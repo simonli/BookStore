@@ -26,10 +26,12 @@ namespace BookStore.Controllers
     {
         private readonly BookStoreContext _context;
         private readonly AppSettings _appSettings;
-        public AccountController(BookStoreContext context, IOptions<AppSettings> appSettings)
+        private readonly IHostingEnvironment _env;
+        public AccountController(BookStoreContext context, IOptions<AppSettings> appSettings,IHostingEnvironment env)
         {
             _context = context;
             _appSettings = appSettings.Value;
+            _env = env;
         }
 
         // GET: User
@@ -143,12 +145,12 @@ namespace BookStore.Controllers
         [Route("[Controller]/settings/avatar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SettingsAvatar([Bind("AvatarFile")] [FromServices] IHostingEnvironment env, SettingsAvatarViewModel vm)
+        public async Task<IActionResult> SettingsAvatar(SettingsAvatarViewModel vm)
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             if (ModelState.IsValid)
             {
-                var avatarFileFolder = Path.Combine(env.WebRootPath, _appSettings.UploadAvatarDir);
+                var avatarFileFolder = Path.Combine(_env.WebRootPath, _appSettings.UploadAvatarDir);
                 if (!Directory.Exists(avatarFileFolder)) Directory.CreateDirectory(avatarFileFolder);
                 var filename = Utils.GetRandomFileName() + Path.GetExtension(vm.AvatarFile.FileName);
                 var filepath = Path.Combine(avatarFileFolder, filename);

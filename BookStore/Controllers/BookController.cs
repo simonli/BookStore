@@ -49,7 +49,7 @@ namespace BookStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("[controller]/upload")]
-        public async Task<IActionResult> Upload([Bind("BookFile,DoubanUrl,BookEditionCommnet")] UploadViewModel vm)
+        public async Task<IActionResult> Upload(UploadViewModel vm)
         {
             if (ModelState.IsValid)
             {
