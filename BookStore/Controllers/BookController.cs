@@ -13,6 +13,7 @@ using System.IO;
 using BookStore.Utility;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 
 namespace BookStore.Controllers
 {
@@ -20,10 +21,14 @@ namespace BookStore.Controllers
     public class BookController : Controller
     {
         private readonly BookStoreContext _context;
+        private readonly AppSettings _appSettings;
+        private readonly IHostingEnvironment _env;
 
-        public BookController(BookStoreContext context)
+        public BookController(BookStoreContext context, IOptions<AppSettings> appSettings, IHostingEnvironment env)
         {
             _context = context;
+            _appSettings = appSettings.Value;
+            _env = env;
         }
 
         // GET: Book
@@ -44,7 +49,7 @@ namespace BookStore.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("[controller]/upload")]
-        public async Task<IActionResult> Upload([Bind("BookFile,DoubanUrl,BookEditionCommnet")] [FromServices]IHostingEnvironment env, UploadViewModel vm)
+        public async Task<IActionResult> Upload([Bind("BookFile,DoubanUrl,BookEditionCommnet")] UploadViewModel vm)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +64,7 @@ namespace BookStore.Controllers
                 #endregion
 
                 #region 定义图书目录,文件名,文件路径
-                var bookFileFolder = Path.Combine(env.WebRootPath, "uploads/books");
+                var bookFileFolder = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
                 if (!Directory.Exists(bookFileFolder)) Directory.CreateDirectory(bookFileFolder);
                 var filename = Utils.GetRandomFileName() + Path.GetExtension(vm.BooKFile.FileName);
                 var filepath = Path.Combine(bookFileFolder, filename);
@@ -133,6 +138,7 @@ namespace BookStore.Controllers
                 {
                     Filename = filename,
                     OriginalFilename = vm.BooKFile.FileName,
+                    Hashcode = Utils.GetGuid(),
                     Filesize = vm.BooKFile.Length,
                     CheckSum = checkSum,
                     CreateTime = DateTime.Now,
@@ -181,6 +187,16 @@ namespace BookStore.Controllers
         public IActionResult Edition(int id)
         {
             throw new NotImplementedException();
+        }
+
+        [Route("[controller]/edition/download/{guid}/{filename}")]
+        public IActionResult EdtionDownload(string guid,string filename)
+        {
+            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            var be = _context.BookEditions.FirstOrDefault(b => b.Hashcode == guid);
+            string bookFileDir = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
+            string filePath = Path.Combine(bookFileDir, be.Filename);
+            return File(new FileStream(filePath,FileMode.Open), "application/x-stream", be.OriginalFilename);
         }
 
         public IActionResult UploadExt()

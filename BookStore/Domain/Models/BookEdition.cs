@@ -13,6 +13,8 @@ namespace BookStore.Domain.Models
         [Key]
         public int Id { get; set; }
 
+        public string Hashcode { get; set; }
+
         [Required]
         [StringLength(500)]
         public string Filename{get;set;}

@@ -89,6 +89,11 @@ namespace BookStore.Utility
             return DateTime.Now.ToString("yyMMddHHmmss") + GetDigitalRandomNum(8);
         }
 
+        public static string GetGuid()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "").ToLower();
+        }
+
         public static string GetEnumDescription(Enum enumValue)
         {
             string str = enumValue.ToString();
@@ -98,6 +103,7 @@ namespace BookStore.Utility
             DescriptionAttribute da = (DescriptionAttribute)objs[0];
             return da.Description;
         }
+
 
 
     }

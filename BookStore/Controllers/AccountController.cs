@@ -53,7 +53,7 @@ namespace BookStore.Controllers
                 };
                 return View(vm);
             }
-            TempData.Flash("danger", "用户不存在！");
+            TempData.Flash("danger", $"用户: {username} 不存在！");
             return View();
         }
 

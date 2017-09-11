@@ -55,10 +55,7 @@ namespace BookStore
                 });
 
             //限制表单上传文件大小最大为60MB.
-            services.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 60 * 1024 * 1024;
-            });
+            services.Configure<FormOptions>(options => { options.MultipartBodyLengthLimit = 60 * 1024 * 1024; });
 
             //URL小写
             services.AddRouting(options =>
@@ -81,13 +78,14 @@ namespace BookStore
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),@"wwwroot/uploads")),
-            //    RequestPath = new PathString("/editions")
-            //});
             app.UseStaticFiles();
+            //定义上传文件存放的目录
+//            app.UseStaticFiles(new StaticFileOptions()
+//            {
+//                FileProvider = new PhysicalFileProvider(
+//                    Path.Combine(Directory.GetCurrentDirectory(), @"upload")),
+//                RequestPath = new PathString("/upload")
+//            });
             app.UseSession();
             app.UseAuthentication();
 
