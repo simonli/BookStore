@@ -1,0 +1,29 @@
+﻿@model BookStore.Models.ChangeEmailViewModel
+@{
+    ViewData["Title"] = "ChangeEmail";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <h5>你的当前邮箱:</h5>
+        <h4 class="text-danger">@Model.CurrentEmail</h4>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
+            <div class="form-group">
+                <i class="fa fa-envelope-o fa-fw"></i>
+                <label asp-for="Email" class="control-label">输入你新邮箱:</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-check-square-o fa-2x"></i> 提交
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

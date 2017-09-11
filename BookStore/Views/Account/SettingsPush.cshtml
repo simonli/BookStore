@@ -1,0 +1,117 @@
+﻿@model BookStore.Models.SettingsPushViewModel
+@{
+    ViewData["Title"] = "PushSettings";
+}
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-condensed table-striped table-hover table-bordered">
+            <thead>
+                <tr class="info">
+                    <th>邮箱</th>
+                    <th>设为默认</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.PushSettings)
+                {
+                    string checkedValue = "";
+                    if (item.IsDefault == 1)
+                    {
+                        checkedValue = "checked";
+                    }
+
+                    <tr pk="@item.Id">
+                        <td>@item.PushEmail</td>
+                        <td><input class="pushmail-default" type="radio" @checkedValue name="default"></td>
+                        <td>
+                            <button class="pushmail-delete btn btn-sm btn-danger"><i class="fa fa-trash-o fa-fw"></i>删除</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <form method="post" role="form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <i class="fa fa-key fa-fw"></i>
+                <label asp-for="PushEmail" class="control-label"></label>
+                <input asp-for="PushEmail" class="form-control" />
+                <span asp-validation-for="PushEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-check-square-o fa-fw"></i> 提交
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Css{
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/jquery-confirm2/css/jquery-confirm.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/lib/jquery-confirm2/dist/jquery-confirm.min.css" />
+    </environment>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <environment include="Development">
+        <script src="~/lib/jquery-confirm2/js/jquery-confirm.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jquery-confirm2/dist/jquery-confirm.min.js"></script>
+    </environment>
+    <script>
+        $('.pushmail-delete').click(function () {
+            var tr = $(this).parents('tr');
+            $.confirm({
+                title: '⚠️ 警告',
+                content: '此操作不可恢复，确认删除吗？',
+                type: 'red',
+                typeAnimated: true,
+                buttons: {
+                    confirm: {
+                        text: '删除',
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            var pk = tr.attr('pk');
+                            var url = "@Url.Action("SettingsPushDelete")";
+                            var args = { id: pk };
+                            $.get(url, args, function (data) {
+                                console.log(data)
+                                if (data==true) {
+                                    tr.remove();
+                                }
+                            });
+                        }
+                    },
+
+                    cancel: {
+                        text: '取消',
+                        btnClass: 'btn-default',
+                        action: function () {
+                        }
+                    }
+                }
+            });
+        });
+
+
+        $('.pushmail-default').click(function () {
+            var pk = $(this).parents('tr').attr('pk');
+            var url = "@Url.Action("SettingsPushDefault")";
+            var args = { id: pk };
+            $.get(url, args, function (data) { });
+        });
+
+    </script>
+}

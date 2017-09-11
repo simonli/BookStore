@@ -1,0 +1,130 @@
+﻿@model BookStore.Models.UploadViewModel
+
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Upload" enctype="multipart/form-data" role="form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="DoubanId" id="DoubanId" />
+            <div class="form-group">
+                <label asp-for="BooKFile" class="control-label"></label>
+                <input asp-for="BooKFile" class="form-control" type="file" />
+                <p class="help-block">支持mobi,epub,pdf,txt. 不超过 50 MB.</p>
+                <span asp-validation-for="BooKFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DoubanUrl" class="control-label"></label>
+                <input asp-for="DoubanUrl" class="form-control" readonly />
+                <span asp-validation-for="DoubanUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookEditionCommnet" class="control-label"></label>
+                <textarea asp-for="BookEditionCommnet" class="form-control"></textarea>
+                <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="提交" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-5 col-md-offset-2">
+        <div class="well" id="id_douban">
+            <label class="control-label" for="id_q">
+                <a target="_blank" href="http://book.douban.com/">豆瓣读书:</a>
+            </label>
+            <div class="input-append">
+                <input type="text" id="id_q" name="q" placeholder="搜索豆瓣书籍" class="span4 search-query">
+                <button type="submit" id="id_btn" class="btn">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <ul id="id_books" class="unstyled"></ul>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <environment include="Development">
+        <script src="~/lib/jsrender/jsrender.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jsrender/jsrender.min.js"></script>
+    </environment>
+    <script type=text/javascript>
+        $("#id_btn").bind('click', function () {          
+            search_douban();
+            return false;
+        });
+
+        function search_douban() {
+            var tmpl = $.templates("#id_book_tmpl");
+            var q = $("#id_q").val();            
+            $.ajax({
+                type: "GET",
+                url:"@Url.Action("SearchDouban")",
+                data: { 'keyword': q },
+                success: function (data) {
+                    console.log(data)
+                    $("#id_books").empty();
+                    $("#id_books").html(tmpl.render(data));
+                },
+                error: function (e) {
+                    alert(e);
+                }
+            });
+        }
+
+        function copy_link(id) {
+            var link = $('#' + id).attr('href');
+            $('#DoubanUrl').val(link);
+            $('#DoubanId').val(id);
+        }
+
+        $('#BooKFile').change(function () {
+            var self = $(this);
+            var fullPath = self.val();
+            var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+            var filename = fullPath.substring(startIndex);
+            if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                filename = filename.substring(1);
+            }
+            var extIndex = filename.lastIndexOf('.');
+            if (extIndex > 0)
+                filename = filename.substring(0, extIndex)
+            $('#id_q').val(filename);
+            $('#DoubanUrl').val('');
+            search_douban();
+        });
+
+
+    </script>
+    <script id="id_book_tmpl" type="text/x-jsrender">
+        <li style="border-top:1px dashed #ddd;padding: 20px 0 10px;">
+            <div class="row">
+                <div class="col-md-2">
+                    <a href="{{:url}}" target="_blank">
+                        <img src="{{:logo}}" alt="{{:title}}">
+                    </a>
+                </div>
+                <div class="col-md-8 col-md-offset-1">
+                    <h5>
+                        <a id="{{:subjectId}}" href="{{:url}}" target="_blank">{{:title}}</a>
+                        <button class="btn btn-mini" onclick="copy_link('{{:subjectId}}')">
+                            <i class="icon-file"></i>复制链接
+                        </button>
+                    </h5>
+                    <div>{{:publisher}}</div>
+                    <div>
+                        {{if ratingScore>0 }}{{:ratingScore}}分{{/if}}
+                        {{if ratingPeople>0 }}({{:ratingPeople}}人评价){{/if}}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </script>
+}
