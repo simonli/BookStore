@@ -32,6 +32,12 @@ namespace BookStore.Domain.DAL
                 .WithMany(x => x.BookTags)
                 .HasForeignKey(k => k.TagId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<Book>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<BookEdition>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<BookEditionComment>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<PushSetting>().Property(x => x.CreateTime).HasDefaultValueSql(null);
         }
     }
 }

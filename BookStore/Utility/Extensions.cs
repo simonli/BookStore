@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BookStore.Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStore.Utility
 {
@@ -27,6 +29,16 @@ namespace BookStore.Utility
             var value = session.GetString(key);
 
             return value == null ? default(T) : JsonConvert.DeserializeObject<T>(value);
+        }
+
+        public static string GetUserIp(this HttpContext context)
+        {
+            var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = context.Connection.RemoteIpAddress.ToString();
+            }
+            return ip;
         }
     }
 }

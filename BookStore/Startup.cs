@@ -31,6 +31,7 @@ namespace BookStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //AppSetings Section注入
             var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
 
@@ -89,12 +90,17 @@ namespace BookStore
             app.UseSession();
             app.UseAuthentication();
 
+            //自定义错误处理
+            app.UseExceptionHandler("/errors/500");
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

@@ -55,8 +55,8 @@ namespace BookStore.Controllers
                 };
                 return View(vm);
             }
-            TempData.Flash("danger", $"用户: {username} 不存在！");
-            return View();
+            TempData.Flash("danger", $"用户<span class='text-danger'><b> {username} </b></span>不存在！");
+            return NotFound();
         }
 
         [Route("[controller]/settings/push")]
@@ -268,7 +268,7 @@ namespace BookStore.Controllers
                 HttpContext.Session.Remove("verify_code");//清除验证码session
                 user.LoginCount += 1;
                 user.LoginTime = DateTime.Now;
-                user.LoginIp = "";
+                user.LoginIp = HttpContext.GetUserIp();
                 await _context.SaveChangesAsync();
                 TempData.Flash("success", string.Format("登录成功，欢迎你{0}", user.Username));
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
