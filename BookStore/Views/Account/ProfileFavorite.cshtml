@@ -1,8 +1,7 @@
-﻿@model ProfileViewModel
+﻿@using BookStore.Utility
+@model ProfileViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "收藏记录";
 }
-
-<h2>title</h2>
+@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "favorite"}})

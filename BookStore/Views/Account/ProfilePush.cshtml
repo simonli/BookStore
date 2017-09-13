@@ -5,11 +5,11 @@
 @{
     ViewData["Title"] = "推送记录";
 }
-@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"NavChecked", "push"}})
+@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "push"}})
 
 <div class="row">
     <div class="col-md-12">
-        <table class='table table-bordered'>
+        <table class="table table-bordered">
             <tr>
                 <th>文件</th>
                 <th class="text-right">大小</th>
@@ -22,16 +22,16 @@
             @{
                 foreach (var log in Model.ActionLogList)
                 {
-                    var _class = (log.PushStatus == PushStatusEnum.Success) ? "success" : "warning";
+                    var _class = log.PushStatus == PushStatusEnum.Success ? "success" : "warning";
                     <tr class="@_class">
                         <td>
                             <a href="@Url.Action("Detail", "Book", new {id = log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
                         </td>
-                        <td class="text-right">@log.BookEdition.Filesize</td>
+                        <td class="text-right">@Utils.FormatFileSize(log.BookEdition.Filesize)</td>
                         <td>@log.PushFromPlatform</td>
                         <td class="text-right">@log.PushEmail</td>
-                        <td>@Utils.DateTimeFormat(log.CreateTime)</td>
-                        <td>@log.PushStatus</td>
+                        <td>@Utils.FormatDateTime(log.CreateTime)</td>
+                        <td>@Utils.GetEnumDescription(log.PushStatus)</td>
                         <td class="text-right">@log.PushUseTime</td>
                     </tr>
                 }

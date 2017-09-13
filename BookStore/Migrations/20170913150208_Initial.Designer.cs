@@ -12,8 +12,8 @@ using System;
 namespace BookStore.Migrations
 {
     [DbContext(typeof(BookStoreContext))]
-    [Migration("20170913065309_Init")]
-    partial class Init
+    [Migration("20170913150208_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,6 +30,8 @@ namespace BookStore.Migrations
 
                     b.Property<int>("CheckinPoint");
 
+                    b.Property<int>("CheckinTotalPoint");
+
                     b.Property<DateTime>("CreateTime");
 
                     b.Property<string>("PushEmail");
@@ -41,8 +43,6 @@ namespace BookStore.Migrations
                     b.Property<int>("PushUseTime");
 
                     b.Property<int>("Taxonomy");
-
-                    b.Property<int>("TotalCheckinPoint");
 
                     b.Property<string>("UserAgent");
 

@@ -1,8 +1,32 @@
-﻿@model ProfileViewModel
+﻿@using BookStore.Utility
+@model ProfileViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "签到记录";
 }
+@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "checkin"}})
 
-<h2>title</h2>
+<div class="row">
+    <div class="col-md-12">
+        <table class='table table-bordered'>
+            <tr>
+                <th>签到时间</th>
+                <th>账号类型</th>
+                <th>获赠积分</th>
+                <th>累计积分</th>
+            </tr>
+            @{
+                foreach (var log in Model.ActionLogList)
+                {
+                    <tr class="info">
+                        <td>@Utils.FormatDateTime(log.CreateTime)</td>
+                        <td>@Utils.GetEnumDescription(Model.User.UserType)</td>
+                        <td>@log.CheckinPoint</td>
+                        <td>@log.CheckinTotalPoint</td>
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+</div>

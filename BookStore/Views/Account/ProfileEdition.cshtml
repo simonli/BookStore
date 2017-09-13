@@ -3,9 +3,8 @@
 
 @{
     ViewData["Title"] = "上传记录";
-    var navChecked = new ViewDataDictionary(ViewData) {{"NavChecked", "edition"}};
 }
-@Html.Partial("_ProfilePartial", Model, navChecked)
+@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "edition"}})
 
 <div class="row">
     <div class="col-md-12">
@@ -23,7 +22,7 @@
                         <td>
                             <a href="@Url.Action("Detail", "Book", new {id = @log.BookEdition.Book.Id})"> @log.BookEdition.OriginalFilename</a>
                         </td>
-                        <td>@Utils.DateTimeFormat(log.CreateTime)</td>
+                        <td>@Utils.FormatDateTime(log.CreateTime)</td>
                         <td>@log.BookEdition.DownloadCount.ToString()</td>
                         <td>@log.BookEdition.PushCount.ToString()</td>
                     </tr>

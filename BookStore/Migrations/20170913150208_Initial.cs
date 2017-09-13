@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BookStore.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -161,13 +161,13 @@ namespace BookStore.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     BookEditionId = table.Column<int>(type: "INTEGER", nullable: true),
                     CheckinPoint = table.Column<int>(type: "INTEGER", nullable: false),
+                    CheckinTotalPoint = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     PushEmail = table.Column<string>(type: "TEXT", nullable: true),
                     PushFromPlatform = table.Column<string>(type: "TEXT", nullable: true),
                     PushStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     PushUseTime = table.Column<int>(type: "INTEGER", nullable: false),
                     Taxonomy = table.Column<int>(type: "INTEGER", nullable: false),
-                    TotalCheckinPoint = table.Column<int>(type: "INTEGER", nullable: false),
                     UserAgent = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },

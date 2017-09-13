@@ -12,13 +12,15 @@ namespace BookStore.Models
 {
     public class SettingsViewModel
     {
+        public User User { get; set; }
     }
 
-    public class ChangeEmailViewModel
+    public class ChangeEmailViewModel : SettingsViewModel
     {
         public string CurrentEmail { get; set; }
 
-        [Remote("ValidateEmail", "Account", HttpMethod = "Post", ErrorMessage = "{0}已经存在", AdditionalFields = "InitialEmail")]
+        [Remote("ValidateEmail", "Account", HttpMethod = "Post", ErrorMessage = "{0}已经存在",
+            AdditionalFields = "InitialEmail")]
         [Required(ErrorMessage = "{0}不能为空")]
         [StringLength(100, MinimumLength = 4, ErrorMessage = "{0}长度为{2}-{1}个字符")]
         [EmailAddress(ErrorMessage = "请输入正确的{0}地址")]
@@ -26,9 +28,9 @@ namespace BookStore.Models
         public string Email { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class ChangePasswordViewModel : SettingsViewModel
     {
-        [Remote("CheckPassword","Account",HttpMethod ="Post",ErrorMessage ="{0}不正确")]
+        [Remote("CheckPassword", "Account", HttpMethod = "Post", ErrorMessage = "{0}不正确")]
         [Required(ErrorMessage = "{0}不能为空")]
         [DataType(DataType.Password)]
         [StringLength(1000, ErrorMessage = "{0}长度少于{1}个字符")]
@@ -48,7 +50,7 @@ namespace BookStore.Models
         public string ConfirmNewPassword { get; set; }
     }
 
-    public class SettingsPushViewModel
+    public class SettingsPushViewModel : SettingsViewModel
     {
         [Remote("ValidatePushEmail", "Account", HttpMethod = "Post", ErrorMessage = "{0}已经存在, 切勿重复添加")]
         [Required(ErrorMessage = "{0}不能为空")]
@@ -60,7 +62,7 @@ namespace BookStore.Models
         public List<PushSetting> PushSettings { get; set; }
     }
 
-    public class SettingsAvatarViewModel
+    public class SettingsAvatarViewModel : SettingsViewModel
     {
         public string CurrentAvatar { get; set; }
 

@@ -70,7 +70,7 @@ namespace BookStore.Controllers
                     IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
                         StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Upload)
-                        .Where(x => x.User == user).OrderByDescending(x=>x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
                 return View(vm);
             }
@@ -90,7 +90,7 @@ namespace BookStore.Controllers
                     IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
                         StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Push)
-                        .Where(x => x.User == user).OrderByDescending(x=>x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
                 return View(vm);
             }
@@ -110,7 +110,7 @@ namespace BookStore.Controllers
                     IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
                         StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Download)
-                        .Where(x => x.User == user).OrderByDescending(x=>x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
                 return View(vm);
             }
@@ -130,14 +130,14 @@ namespace BookStore.Controllers
                     IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
                         StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Favorite)
-                        .Where(x => x.User == user).OrderByDescending(x=>x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
                 return View(vm);
             }
             TempData.Flash("danger", $"用户<span class='text-danger'><b> {username} </b></span>不存在！");
             return NotFound();
         }
-        
+
         [Route("[controller]/profile/{username}/comment")]
         public IActionResult ProfileComment(string username)
         {
@@ -156,7 +156,7 @@ namespace BookStore.Controllers
                     IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
                         StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Checkin)
-                        .Where(x => x.User == user).OrderByDescending(x=>x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
                 return View(vm);
             }
@@ -171,7 +171,8 @@ namespace BookStore.Controllers
             var vm = new SettingsPushViewModel
             {
                 PushSettings = await _context.PushSettings.Where(u => u.User == loginUser)
-                    .OrderByDescending(x => x.CreateTime).ToListAsync()
+                    .OrderByDescending(x => x.CreateTime).ToListAsync(),
+                User = loginUser
             };
             return View(vm);
         }
@@ -197,6 +198,7 @@ namespace BookStore.Controllers
             }
             vm.PushSettings = await _context.PushSettings.Where(u => u.User == loginUser)
                 .OrderByDescending(x => x.CreateTime).ToListAsync();
+            vm.User = loginUser;
             return View(vm);
         }
 
@@ -241,6 +243,7 @@ namespace BookStore.Controllers
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             var vm = new SettingsAvatarViewModel
             {
+                User = loginUser,
                 CurrentAvatar = loginUser.Avatar
             };
             return View(vm);
@@ -269,6 +272,7 @@ namespace BookStore.Controllers
             }
 
             vm.CurrentAvatar = loginUser.Avatar;
+            vm.User = loginUser;
             return View(vm);
         }
 
@@ -276,7 +280,12 @@ namespace BookStore.Controllers
         [Route("[controller]/change_password")]
         public IActionResult ChangePassword()
         {
-            return View();
+            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            var vm = new ChangePasswordViewModel
+            {
+                User = loginUser
+            };
+            return View(vm);
         }
 
         [HttpPost]
@@ -285,12 +294,17 @@ namespace BookStore.Controllers
         public async Task<IActionResult> ChangePassword(
             [Bind("Password", "NewPassword", "ConfirmNewPassword")] ChangePasswordViewModel vm)
         {
-            if (!ModelState.IsValid) return View(vm);
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-            loginUser.Password = Utils.GeneratePassword(vm.NewPassword);
-            await _context.SaveChangesAsync();
-            TempData.Flash("success", "密码修改成功, 下次请使用新密码登陆");
-            return RedirectToAction(nameof(ChangePassword));
+            if (ModelState.IsValid)
+            {
+                loginUser.Password = Utils.GeneratePassword(vm.NewPassword);
+                await _context.SaveChangesAsync();
+                TempData.Flash("success", "密码修改成功, 下次请使用新密码登陆");
+
+                return RedirectToAction(nameof(ChangePassword));
+            }
+            vm.User = loginUser;
+            return View(vm);
         }
 
         [Route("[controller]/change_email")]
@@ -299,6 +313,7 @@ namespace BookStore.Controllers
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             var vm = new ChangeEmailViewModel
             {
+                User = loginUser,
                 CurrentEmail = loginUser != null ? loginUser.Email : ""
             };
             return View(vm);
@@ -309,12 +324,16 @@ namespace BookStore.Controllers
         [Route("[controller]/change_email")]
         public async Task<IActionResult> ChangeEmail([Bind("Email")] ChangeEmailViewModel vm)
         {
-            if (!ModelState.IsValid) return View(vm);
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-            loginUser.Email = vm.Email;
-            await _context.SaveChangesAsync();
-            TempData.Flash("success", $"邮箱修改成功, 新邮箱为: {vm.Email}");
-            return RedirectToAction(nameof(ChangeEmail));
+            if (ModelState.IsValid)
+            {
+                loginUser.Email = vm.Email;
+                await _context.SaveChangesAsync();
+                TempData.Flash("success", $"邮箱修改成功, 新邮箱为: {vm.Email}");
+                return RedirectToAction(nameof(ChangeEmail));
+            }
+            vm.User = loginUser;
+            return View(vm);
         }
 
 

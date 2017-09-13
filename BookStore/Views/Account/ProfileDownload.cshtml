@@ -1,8 +1,31 @@
-﻿@model ProfileViewModel
+﻿@using BookStore.Utility
+@model ProfileViewModel
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "下载记录";
 }
+@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "download"}})
 
-<h2>title</h2>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <tr>
+                <th>书籍</th>
+                <th>时间</th>
+                <th>浏览器</th>
+            </tr>
+            @{
+                foreach (var log in Model.ActionLogList)
+                {
+                    <tr class="info">
+                        <td>
+                            <a href="@Url.Action("Detail", "Book", new {id = log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                        </td>
+                        <td>@Utils.FormatDateTime(log.CreateTime)</td>
+                        <td>@log.UserAgent</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

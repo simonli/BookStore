@@ -18,7 +18,7 @@ namespace BookStore.Domain.Models
         public int PushUseTime { get; set; }
         public string PushFromPlatform { get; set; }
         public int CheckinPoint { get; set; } //checkIn本次得分
-        public int TotalCheckinPoint { get; set; } //CheckIn累积得分
+        public int CheckinTotalPoint { get; set; } //CheckIn累积得分
         public virtual BookEdition BookEdition { get; set; }
         public virtual User User { get; set; }
         public TaxonomyEnum Taxonomy { get; set; }

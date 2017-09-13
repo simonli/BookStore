@@ -1,0 +1,19 @@
+﻿@model ProfileViewModel
+@using BookStore.Utility
+@using Microsoft.AspNetCore.Mvc
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>用户名: @Model, 剩余积分: 56, 今日下载: 0, 今日推送: 0</h4>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="/accounts/settings/info/">修改用户名</a></li>
+            <li class=""><a href="/accounts/settings/email/">修改登录邮箱</a></li>
+            <li class=""><a href="/account/password_change/">修改密码</a></li>
+            <li class=""><a href="/avatar/add/">头像设置</a></li>
+            <li class=""><a href="/accounts/settings/push/">推送设置</a></li>
+            <li class=""><a href="/accounts/settings/pro/">升级到Pro</a></li>
+        </ul>
+
+    </div>
+</div>

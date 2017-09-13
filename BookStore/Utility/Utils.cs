@@ -101,9 +101,27 @@ namespace BookStore.Utility
             return da.Description;
         }
 
-        public static string DateTimeFormat(DateTime d)
+        public static string FormatDateTime(DateTime d)
         {
             return d.ToString("yyyy-MM-dd HH:mm:ss");
         }
+
+        public static string FormatFileSize(long fileSize)
+        {
+            if (fileSize < 0)
+            {
+                return "";
+            }
+            if (fileSize >= 1024 * 1024 * 1024)
+            {
+                return $"{(double) fileSize / (1024 * 1024 * 1024):########0.00} GB";
+            }
+            if (fileSize >= 1024 * 1024)
+            {
+                return $"{(double) fileSize / (1024 * 1024):####0.00} MB";
+            }
+            return fileSize >= 1024 ? $"{(double) fileSize / 1024:####0.00} KB" : $"{fileSize} bytes";
+        }
+        
     }
 }
