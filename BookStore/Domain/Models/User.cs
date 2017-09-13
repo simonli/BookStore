@@ -1,7 +1,7 @@
-﻿using BookStore.Domain.Enum;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -43,6 +43,16 @@ namespace BookStore.Domain.Models
         public int PointCount { get; set; }
 
         public UserTypeEnum UserType { get; set; }
+    }
+    
+    public enum UserTypeEnum
+    {
+        [Description("一般用户")]
+        Free = 100,
+        [Description("Pro用户")]
+        Pro = 500,
+        [Description("Ultra用户")]
+        Ultr = 900
     }
 
     

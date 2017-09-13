@@ -1,0 +1,34 @@
+﻿@using BookStore.Utility
+@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "上传记录";
+    var navChecked = new ViewDataDictionary(ViewData) {{"NavChecked", "edition"}};
+}
+@Html.Partial("_ProfilePartial", Model, navChecked)
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <tr>
+                <th>书籍版本</th>
+                <th>上传时间</th>
+                <th>下载次数</th>
+                <th>推送次数</th>
+            </tr>
+            @{
+                foreach (var log in Model.ActionLogList)
+                {
+                    <tr class="info">
+                        <td>
+                            <a href="@Url.Action("Detail", "Book", new {id = @log.BookEdition.Book.Id})"> @log.BookEdition.OriginalFilename</a>
+                        </td>
+                        <td>@Utils.DateTimeFormat(log.CreateTime)</td>
+                        <td>@log.BookEdition.DownloadCount.ToString()</td>
+                        <td>@log.BookEdition.PushCount.ToString()</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

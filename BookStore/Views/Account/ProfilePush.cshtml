@@ -1,0 +1,41 @@
+﻿@using BookStore.Domain.Models
+@using BookStore.Utility
+@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "推送记录";
+}
+@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"NavChecked", "push"}})
+
+<div class="row">
+    <div class="col-md-12">
+        <table class='table table-bordered'>
+            <tr>
+                <th>文件</th>
+                <th class="text-right">大小</th>
+                <th>来源</th>
+                <th class="text-right">收件邮箱</th>
+                <th>时间</th>
+                <th>状态</th>
+                <th class="text-right">耗时(秒)</th>
+            </tr>
+            @{
+                foreach (var log in Model.ActionLogList)
+                {
+                    var _class = (log.PushStatus == PushStatusEnum.Success) ? "success" : "warning";
+                    <tr class="@_class">
+                        <td>
+                            <a href="@Url.Action("Detail", "Book", new {id = log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                        </td>
+                        <td class="text-right">@log.BookEdition.Filesize</td>
+                        <td>@log.PushFromPlatform</td>
+                        <td class="text-right">@log.PushEmail</td>
+                        <td>@Utils.DateTimeFormat(log.CreateTime)</td>
+                        <td>@log.PushStatus</td>
+                        <td class="text-right">@log.PushUseTime</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

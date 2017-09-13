@@ -8,9 +8,11 @@ using BookStore.Models;
 
 namespace BookStore.Domain.DAL
 {
-    public class BookStoreContext:DbContext
+    public class BookStoreContext : DbContext
     {
-        public BookStoreContext(DbContextOptions<BookStoreContext> options): base(options){ }
+        public BookStoreContext(DbContextOptions options) : base(options)
+        {
+        }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
@@ -18,7 +20,9 @@ namespace BookStore.Domain.DAL
         public DbSet<BookEditionComment> BookEditionComments { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<PushSetting> PushSettings { get; set; }
-        
+        public DbSet<ActionLog> ActionLogs { get; set; }
+        public DbSet<UserPointLog> UserPointLogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BookTag>()
@@ -38,6 +42,8 @@ namespace BookStore.Domain.DAL
             modelBuilder.Entity<BookEdition>().Property(x => x.CreateTime).HasDefaultValueSql(null);
             modelBuilder.Entity<BookEditionComment>().Property(x => x.CreateTime).HasDefaultValueSql(null);
             modelBuilder.Entity<PushSetting>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<ActionLog>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<UserPointLog>().Property(x => x.CreateTime).HasDefaultValueSql(null);
         }
     }
 }

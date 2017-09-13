@@ -109,6 +109,7 @@ namespace BookStore.Migrations
                     DownloadCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Filename = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     Filesize = table.Column<long>(type: "INTEGER", nullable: false),
+                    Hashcode = table.Column<string>(type: "TEXT", nullable: true),
                     OriginalFilename = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     PushCount = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: true)
@@ -153,6 +154,41 @@ namespace BookStore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "action_logs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BookEditionId = table.Column<int>(type: "INTEGER", nullable: true),
+                    CheckinPoint = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PushEmail = table.Column<string>(type: "TEXT", nullable: true),
+                    PushFromPlatform = table.Column<string>(type: "TEXT", nullable: true),
+                    PushStatus = table.Column<int>(type: "INTEGER", nullable: false),
+                    PushUseTime = table.Column<int>(type: "INTEGER", nullable: false),
+                    Taxonomy = table.Column<int>(type: "INTEGER", nullable: false),
+                    TotalCheckinPoint = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserAgent = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_action_logs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_action_logs_book_editions_BookEditionId",
+                        column: x => x.BookEditionId,
+                        principalTable: "book_editions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_action_logs_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "book_edition_comments",
                 columns: table => new
                 {
@@ -186,6 +222,44 @@ namespace BookStore.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "user_point_logs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ActionLogId = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Point = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user_point_logs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_user_point_logs_action_logs_ActionLogId",
+                        column: x => x.ActionLogId,
+                        principalTable: "action_logs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_user_point_logs_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_action_logs_BookEditionId",
+                table: "action_logs",
+                column: "BookEditionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_action_logs_UserId",
+                table: "action_logs",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_book_edition_comments_AtUserId",
@@ -226,6 +300,16 @@ namespace BookStore.Migrations
                 name: "IX_push_settings_UserId",
                 table: "push_settings",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_point_logs_ActionLogId",
+                table: "user_point_logs",
+                column: "ActionLogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_point_logs_UserId",
+                table: "user_point_logs",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -240,10 +324,16 @@ namespace BookStore.Migrations
                 name: "push_settings");
 
             migrationBuilder.DropTable(
-                name: "book_editions");
+                name: "user_point_logs");
 
             migrationBuilder.DropTable(
                 name: "tags");
+
+            migrationBuilder.DropTable(
+                name: "action_logs");
+
+            migrationBuilder.DropTable(
+                name: "book_editions");
 
             migrationBuilder.DropTable(
                 name: "books");

@@ -1,6 +1,36 @@
 ﻿@model ProfileViewModel
 @using BookStore.Utility
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @{
+    var navEditionClass = "";
+    var navPushClass = "";
+    var navDownloadClass = "";
+    var navCheckinClass = "";
+    var navCommentClass = "";
+    var navFavoriteClass = "";
+    var navChecked = ViewData["NavChecked"].ToString();
+    switch (navChecked)
+    {
+        case "edition":
+            navEditionClass = "active";
+            break;
+        case "push":
+            navPushClass = "active";
+            break;
+        case "download":
+            navDownloadClass = "active";
+            break;
+        case "checkin":
+            navCheckinClass = "active";
+            break;
+        case "comment":
+            navCommentClass = "active";
+            break;
+        case "favorite":
+            navFavoriteClass = "active";
+            break;
+    }
+
     <div class="row">
         <div class="col-md-3">
             <a href="@Url.Action("SettingsAvatar", "Account")" title="@Model.User.Username">
@@ -24,22 +54,22 @@
     <div class="row">
         <div class="col-md-12">
             <ul class="nav nav-pills">
-                <li class="">
+                <li class="@navEditionClass">
                     <a href="@Url.Action("ProfileEdition", "Account")">上传</a>
                 </li>
-                <li class="">
+                <li class='@navPushClass'>
                     <a href="@Url.Action("ProfilePush", "Account")">推送</a>
                 </li>
-                <li class="">
+                <li class='@navDownloadClass'>
                     <a href="@Url.Action("ProfileDownload", "Account")">下载</a>
                 </li>
-                <li class="">
+                <li class='@navCommentClass'>
                     <a href="@Url.Action("ProfileComment", "Account")">评论</a>
                 </li>
-                <li class="active">
+                <li class='@navFavoriteClass'>
                     <a href="@Url.Action("ProfileFavorite", "Account")">收藏</a>
                 </li>
-                <li class="">
+                <li class='@navCheckinClass'>
                     <a href="@Url.Action("ProfileCheckin", "Account")">签到</a>
                 </li>
             </ul>

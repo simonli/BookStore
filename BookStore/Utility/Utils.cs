@@ -18,25 +18,24 @@ namespace BookStore.Utility
             string cl = password;
             //string pwd = "";
             MD5 md5 = MD5.Create(); //实例化一个md5对像
-                                    // 加密后是一个字节类型的数组，这里要注意编码UTF8/Unicode等的选择　
+            // 加密后是一个字节类型的数组，这里要注意编码UTF8/Unicode等的选择　
             byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(cl));
             return Convert.ToBase64String(s);
         }
 
 
-
         public static string GetDigitalRandomNum(int NumCount)
         {
             string allChar = "0,1,2,3,4,5,6,7,8,9";
-            string[] allCharArray = allChar.Split(',');//拆分成数组
+            string[] allCharArray = allChar.Split(','); //拆分成数组
             string randomNum = "";
-            int temp = -1;                             //记录上次随机数的数值，尽量避免产生几个相同的随机数
+            int temp = -1; //记录上次随机数的数值，尽量避免产生几个相同的随机数
             var rand = new Random();
             for (int i = 0; i < NumCount; i++)
             {
                 if (temp != -1)
                 {
-                    rand = new Random(i * temp * ((int)DateTime.Now.Ticks));
+                    rand = new Random(i * temp * ((int) DateTime.Now.Ticks));
                 }
                 int t = rand.Next(9);
                 if (temp == t)
@@ -45,7 +44,6 @@ namespace BookStore.Utility
                 }
                 temp = t;
                 randomNum += allCharArray[t];
-
             }
             return "";
         }
@@ -82,7 +80,6 @@ namespace BookStore.Utility
         }
 
 
-
         public static string GetRandomFileName()
         {
             //20位数字文件名
@@ -100,11 +97,13 @@ namespace BookStore.Utility
             System.Reflection.FieldInfo field = enumValue.GetType().GetField(str);
             object[] objs = field.GetCustomAttributes(typeof(DescriptionAttribute), false);
             if (objs == null || objs.Length == 0) return str;
-            DescriptionAttribute da = (DescriptionAttribute)objs[0];
+            DescriptionAttribute da = (DescriptionAttribute) objs[0];
             return da.Description;
         }
 
-
-
+        public static string DateTimeFormat(DateTime d)
+        {
+            return d.ToString("yyyy-MM-dd HH:mm:ss");
+        }
     }
 }
