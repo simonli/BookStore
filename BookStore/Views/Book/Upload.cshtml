@@ -69,7 +69,7 @@
                 url:"@Url.Action("SearchDouban")",
                 data: { 'keyword': q },
                 success: function (data) {
-                    console.log(data)
+                    console.log(data);
                     $("#id_books").empty();
                     $("#id_books").html(tmpl.render(data));
                 },
@@ -95,7 +95,7 @@
             }
             var extIndex = filename.lastIndexOf('.');
             if (extIndex > 0)
-                filename = filename.substring(0, extIndex)
+                filename = filename.substring(0, extIndex);
             $('#id_q').val(filename);
             $('#DoubanUrl').val('');
             search_douban();
