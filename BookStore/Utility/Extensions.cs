@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStore.Utility
 {
@@ -42,7 +43,7 @@ namespace BookStore.Utility
             return ip;
         }
 
-        public static string ActivePage(this HtmlHelper helper, string controller, string action)
+        public static string ActivePage(this IHtmlHelper helper, string action, string controller)
         {
             string classValue = "";
             if (helper.ViewContext.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
