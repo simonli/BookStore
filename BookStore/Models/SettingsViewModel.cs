@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace BookStore.Models
@@ -71,5 +72,13 @@ namespace BookStore.Models
         [FileExt(".jpg,.png,.gif,.jpeg", ErrorMessage = "仅支持jpg, jpeg, png, gif 格式的头像")]
         [FileSize(10 * 1024 * 1024, ErrorMessage = "头像大小不能超过10MB")]
         public IFormFile AvatarFile { get; set; }
+    }
+
+    public class SettingsComponentViewModel
+    {
+        public User User { get; set; }
+        public string Taxonomy { get; set; }
+        public int TodayDownloadCount { get; set; }
+        public int TodayPushCount { get; set; }
     }
 }

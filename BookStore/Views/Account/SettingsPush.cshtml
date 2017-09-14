@@ -3,7 +3,7 @@
     ViewData["Title"] = "PushSettings";
 }
 
-
+@await Component.InvokeAsync("Settings", new { user=Model.User,taxonomy="push" })
 
 <div class="row">
     <div class="col-md-6">
