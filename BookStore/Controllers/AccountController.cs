@@ -158,6 +158,34 @@ namespace BookStore.Controllers
             TempData.Flash("danger", $"用户<span class='text-danger'><b> {username} </b></span>不存在！");
             return NotFound();
         }
+        
+        [Route("[controller]/settings/username")]
+        public async Task<IActionResult> SettingsUsername()
+        {
+            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            var vm = new SettingsUsernameViewModel
+            {
+                User = loginUser
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("[controller]/settings/username")]
+        public async Task<IActionResult> SettingsUsername(SettingsUsernameViewModel vm)
+        {
+            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            if (ModelState.IsValid)
+            {
+                loginUser.Username = vm.NewUsername;
+                await _context.SaveChangesAsync();
+                TempData.Flash("success", $"用户名更改成功，新的用户名：{vm.NewUsername}");
+                return RedirectToAction(nameof(SettingsUsername));
+            }
+            vm.User = loginUser;
+            return View(vm);
+        }
 
         [Route("[controller]/settings/push")]
         public async Task<IActionResult> SettingsPush()

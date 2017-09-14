@@ -16,6 +16,16 @@ namespace BookStore.Models
         public User User { get; set; }
     }
 
+    public class SettingsUsernameViewModel : SettingsViewModel
+    {
+        [Remote("ValidateUsername", "Account", HttpMethod = "Post", ErrorMessage = "{0}已经存在,请换一个", AdditionalFields = "initialUsername")]
+        [MaxLength(100)]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "{0}长度为{2}-{1}个字符")]
+        [Required(ErrorMessage = "{0}不能为空")]
+        [Display(Name = "用户名")]
+        public string NewUsername { get; set; }
+    }
+
     public class ChangeEmailViewModel : SettingsViewModel
     {
         public string CurrentEmail { get; set; }
