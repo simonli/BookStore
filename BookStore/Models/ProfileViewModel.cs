@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace BookStore.Models
 {
-    public class ProfileViewModel
+    public class ProfileViewModel<T> 
     {
         public User User { get; set; }
-        public List<ActionLog> ActionLogList { get; set; }
+        public List<T> ActionLogList { get; set; }
     }
+
+    
 }

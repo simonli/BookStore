@@ -1,0 +1,35 @@
+﻿@using BookStore.Domain.Models
+@model BookStore.Models.ProfileViewModel<BookEditionComment>
+
+@{
+    ViewData["Title"] = "评论记录";
+}
+@await Component.InvokeAsync("Profile", new {user = Model.User})
+
+<div class="row">
+    <div class="col-md-12">
+        <table class='table table-bordered'>
+            <tr>
+                <th>书籍</th>
+                <th>时间</th>
+                <th>评论</th>
+            </tr>
+            @{
+                foreach (var log in Model.ActionLogList)
+                {
+                    <tr class="success">
+                        <td>
+                            
+                            <a href="@Url.Action("Detail","Book",new{id=log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                        </td>
+                        <td>@Utils.FormatDateTime(log.CreateTime)</td>
+                        <td>
+                            <a href="@Url.Action("Comment","Book",new{id=log.Id})">@log.Comment</a>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+</div>

@@ -203,5 +203,10 @@ namespace BookStore.Controllers
         {
             throw new NotImplementedException();
         }
+
+        public IActionResult Comment(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -47,11 +47,13 @@ namespace BookStore.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
             if (user != null)
             {
-                var vm = new ProfileViewModel
+                var vm = new ProfileViewModel<BookEdition>
                 {
                     User = user,
-                    ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Upload)
-                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
+                    ActionLogList = _context.BookEditions
+                        .Where(u => u.User == user).OrderByDescending(t => t.CreateTime)
+                        .Include(be=>be.Book)
+                        .ToList()
                 };
                 return View(vm);
             }
@@ -65,11 +67,13 @@ namespace BookStore.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
             if (user != null)
             {
-                var vm = new ProfileViewModel
+                var vm = new ProfileViewModel<ActionLog>
                 {
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Push)
-                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
+                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .ToList()
                 };
                 return View(vm);
             }
@@ -83,11 +87,13 @@ namespace BookStore.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
             if (user != null)
             {
-                var vm = new ProfileViewModel
+                var vm = new ProfileViewModel<ActionLog>
                 {
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Download)
-                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
+                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .ToList()
                 };
                 return View(vm);
             }
@@ -101,11 +107,13 @@ namespace BookStore.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
             if (user != null)
             {
-                var vm = new ProfileViewModel
+                var vm = new ProfileViewModel<ActionLog>
                 {
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Favorite)
-                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
+                        .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
+                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .ToList()
                 };
                 return View(vm);
             }
@@ -116,7 +124,21 @@ namespace BookStore.Controllers
         [Route("[controller]/profile/{username}/comment")]
         public IActionResult ProfileComment(string username)
         {
-            throw new NotImplementedException();
+            var user = _context.Users.FirstOrDefault(u => u.Username == username);
+            if (user != null)
+            {
+                var vm = new ProfileViewModel<BookEditionComment>
+                {
+                    ActionLogList = _context.BookEditionComments.Where(x => x.User == user)
+                        .OrderByDescending(x => x.CreateTime)
+                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .ToList(),
+                    User = user
+                };
+                return View(vm);
+            }
+            TempData.Flash("danger", $"用户<span class='text-danger'><b> {username} </b></span>不存在！");
+            return NotFound();
         }
 
         [Route("[controller]/profile/{username}/checkin")]
@@ -125,7 +147,7 @@ namespace BookStore.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Username == username);
             if (user != null)
             {
-                var vm = new ProfileViewModel
+                var vm = new ProfileViewModel<ActionLog>
                 {
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Checkin)

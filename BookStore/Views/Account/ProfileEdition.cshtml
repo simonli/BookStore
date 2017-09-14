@@ -1,4 +1,4 @@
-﻿@model BookStore.Models.ProfileViewModel
+﻿@model BookStore.Models.ProfileViewModel<BookStore.Domain.Models.BookEdition>
 
 @{
     ViewData["Title"] = "上传记录";
@@ -19,11 +19,11 @@
                 {
                     <tr class="info">
                         <td>
-                            <a href="@Url.Action("Detail", "Book", new {id = @log.BookEdition.Book.Id})"> @log.BookEdition.OriginalFilename</a>
+                            <a href="@Url.Action("Detail", "Book", new {id = @log.Book.Id})"> @log.OriginalFilename</a>
                         </td>
                         <td>@Utils.FormatDateTime(log.CreateTime)</td>
-                        <td>@log.BookEdition.DownloadCount.ToString()</td>
-                        <td>@log.BookEdition.PushCount.ToString()</td>
+                        <td>@log.DownloadCount.ToString()</td>
+                        <td>@log.PushCount.ToString()</td>
                     </tr>
                 }
             }

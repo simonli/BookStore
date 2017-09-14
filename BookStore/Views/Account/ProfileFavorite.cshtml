@@ -1,6 +1,30 @@
-﻿@model BookStore.Models.ProfileViewModel
+﻿@model BookStore.Models.ProfileViewModel<BookStore.Domain.Models.ActionLog>
 
 @{
     ViewData["Title"] = "收藏记录";
 }
-@await Component.InvokeAsync("Profile", new { user = Model.User })
+@await Component.InvokeAsync("Profile", new {user = Model.User})
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered">
+            <tr>
+                <th>书籍</th>
+                <th>时间</th>
+            </tr>
+
+            @{
+                foreach (var log in Model.ActionLogList)
+                {
+                    <tr class="info">
+                        <td>
+                            <a href="@Url.Action("Detail", "Book", new {id = log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                        </td>
+                        <td>@Utils.FormatDateTime(log.CreateTime)</td>
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+</div>
