@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace BookStore.Utility
 {
@@ -39,6 +40,22 @@ namespace BookStore.Utility
                 ip = context.Connection.RemoteIpAddress.ToString();
             }
             return ip;
+        }
+
+        public static string ActivePage(this HtmlHelper helper, string controller, string action)
+        {
+            string classValue = "";
+            if (helper.ViewContext.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
+            {
+                string currentController = controllerActionDescriptor.ControllerName;
+                string currentAction = controllerActionDescriptor.ActionName;
+
+                if (currentController == controller && currentAction == action)
+                {
+                    classValue = "active";
+                }
+            }
+            return classValue;
         }
     }
 }
