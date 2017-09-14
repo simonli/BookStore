@@ -1,0 +1,13 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <h4>用户名: @Model, 剩余积分: 56, 今日下载: 0, 今日推送: 0</h4>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="@Url.Action("SettingsAvatar","Account")">修改用户名</a></li>
+            <li class=""><a href="@Url.Action("ChangeEmail","Account")">修改登录邮箱</a></li>
+            <li class=""><a href="@Url.Action("ChangePassword","Account")">修改密码</a></li>
+            <li class=""><a href="@Url.Action("SettingsAvatar","Account")">头像设置</a></li>
+            <li class=""><a href="@Url.Action("SettingsPush","Account")">推送设置</a></li>
+            <li class=""><a href="/accounts/settings/pro/">升级到Pro</a></li>
+        </ul>
+    </div>
+</div>
