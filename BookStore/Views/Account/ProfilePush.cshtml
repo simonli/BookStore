@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "推送记录";
 }
-@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "push"}})
+@await Component.InvokeAsync("Profile", new { user = Model.User })
 
 <div class="row">
     <div class="col-md-12">

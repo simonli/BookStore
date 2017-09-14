@@ -40,23 +40,6 @@ namespace BookStore.Controllers
             return View(await _context.Users.ToListAsync());
         }
 
-        [Route("[Controller]/profile/{username}")]
-        public IActionResult Profile(string username)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Username == username);
-            if (user != null)
-            {
-                var vm = new ProfileViewModel
-                {
-                    User = user,
-                    IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
-                        StringComparison.CurrentCultureIgnoreCase)
-                };
-                return View(vm);
-            }
-            TempData.Flash("danger", $"用户<span class='text-danger'><b> {username} </b></span>不存在！");
-            return NotFound();
-        }
 
         [Route("[controller]/profile/{username}/edition")]
         public IActionResult ProfileEdition(string username)
@@ -67,8 +50,6 @@ namespace BookStore.Controllers
                 var vm = new ProfileViewModel
                 {
                     User = user,
-                    IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
-                        StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Upload)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
@@ -87,8 +68,6 @@ namespace BookStore.Controllers
                 var vm = new ProfileViewModel
                 {
                     User = user,
-                    IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
-                        StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Push)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
@@ -107,8 +86,6 @@ namespace BookStore.Controllers
                 var vm = new ProfileViewModel
                 {
                     User = user,
-                    IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
-                        StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Download)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
@@ -127,8 +104,6 @@ namespace BookStore.Controllers
                 var vm = new ProfileViewModel
                 {
                     User = user,
-                    IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
-                        StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Favorite)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
@@ -153,8 +128,6 @@ namespace BookStore.Controllers
                 var vm = new ProfileViewModel
                 {
                     User = user,
-                    IsLogined = string.Equals(username, HttpContext.User.Identity.Name,
-                        StringComparison.CurrentCultureIgnoreCase),
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Checkin)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime).ToList()
                 };
@@ -330,6 +303,11 @@ namespace BookStore.Controllers
             vm.User = loginUser;
             return View(vm);
         }
+        [Route("[controller]/settings/pro")]
+        public IActionResult SettingsPro()
+        {
+            return View();
+        }
 
 
         [AllowAnonymous]
@@ -490,5 +468,7 @@ namespace BookStore.Controllers
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             return Json(Utils.GeneratePassword(password) == loginUser.Password);
         }
+
+       
     }
 }

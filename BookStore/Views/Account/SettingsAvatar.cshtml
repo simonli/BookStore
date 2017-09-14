@@ -2,8 +2,7 @@
 @{
     ViewData["Title"] = "SettingsAvatar";
 }
-@await Component.InvokeAsync("Settings", new { maxPriority = 4, isDone = true })
-
+@await Component.InvokeAsync("Settings", new{user=Model.User})
 
 <div class="row">
     <div class="col-md-3">

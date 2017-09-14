@@ -58,5 +58,21 @@ namespace BookStore.Utility
             }
             return classValue;
         }
+
+        public static bool IsActivePage(this IHtmlHelper helper, string action, string controller)
+        {
+            bool isActive = false;
+            if (helper.ViewContext.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
+            {
+                string currentController = controllerActionDescriptor.ControllerName;
+                string currentAction = controllerActionDescriptor.ActionName;
+
+                if (currentController == controller && currentAction == action)
+                {
+                    isActive = true;
+                }
+            }
+            return isActive;
+        }
     }
 }

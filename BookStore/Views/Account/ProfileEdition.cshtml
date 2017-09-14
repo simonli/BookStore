@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "上传记录";
 }
-@Html.Partial("_ProfilePartial", Model, new ViewDataDictionary(ViewData) {{"Taxonomy", "edition"}})
+@await Component.InvokeAsync("Profile", new { user = Model.User })
 
 <div class="row">
     <div class="col-md-12">

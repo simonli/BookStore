@@ -1,0 +1,49 @@
+﻿@model BookStore.Models.ProfileComponentViewModel
+@using Microsoft.AspNetCore.Mvc
+
+
+<div class="row">
+    <div class="col-md-3">
+        <a href="@Url.Action("SettingsAvatar", "Account")" title="@Model.User.Username">
+            <img class="pull-left img-circle" src="~/static/avatars/@Model.User.Avatar" style="width: 150px; height: 150px;" alt="@Model.User.Username"/>
+        </a>
+    </div>
+    <div class="col-md-6">
+        <h3>@Model.User.Username</h3>
+        <p class="text-muted">账号类型: @Utils.GetEnumDescription(Model.User.UserType)</p>
+        <p class="text-muted">加入时间: @Model.User.CreateTime.ToString("yyyy-MM-dd")</p>
+        @{
+            if (Model.IsLogined)
+            {
+                <a class="btn btn-info btn-sm" href="@Url.Action("SettingsAvatar", "Account")"><i class="fa fa-sliders" aria-hidden="true"></i>设置</a>
+            }
+        }
+    </div>
+</div>
+<hr/>
+<p>用户名：@Model.User.Username, 剩余积分：0,今日下载：0, 今日推送：0</p>
+<div class="row" style="margin-bottom: 15px;">
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+            <li class="@Html.ActivePage("ProfileEdition", "Account")">
+                <a href="@Url.Action("ProfileEdition", "Account")">上传 </a>
+            </li>
+            <li class="@Html.ActivePage("ProfilePush", "Account")">
+                <a href="@Url.Action("ProfilePush", "Account")">推送 </a>
+            </li>
+            <li class="@Html.ActivePage("ProfileDownload", "Account")">
+                <a href="@Url.Action("ProfileDownload", "Account")">下载</a>
+            </li>
+            <li class="@Html.ActivePage("ProfileComment", "Account")">
+                <a href="@Url.Action("ProfileComment", "Account")">评论</a>
+            </li>
+            <li class="@Html.ActivePage("ProfileFavorite", "Account")">
+                <a href="@Url.Action("ProfileFavorite", "Account")">收藏</a>
+            </li>
+            <li class="@Html.ActivePage("ProfileCheckin", "Account")">
+                <a href="@Url.Action("ProfileCheckin", "Account")">签到</a>
+            </li>
+
+        </ul>
+    </div>
+</div>

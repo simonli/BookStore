@@ -91,7 +91,7 @@ namespace BookStore
             app.UseAuthentication();
 
             //自定义错误处理
-            app.UseExceptionHandler("/errors/500");
+            //app.UseExceptionHandler("/errors/500");
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseMvc(routes =>
