@@ -280,12 +280,7 @@ namespace BookStore.Controllers
         [Route("[controller]/change_password")]
         public IActionResult ChangePassword()
         {
-            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-            var vm = new ChangePasswordViewModel
-            {
-                User = loginUser
-            };
-            return View(vm);
+            return View();
         }
 
         [HttpPost]
