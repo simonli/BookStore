@@ -1,9 +1,10 @@
-﻿@model BookStore.Models.ProfileViewModel<BookStore.Domain.Models.ActionLog>
+﻿@model ProfileViewModel<BookStore.Domain.Models.ActionLog>
 
 @{
     ViewData["Title"] = "签到记录";
 }
-@await Component.InvokeAsync("Profile", new { user = Model.User })
+
+<vc:profile user="Model.User"></vc:profile>
 
 <div class="row">
     <div class="col-md-12">

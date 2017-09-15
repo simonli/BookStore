@@ -23,7 +23,8 @@ namespace BookStore.Models
         [StringLength(100, MinimumLength = 2, ErrorMessage = "{0}长度为{2}-{1}个字符")]
         [Required(ErrorMessage = "{0}不能为空")]
         [Display(Name = "用户名")]
-        public string NewUsername { get; set; }
+        public string Username { get; set; }
+        public string PushmainDomain { get; set; }
     }
 
     public class ChangeEmailViewModel : SettingsViewModel

@@ -10,5 +10,6 @@ namespace BookStore
         public string LoginUrl { get; set; }
         public string UploadBookDir { get; set; }
         public string UploadAvatarDir { get; set; }
+        public string PushmailDomain { get; set; }
     }
 }

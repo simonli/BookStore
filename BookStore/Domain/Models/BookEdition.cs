@@ -33,7 +33,6 @@ namespace BookStore.Domain.Models
         public virtual Book Book { get; set; }
         public virtual User User { get; set; }
 
-
-        public virtual ICollection<BookEditionComment> GetBookEditionComments { get; set; }
+        public virtual ICollection<BookEditionComment> BookEditionComments { get; set; }
     }
 }

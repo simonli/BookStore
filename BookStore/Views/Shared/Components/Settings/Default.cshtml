@@ -1,11 +1,11 @@
-﻿@model BookStore.Models.SettingsComponentViewModel
+﻿@model SettingsComponentViewModel
 
 <h4>用户名: @Model.User.Username, 剩余积分: @Model.User.PointCount, 今日下载: @Model.TodayDownloadCount, 今日推送: @Model.TodayPushCount</h4>
 <div class="row" style="margin-bottom: 15px;">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
-            <li class="@Html.ActivePage("SettingsAvatar", "Account")">
-                <a href="@Url.Action("SettingsAvatar", "Account")">修改用户名</a>
+            <li class="@Html.ActivePage("SettingsUsername", "Account")">
+                <a href="@Url.Action("SettingsUsername", "Account")">修改用户名</a>
             </li>
             <li class="@Html.ActivePage("ChangeEmail", "Account")">
                 <a href="@Url.Action("ChangeEmail", "Account")">修改登录邮箱</a>

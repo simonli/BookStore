@@ -54,23 +54,29 @@ namespace BookStore.Controllers
             if (ModelState.IsValid)
             {
                 #region 根据douban Id判断图书是否存在
+
                 int doubanId = DoubanUtil.GetDoubanId(vm.DoubanUrl);
                 var book = _context.Books.FirstOrDefault(m => m.DoubanId == doubanId);
                 if (book != null)
                 {
-                    ModelState.AddModelError("BookFile", $"书籍已经存在,图书地址:{Url.Action("Detail", "Book", new { id = book.Id })}");
+                    ModelState.AddModelError("BookFile",
+                        $"书籍已经存在,图书地址:{Url.Action("Detail", "Book", new {id = book.Id})}");
                     return View(vm);
                 }
+
                 #endregion
 
                 #region 定义图书目录,文件名,文件路径
+
                 var bookFileFolder = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
                 if (!Directory.Exists(bookFileFolder)) Directory.CreateDirectory(bookFileFolder);
                 var filename = Utils.GetRandomFileName() + Path.GetExtension(vm.BooKFile.FileName);
                 var filepath = Path.Combine(bookFileFolder, filename);
+
                 #endregion
 
                 #region 获得并判断checkSum,上传文件
+
                 string checkSum;
                 using (var ms = new MemoryStream())
                 {
@@ -80,7 +86,8 @@ namespace BookStore.Controllers
                     var bookEdition = _context.BookEditions.FirstOrDefault(m => m.CheckSum == checkSum);
                     if (bookEdition != null)
                     {
-                        ModelState.AddModelError("BookFile", $"书籍已经存在,图书地址:{Url.Action("Edition", "Book", new { id = bookEdition.Id })}");
+                        ModelState.AddModelError("BookFile",
+                            $"书籍已经存在,图书地址:{Url.Action("Edition", "Book", new {id = bookEdition.Id})}");
                         return View(vm);
                     }
                     //将内存流写入文件
@@ -90,8 +97,9 @@ namespace BookStore.Controllers
                         ms.CopyTo(stream);
                     }
                 }
+
                 #endregion
-               
+
                 var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
                 var doubanBook = DoubanUtil.GetDoubanBook(vm.DoubanUrl);
                 var b = new Book
@@ -114,6 +122,7 @@ namespace BookStore.Controllers
                 };
 
                 #region 处理标签
+
                 var bookTagList = new List<BookTag>();
                 var doubanTagList = doubanBook.TagList;
                 var dbTagList = _context.Tags.Where(x => doubanTagList.Contains(x.Name)).ToList();
@@ -126,12 +135,14 @@ namespace BookStore.Controllers
                     }
                     else
                     {
-                        bookTag.Tag = new Tag { Name = doubanTagName };
+                        bookTag.Tag = new Tag {Name = doubanTagName};
                     }
                     bookTag.Book = b;
                     bookTagList.Add(bookTag);
                 });
+
                 #endregion
+
                 b.BookTags = bookTagList;
 
                 var be = new BookEdition
@@ -156,16 +167,15 @@ namespace BookStore.Controllers
                         BookEdition = be,
                         User = loginUser,
                         CreateTime = DateTime.Now
-
                     };
                     _context.Add(bec);
                 }
                 await _context.SaveChangesAsync();
 
-                var editionUrl = Url.Action("edition", "book", new { id = be.Id });
-                TempData.Flash("success", $"图书上传成功,书名：<a href='{editionUrl}'><span class='text-danger'><b>{vm.BooKFile.FileName}</b></span></a>");
+                var editionUrl = Url.Action("edition", "book", new {id = be.Id});
+                TempData.Flash("success",
+                    $"图书上传成功,书名：<a href='{editionUrl}'><span class='text-danger'><b>{vm.BooKFile.FileName}</b></span></a>");
                 return RedirectToAction("Upload");
-
             }
             return View(vm);
         }
@@ -179,9 +189,15 @@ namespace BookStore.Controllers
         }
 
 
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            throw new NotImplementedException();
+            var book = await _context.Books
+                .Include(be=>be.BookEditions)
+                    .ThenInclude(bec=>bec.BookEditionComments)
+                .Include(x=>x.BookTags)
+                    .ThenInclude(t=>t.Tag)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return View(book);
         }
 
         public IActionResult Edition(int id)
@@ -190,13 +206,13 @@ namespace BookStore.Controllers
         }
 
         [Route("[controller]/edition/download/{guid}/{filename}")]
-        public IActionResult EdtionDownload(string guid,string filename)
+        public IActionResult EdtionDownload(string guid, string filename)
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             var be = _context.BookEditions.FirstOrDefault(b => b.Hashcode == guid);
             string bookFileDir = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
             string filePath = Path.Combine(bookFileDir, be.Filename);
-            return File(new FileStream(filePath,FileMode.Open), "application/x-stream", be.OriginalFilename);
+            return File(new FileStream(filePath, FileMode.Open), "application/x-stream", be.OriginalFilename);
         }
 
         public IActionResult UploadExt()

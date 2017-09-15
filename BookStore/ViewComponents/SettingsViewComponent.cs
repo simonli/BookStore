@@ -46,7 +46,7 @@ namespace BookStore.ViewComponents
                     TodayDownloadCount = todayDownloadCount,
                     TodayPushCount = todayPushCount
                 };
-                return View(vm);
+                return  View(vm);
             }
             return View("Blank");
         }

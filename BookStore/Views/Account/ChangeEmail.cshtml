@@ -1,8 +1,8 @@
-﻿@model BookStore.Models.ChangeEmailViewModel
+﻿@model ChangeEmailViewModel
 @{
     ViewData["Title"] = "ChangeEmail";
 }
-@await Component.InvokeAsync("Settings", new { user = Model.User })
+<vc:settings user="Model.User"></vc:settings>
 <div class="row">
     <div class="col-md-3">
         <h5>你的当前邮箱:</h5>

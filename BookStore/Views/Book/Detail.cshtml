@@ -1,0 +1,50 @@
+﻿@model BookStore.Domain.Models.Book
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h2>
+                    <a class="link-search" target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@Model.Title&tag=readfreeme-23">
+                        @Model.Title
+                    </a>
+                </h2>
+                <p>
+                    <span>作者:<strong>@Model.Author </strong></span>
+                    @{
+                        if (!string.IsNullOrEmpty(Model.Translator))
+                        {
+                            <span>&nbsp;译者:<strong>@Model.Translator </strong></span>
+                        }
+                    }
+                    @{
+                        if (!string.IsNullOrEmpty(Model.Publisher))
+                        {
+                            <span>&nbsp;出版社:<small>@Model.Publisher</small></span>
+                        }
+                    }
+                </p>
+                <div>
+                    @{
+                        if (!string.IsNullOrEmpty(Model.DoubanUrl))
+                        {
+                            @:豆瓣:
+                            <span class="badge bg-success">@(Model.DoubanRatingScore)分</span>
+                            <span>(@(Model.DoubanRatingPeople)人评价...)</span>
+                        }
+                    }
+                    <a target='_blank' class="z-link-search btn btn-primary btn-long pull-right" href="http://www.amazon.cn/gp/search?index=books&keywords=@Model.Title&tag=readfreeme-23" title="到亚马逊购买正版">
+                        <i class="fa fa-amazon" aria-hidden="true"></i> 支持正版
+                    </a>
+                    <div class='clearfix'></div>
+                </div>
+                
+                
+
+            </div>
+        </div>
+    </div>
+</div>

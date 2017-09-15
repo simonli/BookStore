@@ -1,10 +1,11 @@
 ﻿@using BookStore.Domain.Models
-@model BookStore.Models.ProfileViewModel<BookEditionComment>
+@model ProfileViewModel<BookEditionComment>
 
 @{
     ViewData["Title"] = "评论记录";
 }
-@await Component.InvokeAsync("Profile", new {user = Model.User})
+
+<vc:profile user="Model.User"></vc:profile>
 
 <div class="row">
     <div class="col-md-12">

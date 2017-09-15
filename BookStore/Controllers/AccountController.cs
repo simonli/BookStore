@@ -162,10 +162,11 @@ namespace BookStore.Controllers
         [Route("[controller]/settings/username")]
         public async Task<IActionResult> SettingsUsername()
         {
-            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            var loginUser = await _context.Users.FirstOrDefaultAsync(m => m.Username == HttpContext.User.Identity.Name);
             var vm = new SettingsUsernameViewModel
             {
-                User = loginUser
+                User = loginUser,
+                PushmainDomain = _appSettings.PushmailDomain
             };
             return View(vm);
         }
@@ -178,12 +179,13 @@ namespace BookStore.Controllers
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             if (ModelState.IsValid)
             {
-                loginUser.Username = vm.NewUsername;
+                loginUser.Username = vm.Username;
                 await _context.SaveChangesAsync();
-                TempData.Flash("success", $"用户名更改成功，新的用户名：{vm.NewUsername}");
+                TempData.Flash("success", $"用户名更改成功，新的用户名：{vm.Username}");
                 return RedirectToAction(nameof(SettingsUsername));
             }
             vm.User = loginUser;
+            vm.PushmainDomain = _appSettings.PushmailDomain;
             return View(vm);
         }
 

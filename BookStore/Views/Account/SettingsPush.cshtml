@@ -1,9 +1,9 @@
-﻿@model BookStore.Models.SettingsPushViewModel
+﻿@model SettingsPushViewModel
 @{
     ViewData["Title"] = "PushSettings";
 }
 
-@await Component.InvokeAsync("Settings", new { user = Model.User })
+<vc:settings user="Model.User"></vc:settings>
 
 <div class="row">
     <div class="col-md-6">
