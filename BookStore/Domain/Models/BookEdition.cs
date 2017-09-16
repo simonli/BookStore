@@ -24,6 +24,7 @@ namespace BookStore.Domain.Models
         public long Filesize { get; set; }
         public int PushCount { get; set; }
         public int DownloadCount { get; set; }
+        public int FavoriteCount { get; set; }
 
         [StringLength(2000)]
         public string CheckSum { get; set; }

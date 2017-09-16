@@ -122,6 +122,11 @@ namespace BookStore.Utility
             }
             return fileSize >= 1024 ? $"{(double) fileSize / 1024:####0.00} KB" : $"{fileSize} bytes";
         }
+
+        public static string GetFileExt(string filename)
+        {
+            return !string.IsNullOrEmpty(filename) ? Path.GetExtension(filename).Split('.')[1] : "";
+        }
         
     }
 }

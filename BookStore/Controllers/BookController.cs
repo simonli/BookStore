@@ -188,16 +188,27 @@ namespace BookStore.Controllers
             return Json(bookList);
         }
 
-
+        [Route("[controller]/{id}")]
         public async Task<IActionResult> Detail(int id)
         {
             var book = await _context.Books
-                .Include(be=>be.BookEditions)
-                    .ThenInclude(bec=>bec.BookEditionComments)
-                .Include(x=>x.BookTags)
-                    .ThenInclude(t=>t.Tag)
+                .Include(b => b.BookEditions)
+                .ThenInclude(be => be.BookEditionComments)
+                .Include(b => b.BookTags)
+                .ThenInclude(t => t.Tag)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            return View(book);
+
+            var relatedBooks = await _context.Books
+                .Where(x => x.Id != book.Id)
+                .Include(b => b.BookTags).ThenInclude(t => t.Book)
+                .ToListAsync();
+
+            var vm = new BookDetailViewModel
+            {
+                Book = book,
+                RelatedBooks = relatedBooks
+            };
+            return View(vm);
         }
 
         public IActionResult Edition(int id)
@@ -221,6 +232,16 @@ namespace BookStore.Controllers
         }
 
         public IActionResult Comment(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult Tag(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IActionResult FileUpload(int id)
         {
             throw new NotImplementedException();
         }

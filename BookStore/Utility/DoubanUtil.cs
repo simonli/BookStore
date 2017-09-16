@@ -106,8 +106,6 @@ namespace BookStore.Utility
                     case "ISBN":
                         isbn = GetHtmlNodeText(spanNode.NextSibling);
                         break;
-                    default:
-                        break;
                 }
             }
 

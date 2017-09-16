@@ -16,7 +16,7 @@ namespace BookStore.Utility
     {
         public static ITempDataDictionary Flash(this ITempDataDictionary tempData, string key, object value)
         {
-            tempData.Remove(key);
+            tempData.Clear();
             tempData.Add(key, value);
             return tempData;
         }

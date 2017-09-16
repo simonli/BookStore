@@ -182,7 +182,7 @@ namespace BookStore.Controllers
                 loginUser.Username = vm.Username;
                 await _context.SaveChangesAsync();
                 TempData.Flash("success", $"用户名更改成功，新的用户名：{vm.Username}");
-                return RedirectToAction(nameof(SettingsUsername));
+                return RedirectToAction(nameof(Logout));
             }
             vm.User = loginUser;
             vm.PushmainDomain = _appSettings.PushmailDomain;
@@ -441,7 +441,7 @@ namespace BookStore.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             TempData.Flash("success", "成功登出系统");
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(Login));
         }
 
         [AllowAnonymous]
