@@ -9,9 +9,6 @@ namespace BookStore.Models
 {
     public class RegisterViewModel
     {
-        [Key]
-        [HiddenInput(DisplayValue = false)]
-        public int Id { get; set; }
         
         [Remote("ValidateUsername", "Account", HttpMethod = "Post", ErrorMessage = "{0}已经存在,请换一个", AdditionalFields = "initialUsername")]
         [MaxLength(100)]

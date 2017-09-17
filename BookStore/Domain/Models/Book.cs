@@ -12,7 +12,8 @@ namespace BookStore.Domain.Models
     public class Book
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long Id { get; set; }
 
         [Required]
         [StringLength(500)]
@@ -21,8 +22,8 @@ namespace BookStore.Domain.Models
         [StringLength(500)]
         public string Author { get; set; }
 
-        public string AuthorIntroduction { get; set; }   
-        
+        public string AuthorIntroduction { get; set; }
+
         [StringLength(500)]
         public string Logo { get; set; }
 
@@ -34,6 +35,7 @@ namespace BookStore.Domain.Models
 
         [StringLength(100)]
         public string Isbn { get; set; }
+
         public string BookCatelog { get; set; }
         public string Introduction { get; set; }
         public int DoubanId { get; set; }
@@ -44,8 +46,5 @@ namespace BookStore.Domain.Models
         public int IsDelete { get; set; }
         public virtual ICollection<BookEdition> BookEditions { get; set; }
         public virtual ICollection<BookTag> BookTags { get; set; }
-
-
     }
-
 }

@@ -10,7 +10,7 @@ namespace BookStore.Domain.DAL
 {
     public class BookStoreContext : DbContext
     {
-        public BookStoreContext(DbContextOptions options) : base(options)
+        public BookStoreContext(DbContextOptions options): base(options)
         {
         }
 
@@ -22,9 +22,13 @@ namespace BookStore.Domain.DAL
         public DbSet<PushSetting> PushSettings { get; set; }
         public DbSet<ActionLog> ActionLogs { get; set; }
         public DbSet<UserPointLog> UserPointLogs { get; set; }
+        public DbSet<AppKey> AppKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Username).IsUnique();
+            
             modelBuilder.Entity<BookTag>()
                 .HasOne(x => x.Book)
                 .WithMany(x => x.BookTags)
@@ -37,13 +41,13 @@ namespace BookStore.Domain.DAL
                 .HasForeignKey(k => k.TagId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<User>().Property(x => x.CreateTime).HasDefaultValueSql(null);
-            modelBuilder.Entity<Book>().Property(x => x.CreateTime).HasDefaultValueSql(null);
-            modelBuilder.Entity<BookEdition>().Property(x => x.CreateTime).HasDefaultValueSql(null);
-            modelBuilder.Entity<BookEditionComment>().Property(x => x.CreateTime).HasDefaultValueSql(null);
-            modelBuilder.Entity<PushSetting>().Property(x => x.CreateTime).HasDefaultValueSql(null);
-            modelBuilder.Entity<ActionLog>().Property(x => x.CreateTime).HasDefaultValueSql(null);
-            modelBuilder.Entity<UserPointLog>().Property(x => x.CreateTime).HasDefaultValueSql(null);
+            modelBuilder.Entity<User>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Book>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<BookEdition>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<BookEditionComment>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<PushSetting>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<ActionLog>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<UserPointLog>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
         }
     }
 }

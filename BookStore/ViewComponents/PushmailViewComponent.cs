@@ -19,7 +19,7 @@ namespace BookStore.ViewComponents
             _context = context;
         }
 
-        public async Task<ViewViewComponentResult> InvokeAsync(int editionId)
+        public async Task<ViewViewComponentResult> InvokeAsync(long editionId)
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {

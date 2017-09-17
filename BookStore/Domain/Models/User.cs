@@ -13,8 +13,8 @@ namespace BookStore.Domain.Models
     public class User
     {
         [Key]
-        [HiddenInput(DisplayValue = false)]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long Id { get; set; }
 
         [Required]
         [StringLength(500)]
@@ -32,6 +32,7 @@ namespace BookStore.Domain.Models
 
         [StringLength(100)]
         public string LoginIp { get; set; }
+
         public DateTime LoginTime { get; set; }
         public int LoginCount { get; set; }
         public DateTime CreateTime { get; set; }
@@ -44,16 +45,11 @@ namespace BookStore.Domain.Models
 
         public UserTypeEnum UserType { get; set; }
     }
-    
+
     public enum UserTypeEnum
     {
-        [Description("一般用户")]
-        Free = 100,
-        [Description("Pro用户")]
-        Pro = 500,
-        [Description("Ultra用户")]
-        Ultr = 900
+        [Description("一般用户")] Free = 100,
+        [Description("Pro用户")] Pro = 500,
+        [Description("Ultra用户")] Ultr = 900
     }
-
-    
 }

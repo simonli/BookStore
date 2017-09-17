@@ -11,14 +11,13 @@ namespace BookStore.Domain.Models
     public class BookEditionComment
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long Id { get; set; }
+
         public string Comment { get; set; }
         public DateTime CreateTime { get; set; }
         public virtual BookEdition BookEdition { get; set; }
         public virtual User User { get; set; }
         public virtual User AtUser { get; set; }
-
-
-
     }
 }

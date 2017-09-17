@@ -12,8 +12,8 @@ using System;
 namespace BookStore.Migrations
 {
     [DbContext(typeof(BookStoreContext))]
-    [Migration("20170915134443_FavoriteCount")]
-    partial class FavoriteCount
+    [Migration("20170917145911_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,16 +23,16 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.ActionLog", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
-                    b.Property<int?>("BookEditionId");
+                    b.Property<long?>("BookEditionId");
 
                     b.Property<int>("CheckinPoint");
 
                     b.Property<int>("CheckinTotalPoint");
 
-                    b.Property<DateTime>("CreateTime");
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("PushEmail");
 
@@ -46,7 +46,7 @@ namespace BookStore.Migrations
 
                     b.Property<string>("UserAgent");
 
-                    b.Property<int?>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
@@ -57,10 +57,23 @@ namespace BookStore.Migrations
                     b.ToTable("action_logs");
                 });
 
+            modelBuilder.Entity("BookStore.Domain.Models.AppKey", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("MaxId");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("app_keys");
+                });
+
             modelBuilder.Entity("BookStore.Domain.Models.Book", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
                     b.Property<string>("Author")
                         .HasMaxLength(500);
@@ -69,7 +82,8 @@ namespace BookStore.Migrations
 
                     b.Property<string>("BookCatelog");
 
-                    b.Property<DateTime>("CreateTime");
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("DoubanId");
 
@@ -106,15 +120,15 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.BookEdition", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
-                    b.Property<int?>("BookId");
+                    b.Property<long?>("BookId");
 
                     b.Property<string>("CheckSum")
                         .HasMaxLength(2000);
 
-                    b.Property<DateTime>("CreateTime");
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("DownloadCount");
 
@@ -126,14 +140,12 @@ namespace BookStore.Migrations
 
                     b.Property<long>("Filesize");
 
-                    b.Property<string>("Hashcode");
-
                     b.Property<string>("OriginalFilename")
                         .HasMaxLength(500);
 
                     b.Property<int>("PushCount");
 
-                    b.Property<int?>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
@@ -146,18 +158,18 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.BookEditionComment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
-                    b.Property<int?>("AtUserId");
+                    b.Property<long?>("AtUserId");
 
-                    b.Property<int?>("BookEditionId");
+                    b.Property<long?>("BookEditionId");
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("CreateTime");
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
@@ -172,12 +184,11 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.BookTag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
-                    b.Property<int>("BookId");
+                    b.Property<long>("BookId");
 
-                    b.Property<int>("TagId");
+                    b.Property<long>("TagId");
 
                     b.HasKey("Id");
 
@@ -190,10 +201,10 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.PushSetting", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
-                    b.Property<DateTime?>("CreateTime");
+                    b.Property<DateTime?>("CreateTime")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("IsDefault");
 
@@ -201,7 +212,7 @@ namespace BookStore.Migrations
                         .IsRequired()
                         .HasMaxLength(500);
 
-                    b.Property<int?>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 
@@ -212,8 +223,7 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.Tag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
                     b.Property<string>("Name")
                         .HasMaxLength(500);
@@ -225,13 +235,13 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
                     b.Property<string>("Avatar")
                         .HasMaxLength(2000);
 
-                    b.Property<DateTime>("CreateTime");
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Email")
                         .HasMaxLength(500);
@@ -258,21 +268,24 @@ namespace BookStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("users");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Models.UserPointLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id");
+
+                    b.Property<long?>("ActionLogId");
+
+                    b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("ActionLogId");
-
-                    b.Property<DateTime>("CreateTime");
 
                     b.Property<int>("Point");
 
-                    b.Property<int?>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("Id");
 

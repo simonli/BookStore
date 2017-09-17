@@ -212,6 +212,7 @@ namespace BookStore.Controllers
             {
                 var pushSetting = new PushSetting
                 {
+                    Id = IdGen.NewID(),
                     PushEmail = vm.PushEmail,
                     User = loginUser,
                     CreateTime = DateTime.Now
@@ -228,7 +229,7 @@ namespace BookStore.Controllers
         }
 
         [Route("[controller]/settings/push/delete")]
-        public JsonResult SettingsPushDelete(int id)
+        public JsonResult SettingsPushDelete(long id)
         {
             if (id > 0)
             {
@@ -244,7 +245,7 @@ namespace BookStore.Controllers
         }
 
         [Route("[controller]/settings/push/default")]
-        public JsonResult SettingsPushDefault(int id)
+        public JsonResult SettingsPushDefault(long id)
         {
             if (id > 0)
             {
@@ -284,7 +285,7 @@ namespace BookStore.Controllers
             {
                 var avatarFileFolder = Path.Combine(_env.WebRootPath, _appSettings.UploadAvatarDir);
                 if (!Directory.Exists(avatarFileFolder)) Directory.CreateDirectory(avatarFileFolder);
-                var filename = Utils.GetRandomFileName() + Path.GetExtension(vm.AvatarFile.FileName);
+                var filename = IdGen.NewID() + Path.GetExtension(vm.AvatarFile.FileName);
                 var filepath = Path.Combine(avatarFileFolder, filename);
                 using (var stream = new FileStream(filepath, FileMode.Create))
                 {
@@ -379,6 +380,7 @@ namespace BookStore.Controllers
             if (!ModelState.IsValid) return View(vm);
             var user = new User
             {
+                Id = GenId.NewId("user"),
                 Username = vm.Username,
                 Password = Utils.GeneratePassword(vm.Password),
                 Email = vm.Email,

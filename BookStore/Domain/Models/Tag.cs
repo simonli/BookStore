@@ -11,10 +11,12 @@ namespace BookStore.Domain.Models
     public class Tag
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long Id { get; set; }
 
         [StringLength(500)]
         public string Name { get; set; }
+
         public virtual ICollection<BookTag> BookTags { get; set; }
     }
 }

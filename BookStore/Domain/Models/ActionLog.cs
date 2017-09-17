@@ -9,7 +9,8 @@ namespace BookStore.Domain.Models
     public class ActionLog
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long Id { get; set; }
 
         public DateTime CreateTime { get; set; }
         public string UserAgent { get; set; }

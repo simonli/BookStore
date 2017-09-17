@@ -70,7 +70,7 @@ namespace BookStore.Controllers
 
                 var bookFileFolder = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
                 if (!Directory.Exists(bookFileFolder)) Directory.CreateDirectory(bookFileFolder);
-                var filename = Utils.GetRandomFileName() + Path.GetExtension(vm.BooKFile.FileName);
+                var filename = IdGen.NewID() + Path.GetExtension(vm.BooKFile.FileName);
                 var filepath = Path.Combine(bookFileFolder, filename);
 
                 #endregion
@@ -104,6 +104,7 @@ namespace BookStore.Controllers
                 var doubanBook = DoubanUtil.GetDoubanBook(vm.DoubanUrl);
                 var b = new Book
                 {
+                    Id = IdGen.NewID(),
                     Title = doubanBook.Title ?? vm.BooKFile.FileName,
                     Author = doubanBook.Author,
                     AuthorIntroduction = doubanBook.AuthorIntroduction,
@@ -128,16 +129,14 @@ namespace BookStore.Controllers
                 var dbTagList = _context.Tags.Where(x => doubanTagList.Contains(x.Name)).ToList();
                 doubanTagList.ForEach(doubanTagName =>
                 {
-                    var bookTag = new BookTag();
-                    if (dbTagList.Any(x => x.Name == doubanTagName))
+                    var bookTag = new BookTag
                     {
-                        bookTag.Tag = dbTagList.FirstOrDefault(x => x.Name == doubanTagName);
-                    }
-                    else
-                    {
-                        bookTag.Tag = new Tag {Name = doubanTagName};
-                    }
-                    bookTag.Book = b;
+                        Id = IdGen.NewID(),
+                        Tag = dbTagList.Any(x => x.Name == doubanTagName)
+                            ? dbTagList.FirstOrDefault(x => x.Name == doubanTagName)
+                            : new Tag {Id = IdGen.NewID(), Name = doubanTagName},
+                        Book = b
+                    };
                     bookTagList.Add(bookTag);
                 });
 
@@ -147,9 +146,9 @@ namespace BookStore.Controllers
 
                 var be = new BookEdition
                 {
+                    Id = IdGen.NewID(),
                     Filename = filename,
                     OriginalFilename = vm.BooKFile.FileName,
-                    Hashcode = Utils.GetGuid(),
                     Filesize = vm.BooKFile.Length,
                     CheckSum = checkSum,
                     CreateTime = DateTime.Now,
@@ -163,6 +162,7 @@ namespace BookStore.Controllers
                 {
                     var bec = new BookEditionComment
                     {
+                        Id = IdGen.NewID(),
                         Comment = vm.BookEditionCommnet,
                         BookEdition = be,
                         User = loginUser,
@@ -189,7 +189,7 @@ namespace BookStore.Controllers
         }
 
         [Route("[controller]/{id}")]
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(long id)
         {
             var book = await _context.Books
                 .Include(b => b.BookEditions)
@@ -211,16 +211,16 @@ namespace BookStore.Controllers
             return View(vm);
         }
 
-        public IActionResult Edition(int id)
+        public IActionResult Edition(long id)
         {
             throw new NotImplementedException();
         }
 
-        [Route("[controller]/edition/d/{id}/{guid}/{filename}")]
-        public IActionResult EdtionDownload(int id, string guid, string filename)
+        [Route("[controller]/edition/d/{id}/{filename}")]
+        public IActionResult EdtionDownload(long id, string filename)
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-            var be = _context.BookEditions.FirstOrDefault(b => b.Id==id);
+            var be = _context.BookEditions.FirstOrDefault(b => b.Id == id);
             string bookFileDir = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
             string filePath = Path.Combine(bookFileDir, be.Filename);
             return File(new FileStream(filePath, FileMode.Open), "application/x-stream", be.OriginalFilename);
@@ -231,17 +231,17 @@ namespace BookStore.Controllers
             throw new NotImplementedException();
         }
 
-        public IActionResult Comment(int id)
+        public IActionResult Comment(long id)
         {
             throw new NotImplementedException();
         }
 
-        public IActionResult Tag(int id)
+        public IActionResult Tag(long id)
         {
             throw new NotImplementedException();
         }
 
-        public IActionResult FileUpload(int id)
+        public IActionResult FileUpload(long id)
         {
             throw new NotImplementedException();
         }

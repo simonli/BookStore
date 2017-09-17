@@ -166,7 +166,7 @@
 
                                     <div class="btn-group">
 
-                                        <a title="@(be.OriginalFilename)" class="book-down btn btn-mini btn-success" href="@Url.Action("EdtionDownload", "Book", new {id = be.Id, guid = be.CheckSum, filename = be.OriginalFilename})">
+                                        <a title="@(be.OriginalFilename)" class="book-down btn btn-mini btn-success" href="@Url.Action("EdtionDownload", "Book", new {id = be.Id, filename = be.OriginalFilename})">
                                             <i class="fa fa-download" aria-hidden="true"></i>下载<span>@(be.DownloadCount)</span>
                                         </a>
                                         <button class="book-wish btn btn-sm btn-success" title="点击切换收藏状态,收藏后可到我的书单查看">

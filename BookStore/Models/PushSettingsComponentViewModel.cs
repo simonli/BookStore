@@ -9,7 +9,7 @@ namespace BookStore.Models
     public class PushSettingsComponentViewModel
     {
         public List<PushSetting> PushSettings { get; set; }
-        public int EditionId { get; set; }
+        public long EditionId { get; set; }
 
         public User LoginedUser { get; set; }
     }

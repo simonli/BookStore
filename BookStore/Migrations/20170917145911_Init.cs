@@ -4,16 +4,29 @@ using System.Collections.Generic;
 
 namespace BookStore.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "app_keys",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    MaxId = table.Column<long>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_app_keys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "books",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
                     Author = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     AuthorIntroduction = table.Column<string>(type: "TEXT", nullable: true),
                     BookCatelog = table.Column<string>(type: "TEXT", nullable: true),
@@ -39,8 +52,7 @@ namespace BookStore.Migrations
                 name: "tags",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
@@ -52,8 +64,7 @@ namespace BookStore.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
                     Avatar = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
@@ -75,10 +86,9 @@ namespace BookStore.Migrations
                 name: "book_tag",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BookId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TagId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
+                    BookId = table.Column<long>(type: "INTEGER", nullable: false),
+                    TagId = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,18 +111,17 @@ namespace BookStore.Migrations
                 name: "book_editions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BookId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
+                    BookId = table.Column<long>(type: "INTEGER", nullable: true),
                     CheckSum = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DownloadCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    FavoriteCount = table.Column<int>(type: "INTEGER", nullable: false),
                     Filename = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     Filesize = table.Column<long>(type: "INTEGER", nullable: false),
-                    Hashcode = table.Column<string>(type: "TEXT", nullable: true),
                     OriginalFilename = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     PushCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,12 +144,11 @@ namespace BookStore.Migrations
                 name: "push_settings",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsDefault = table.Column<int>(type: "INTEGER", nullable: false),
                     PushEmail = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -157,9 +165,8 @@ namespace BookStore.Migrations
                 name: "action_logs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BookEditionId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
+                    BookEditionId = table.Column<long>(type: "INTEGER", nullable: true),
                     CheckinPoint = table.Column<int>(type: "INTEGER", nullable: false),
                     CheckinTotalPoint = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -169,7 +176,7 @@ namespace BookStore.Migrations
                     PushUseTime = table.Column<int>(type: "INTEGER", nullable: false),
                     Taxonomy = table.Column<int>(type: "INTEGER", nullable: false),
                     UserAgent = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,13 +199,12 @@ namespace BookStore.Migrations
                 name: "book_edition_comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    AtUserId = table.Column<int>(type: "INTEGER", nullable: true),
-                    BookEditionId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
+                    AtUserId = table.Column<long>(type: "INTEGER", nullable: true),
+                    BookEditionId = table.Column<long>(type: "INTEGER", nullable: true),
                     Comment = table.Column<string>(type: "TEXT", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -227,12 +233,11 @@ namespace BookStore.Migrations
                 name: "user_point_logs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ActionLogId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Id = table.Column<long>(type: "INTEGER", nullable: false),
+                    ActionLogId = table.Column<long>(type: "INTEGER", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Point = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -310,10 +315,19 @@ namespace BookStore.Migrations
                 name: "IX_user_point_logs_UserId",
                 table: "user_point_logs",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_Username",
+                table: "users",
+                column: "Username",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "app_keys");
+
             migrationBuilder.DropTable(
                 name: "book_edition_comments");
 

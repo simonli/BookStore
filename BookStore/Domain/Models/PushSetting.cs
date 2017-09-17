@@ -11,7 +11,8 @@ namespace BookStore.Domain.Models
     public class PushSetting
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long Id { get; set; }
 
         [Required]
         [StringLength(500)]
@@ -22,7 +23,5 @@ namespace BookStore.Domain.Models
         public DateTime? CreateTime { get; set; }
 
         public virtual User User { get; set; }
-
-
     }
 }
