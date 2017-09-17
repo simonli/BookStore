@@ -72,3 +72,8 @@ ul.unstyled, ol.unstyled {
     margin-left: 0;
     list-style: none;
 }
+
+img.avatar-small {
+    height: 24px;
+    width: 24px;
+}

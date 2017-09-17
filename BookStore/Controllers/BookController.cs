@@ -216,11 +216,11 @@ namespace BookStore.Controllers
             throw new NotImplementedException();
         }
 
-        [Route("[controller]/edition/download/{guid}/{filename}")]
-        public IActionResult EdtionDownload(string guid, string filename)
+        [Route("[controller]/edition/d/{id}/{guid}/{filename}")]
+        public IActionResult EdtionDownload(int id, string guid, string filename)
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-            var be = _context.BookEditions.FirstOrDefault(b => b.Hashcode == guid);
+            var be = _context.BookEditions.FirstOrDefault(b => b.Id==id);
             string bookFileDir = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
             string filePath = Path.Combine(bookFileDir, be.Filename);
             return File(new FileStream(filePath, FileMode.Open), "application/x-stream", be.OriginalFilename);

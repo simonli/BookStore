@@ -127,6 +127,15 @@ namespace BookStore.Utility
         {
             return !string.IsNullOrEmpty(filename) ? Path.GetExtension(filename).Split('.')[1] : "";
         }
-        
+
+        /// <summary>
+        /// 根据GUID获取19位的唯一数字序列
+        /// </summary>
+        public static long GetId()
+        {
+            byte[] buffer = Guid.NewGuid().ToByteArray();
+            return BitConverter.ToInt64(buffer, 0);
+        }
+
     }
 }
