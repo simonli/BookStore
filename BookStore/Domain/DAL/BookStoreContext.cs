@@ -24,10 +24,14 @@ namespace BookStore.Domain.DAL
         public DbSet<UserPointLog> UserPointLogs { get; set; }
         public DbSet<AppKey> AppKeys { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
                 .HasIndex(x => x.Username).IsUnique();
+
+            modelBuilder.Entity<AppKey>()
+                .HasIndex(x => x.Name).IsUnique();
             
             modelBuilder.Entity<BookTag>()
                 .HasOne(x => x.Book)

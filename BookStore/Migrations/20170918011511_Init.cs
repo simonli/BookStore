@@ -12,14 +12,12 @@ namespace BookStore.Migrations
                 name: "app_keys",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    MaxId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    MaxId = table.Column<long>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_app_keys", x => x.Id);
+                    table.PrimaryKey("PK_app_keys", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(

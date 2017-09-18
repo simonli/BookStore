@@ -192,15 +192,15 @@ namespace BookStore.Controllers
         public async Task<IActionResult> Detail(long id)
         {
             var book = await _context.Books
-                .Include(b => b.BookEditions)
-                .ThenInclude(be => be.BookEditionComments)
-                .Include(b => b.BookTags)
-                .ThenInclude(t => t.Tag)
+                .Include(b => b.BookEditions).ThenInclude(be => be.BookEditionComments)
+                .Include(b => b.BookTags).ThenInclude(t => t.Tag)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             var relatedBooks = await _context.Books
                 .Where(x => x.Id != book.Id)
                 .Include(b => b.BookTags).ThenInclude(t => t.Book)
+                .AsNoTracking()
                 .ToListAsync();
 
             var vm = new BookDetailViewModel

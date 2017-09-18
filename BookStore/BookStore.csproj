@@ -19,7 +19,4 @@
   <ItemGroup>
     <Folder Include="upload" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="bookstore.db" />
-  </ItemGroup>
 </Project>

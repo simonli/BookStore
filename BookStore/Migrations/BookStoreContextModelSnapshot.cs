@@ -58,14 +58,12 @@ namespace BookStore.Migrations
 
             modelBuilder.Entity("BookStore.Domain.Models.AppKey", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<string>("Name")
                         .ValueGeneratedOnAdd();
 
                     b.Property<long>("MaxId");
 
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
+                    b.HasKey("Name");
 
                     b.ToTable("app_keys");
                 });
