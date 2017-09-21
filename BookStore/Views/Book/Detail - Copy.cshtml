@@ -2,7 +2,6 @@
 @model BookDetailViewModel
 @{
     ViewData["Title"] = Model.Book.Title;
-    var book = Model.Book;
 }
 
 <div class="row">
@@ -155,7 +154,7 @@
                                     <vc:pushmail book-edition="@be"></vc:pushmail>
                                     <div class="btn-group">
 
-                                        <a title="@(be.Book.Title)" class="book-down btn btn-sm btn-success" href="@Url.Action("EdtionDownload", new {id = be.Id, filename = be.OriginalFilename, checksum = be.CheckSum})">
+                                        <a title="@(be.Book.Title)" class="book-down btn btn-sm btn-success" href="@Url.Action("EditionDownload", new {id = be.Id, filename = be.OriginalFilename, checksum = be.CheckSum})">
                                             <i class="fa fa-download" aria-hidden="true"></i>下载<span>@(be.DownloadCount)</span>
                                         </a>
                                         <button class="book-wish btn btn-sm btn-success" title="点击切换收藏状态,收藏后可到我的书单查看">

@@ -1,5 +1,4 @@
 ﻿@model ProfileComponentViewModel
-@using Microsoft.AspNetCore.Mvc
 
 
 <div class="row">
@@ -15,7 +14,7 @@
         @{
             if (Model.IsLogined)
             {
-                <a class="btn btn-info" href="@Url.Action("SettingsAvatar", "Account")"><i class="fa fa-sliders" aria-hidden="true"></i>设置</a>
+                <a class="btn btn-default" href="@Url.Action("SettingsAvatar", "Account")"><i class="fa fa-cogs" aria-hidden="true"></i> 设置</a>
             }
         }
     </div>

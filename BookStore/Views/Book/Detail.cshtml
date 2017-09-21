@@ -1,26 +1,44 @@
 ﻿@using System.Linq
 @using BookStore
+@using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.Razor.Extensions
 @using Microsoft.Extensions.Options
 @inject IOptions<AppSettings> AppSettings
+@inject IHostingEnvironment Env
 @model BookDetailViewModel
 
 @{
     ViewData["Title"] = Model.Book.Title;
     var book = Model.Book;
+    var amazonCode = AppSettings.Value.AmazonCode;
+    var logoUrl = book.Logo;
+    if (logoUrl.IndexOf("http", StringComparison.Ordinal) < 0 || logoUrl.IndexOf("https", StringComparison.Ordinal) < 0)
+    {
+        logoUrl = Env.WebRootPath + "/" + AppSettings.Value.UploadAvatarDir + "/" + book.Logo;
+        ;
+    }
 }
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <div class="well" style="background-color: #ffffff;">
-            <h2>
-                <a target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@(book.Title)&tag=@(AppSettings.Value.AmazonCode)">
+            <h1>
+                <a target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@(book.Title)&tag=@amazonCode">
                     @book.Title
                 </a>
-            </h2>
+            </h1>
+            <div class="row">
+                <div class="col-md-8">
+
+                </div>
+                <div class="col-md-4">
+                    <a target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@(book.Title)&tag=@amazonCode">
+                        <img src="@logoUrl" class="book-img pull-right" alt="@book.Title"/>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
-

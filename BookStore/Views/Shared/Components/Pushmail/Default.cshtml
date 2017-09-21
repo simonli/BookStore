@@ -48,7 +48,7 @@
 
 <div class="btn-group btn-group-xs" role="group" aria-label="down">
     
-    <a title="@be.Book.Title" class="book-down btn btn-success" href="@Url.Action("EditionDownload", new {id = be.Id, filename = be.OriginalFilename, checksum = be.CheckSum})">
+    <a title="@be.Book.Title" class="book-down btn btn-success" href="@Url.Action("EditionDownload","Book", new {id = be.Id, filename = be.OriginalFilename, checksum = be.CheckSum})">
         <i class="fa fa-download" aria-hidden="true"></i>下载 <span>@be.DownloadCount</span>
     </a>
     <button class='book-favorite btn btn-success' title='点击切换收藏状态,收藏后可到我的书单查看'>

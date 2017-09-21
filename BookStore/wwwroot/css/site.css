@@ -5,12 +5,10 @@
 body {
     padding-top: 80px;
     padding-bottom: 20px;
-    font-family: "Lucida Grande", Lucida Sans Unicode, PingFang SC, Hiragino Sans GB, WenQuanYi Micro Hei, Verdana, Aril, Microsoft YaHei sans-serif;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "PingFang SC", "Hiragino Sans GB","Microsoft YaHei", "WenQuanYi Micro Hei", Verdana, Aril, sans-serif;
     -webkit-font-smoothing: antialiased;
     background: #fcfcfc;
-
 }
-
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -94,8 +92,8 @@ body {
 
 .well-ext {
     min-height: 2rem;
-    padding: 1.5rem;
-    margin: 1.5rem 0 1.5rem 0;
+    padding: 1rem;
+    margin: 1rem 0 1.5rem 0;
     background-color: #f5f5f5;
     /*border: 1px solid #e3e3e3;*/
     border-radius: 2px;

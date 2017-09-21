@@ -4,7 +4,6 @@
     ViewData["Title"] = Model.BookEdition.OriginalFilename;
     var be = Model.BookEdition;
 }
-<style type="text/css">.avatar-medium { }</style>
 <div class="row">
     <div class="col-md-9">
         <h3>
@@ -39,7 +38,7 @@
                     <li id="@bec.Id" title="@(seq)楼" >
                         <span class="pull-left">
                             <a class="pull-left" href="@Url.Action("ProfileComment","Account",new{username=bec.User.Username})">
-                                <img class="avatar" src="~/static/avatars/@(bec.User.Avatar)" alt="@(bec.User.Username)"/>
+                                <img class="avatar-small" src="~/static/avatars/@(bec.User.Avatar)" alt="@(bec.User.Username)"/>
                             </a>
                         </span>
                         

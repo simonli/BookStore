@@ -1,9 +1,9 @@
 ﻿@model UploadViewModel
 
 @{
-    ViewData["Title"] = "上传图书";
+    ViewData["Title"] = "快速简易上传图书";
 }
-<div class="row" style="margin-bottom: 15px;border-bottom: 1px solid #ddd;">
+<div class="row" style="margin-bottom: 30px; border-bottom: 1px solid #ddd;">
     <div class="col-md-12">
         <span><i class="fa fa-reorder"></i> 上传方式：</span>
         <div class="btn-group" role="group">
@@ -45,8 +45,10 @@
                 <span asp-validation-for="DoubanUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <textarea asp-for="BookEditionCommnet" class="form-control" placeholder="版本介绍"></textarea>
-                <p class="help-block"><small>如:目录完整, 排版精美绝伦...</small></p>
+                <label asp-for="BookEditionCommnet" class="control-label"></label>
+                <textarea asp-for="BookEditionCommnet" class="form-control"></textarea>
+                <p class="help-block"><small>如:目录完整, 排版精美绝伦...</small>
+                </p>
                 <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -87,61 +89,61 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <environment include="Development">
         <script src="~/lib/jsrender/jsrender.js"></script>
+        <script>
+            
+            $("#douban_query_submit").bind('click',
+                function () {
+                    search_douban();
+                    return false;
+                });
+
+            function search_douban() {
+                var tmpl = $.templates("#id_book_tmpl");
+                var q = $("#douban_query").val();
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("SearchDouban")",
+                    data: { 'keyword': q },
+                    success: function (data) {
+                        console.log(data);
+                        $("#douban_books").empty();
+                        $("#douban_books").html(tmpl.render(data));
+                    },
+                    error: function (e) {
+                        alert(e);
+                    }
+                });
+            }
+
+            function copy_link(id) {
+                var link = $('#' + id).attr('href');
+                $('#DoubanUrl').val(link);
+                $('#DoubanId').val(id);
+                $('#douban_ok').html("<span class='text-success'><b>已确认OK</b></span>");
+            }
+
+            $('#BooKFile').change(function () {
+                var self = $(this);
+                var fullPath = self.val();
+                var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+                var filename = fullPath.substring(startIndex);
+                if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                    filename = filename.substring(1);
+                }
+                var extIndex = filename.lastIndexOf('.');
+                if (extIndex > 0)
+                    filename = filename.substring(0, extIndex);
+                $('#douban_query').val(filename);
+                $('#DoubanUrl').val('');
+                $('#douban_ok').html('');
+                search_douban();
+            });
+        </script>
     </environment>
     <environment exclude="Development">
         <script src="~/lib/jsrender/jsrender.min.js"></script>
+        <script src="~/js/site.min.js"></script>
     </environment>
-    <script type=text/javascript>
-        $("#douban_query_submit").bind('click',
-            function() {
-                search_douban();
-                return false;
-            });
-
-        function search_douban() {
-            var tmpl = $.templates("#id_book_tmpl");
-            var q = $("#douban_query").val();
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("SearchDouban")",
-                data: { 'keyword': q },
-                success: function(data) {
-                    console.log(data);
-                    $("#douban_books").empty();
-                    $("#douban_books").html(tmpl.render(data));
-                },
-                error: function(e) {
-                    alert(e);
-                }
-            });
-        }
-
-        function copy_link(id) {
-            var link = $('#' + id).attr('href');
-            $('#DoubanUrl').val(link);
-            $('#DoubanId').val(id);
-            $('#douban_ok').html("<span class='text-success'><b>已确认OK</b></span>");
-        }
-
-        $('#BooKFile').change(function() {
-            var self = $(this);
-            var fullPath = self.val();
-            var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
-            var filename = fullPath.substring(startIndex);
-            if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
-                filename = filename.substring(1);
-            }
-            var extIndex = filename.lastIndexOf('.');
-            if (extIndex > 0)
-                filename = filename.substring(0, extIndex);
-            $('#douban_query').val(filename);
-            $('#DoubanUrl').val('');
-            $('#douban_ok').html('');
-            search_douban();
-        });
-
-
-    </script>
     <script id="id_book_tmpl" type="text/x-jsrender">
         <li style="border-bottom:1px dashed #ddd;padding: 20px 0 10px;">
             <div class="row">

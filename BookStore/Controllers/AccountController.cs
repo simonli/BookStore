@@ -31,16 +31,7 @@ namespace BookStore.Controllers
             _appSettings = appSettings.Value;
             _env = env;
         }
-
-        // GET: User
-        [Route("[controller]/index")]
-        [Route("[controller]")]
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Users.ToListAsync());
-        }
-
-
+        
         [Route("[controller]/profile/{username}/edition")]
         public IActionResult ProfileEdition(string username)
         {
