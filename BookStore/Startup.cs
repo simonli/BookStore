@@ -39,6 +39,7 @@ namespace BookStore
 
             //数据库配置
             services.AddDbContext<BookStoreContext>(options =>
+//                options.UseMySql(Configuration.GetConnectionString("DefaultConnection2"))
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
             );
 

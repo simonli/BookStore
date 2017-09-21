@@ -37,7 +37,7 @@ namespace BookStore.Controllers
         [Route("[controller]")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.AsNoTracking().ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
 
@@ -53,7 +53,6 @@ namespace BookStore.Controllers
                     ActionLogList = _context.BookEditions
                         .Where(u => u.User == user).OrderByDescending(t => t.CreateTime)
                         .Include(be=>be.Book)
-                        .AsNoTracking()
                         .ToList()
                 };
                 return View(vm);
@@ -74,7 +73,6 @@ namespace BookStore.Controllers
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Push)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
                         .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
-                        .AsNoTracking()
                         .ToList()
                 };
                 return View(vm);
@@ -95,7 +93,6 @@ namespace BookStore.Controllers
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Download)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
                         .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
-                        .AsNoTracking()
                         .ToList()
                 };
                 return View(vm);
@@ -116,7 +113,6 @@ namespace BookStore.Controllers
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Favorite)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
                         .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
-                        .AsNoTracking()
                         .ToList()
                 };
                 return View(vm);
@@ -136,7 +132,6 @@ namespace BookStore.Controllers
                     ActionLogList = _context.BookEditionComments.Where(x => x.User == user)
                         .OrderByDescending(x => x.CreateTime)
                         .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
-                        .AsNoTracking()
                         .ToList(),
                     User = user
                 };
@@ -158,7 +153,6 @@ namespace BookStore.Controllers
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Checkin)
                         .Where(x => x.User == user)
                         .OrderByDescending(x => x.CreateTime)
-                        .AsNoTracking()
                         .ToList()
                 };
                 return View(vm);
@@ -204,7 +198,7 @@ namespace BookStore.Controllers
             var vm = new SettingsPushViewModel
             {
                 PushSettings = await _context.PushSettings.Where(u => u.User == loginUser)
-                    .OrderByDescending(x => x.CreateTime).AsNoTracking().ToListAsync(),
+                    .OrderByDescending(x => x.CreateTime).ToListAsync(),
                 User = loginUser
             };
             return View(vm);
@@ -220,7 +214,7 @@ namespace BookStore.Controllers
             {
                 var pushSetting = new PushSetting
                 {
-                    Id = IdGen.NewID(),
+                    Id = IdGen.NewId(AppkeyEnum.PushSettings.ToString()),
                     PushEmail = vm.PushEmail,
                     User = loginUser,
                     CreateTime = DateTime.Now
@@ -241,7 +235,7 @@ namespace BookStore.Controllers
         {
             if (id > 0)
             {
-                var pushSetting = _context.PushSettings.AsNoTracking().FirstOrDefault(x => x.Id == id);
+                var pushSetting = _context.PushSettings.FirstOrDefault(x => x.Id == id);
                 if (pushSetting != null)
                 {
                     _context.PushSettings.Remove(pushSetting);
@@ -258,8 +252,8 @@ namespace BookStore.Controllers
             if (id > 0)
             {
                 var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-                var pushSettings = _context.PushSettings.Where(x => x.User == loginUser).AsNoTracking().ToList(); //当前用户的所有设置
-                var pushSettingDefault = _context.PushSettings.AsNoTracking().FirstOrDefault(x => x.Id == id);
+                var pushSettings = _context.PushSettings.Where(x => x.User == loginUser).ToList(); //当前用户的所有设置
+                var pushSettingDefault = _context.PushSettings.FirstOrDefault(x => x.Id == id);
                 if (pushSettingDefault != null)
                 {
                     pushSettings.ForEach(ps => { ps.IsDefault = 0; });
@@ -293,7 +287,7 @@ namespace BookStore.Controllers
             {
                 var avatarFileFolder = Path.Combine(_env.WebRootPath, _appSettings.UploadAvatarDir);
                 if (!Directory.Exists(avatarFileFolder)) Directory.CreateDirectory(avatarFileFolder);
-                var filename = IdGen.NewID() + Path.GetExtension(vm.AvatarFile.FileName);
+                var filename = Utils.GetId() + Path.GetExtension(vm.AvatarFile.FileName);
                 var filepath = Path.Combine(avatarFileFolder, filename);
                 using (var stream = new FileStream(filepath, FileMode.Create))
                 {
@@ -388,7 +382,7 @@ namespace BookStore.Controllers
             if (!ModelState.IsValid) return View(vm);
             var user = new User
             {
-                Id = GenId.NewId(AppkeyEnum.Users.ToString()),
+                Id = IdGen.NewId(AppkeyEnum.Users.ToString()),
                 Username = vm.Username,
                 Password = Utils.GeneratePassword(vm.Password),
                 Email = vm.Email,

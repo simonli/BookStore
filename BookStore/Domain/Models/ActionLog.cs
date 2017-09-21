@@ -13,10 +13,13 @@ namespace BookStore.Domain.Models
         public long Id { get; set; }
 
         public DateTime CreateTime { get; set; }
+        
         public string UserAgent { get; set; }
+        [StringLength(500)]
         public string PushEmail { get; set; }
         public PushStatusEnum PushStatus { get; set; }
         public int PushUseTime { get; set; }
+        [StringLength(500)]
         public string PushFromPlatform { get; set; }
         public int CheckinPoint { get; set; } //checkIn本次得分
         public int CheckinTotalPoint { get; set; } //CheckIn累积得分

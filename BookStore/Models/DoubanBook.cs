@@ -20,6 +20,7 @@ namespace BookStore.Models
         public string BookCatelog { get; set; }
         public float RatingScore { get; set; }
         public int RatingPeople { get; set; }
+        public long BookId { get; set; }
 
         public List<string> TagList { get; set; }
     }

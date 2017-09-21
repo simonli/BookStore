@@ -25,7 +25,7 @@
                         </td>
                         <td>@Utils.FormatDateTime(log.CreateTime)</td>
                         <td>
-                            <a href="@Url.Action("Comment","Book",new{id=log.Id})">@log.Comment</a>
+                            <a href="@Url.Action("Edition","Book",new{id=log.BookEdition.Id})#@log.Id">@log.Comment</a>
                         </td>
                     </tr>
                 }

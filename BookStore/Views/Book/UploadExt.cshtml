@@ -1,38 +1,103 @@
-﻿@model UploadViewModel
+﻿@model UploadExtViewModel
 
 @{
-    ViewData["Title"] = "UploadExt";
+    ViewData["Title"] = "DIY上传图书";
 }
-
-<h2>UploadExt</h2>
-
-<h4>UploadViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="UploadExt">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DoubanUrl" class="control-label"></label>
-                <input asp-for="DoubanUrl" class="form-control" />
-                <span asp-validation-for="DoubanUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BookEditionCommnet" class="control-label"></label>
-                <input asp-for="BookEditionCommnet" class="form-control" />
-                <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+<div class="row" style="margin-bottom: 30px; border-bottom: 1px solid #ddd;">
+    <div class="col-md-12">
+        <span><i class="fa fa-reorder"></i> 上传方式：</span>
+        <div class="btn-group" role="group">
+            <a type="button" role="button" class="btn btn-default btn-switcher" asp-controller="Book" asp-action="Upload">&nbsp;&nbsp;简易快速上传&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn btn-success btn-switcher" asp-controller="Book" asp-action="UploadExt">&nbsp;&nbsp;定制化上传&nbsp;&nbsp;</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <form asp-action="UploadExt" enctype="multipart/form-data" role="form" method="post">
+        <div class="col-md-4">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <i class="fa fa-asterisk text-danger"></i>
+                <label asp-for="BooKFile" class="control-label"></label>
+                <input asp-for="BooKFile" class="form-control" type="file"/>
+                <p class="help-block"><small>支持mobi,epub,pdf,txt. 不超过 50 MB.</small></p>
+                <span asp-validation-for="BooKFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <i class="fa fa-asterisk text-danger"></i>
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control"/>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <i class="fa fa-asterisk text-danger"></i>
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control"/>
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <i class="fa fa-asterisk text-danger"></i>
+                <label asp-for="Introduction" class="control-label"></label>
+                <textarea asp-for="Introduction" class="form-control"></textarea>
+                <span asp-validation-for="Introduction" class="text-danger"></span>
+            </div>
+
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Logo" class="control-label"></label>
+                <input asp-for="Logo" class="form-control" type="file"/>
+                <p class="help-block"><small>支持jpg, png, jpeg, gif格式的图片,不超过5MB.</small></p>
+                <span asp-validation-for="Logo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Tags" class="form-control" placeholder="标签"/>
+                <p class="help-block"><small>多个标签请以英文逗号分隔</small></p>
+                <span asp-validation-for="Tags" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Translator" class="form-control" placeholder="译者"/>
+                <span asp-validation-for="Translator" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Publisher" class="form-control" placeholder="出版社"/>
+                <span asp-validation-for="Publisher" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Isbn" class="form-control" placeholder="图书ISBN"/>
+                <span asp-validation-for="Isbn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <textarea asp-for="BookCatelog" class="form-control" placeholder="图书目录"></textarea>
+                <span asp-validation-for="BookCatelog" class="text-danger"></span>
+            </div>
+
+            
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="BookEditionCommnet" class="control-label"></label>
+                <textarea asp-for="BookEditionCommnet" class="form-control"  placeholder="版本简介"></textarea>
+                <p class="help-block"><small>如:目录完整, 排版精美绝伦...</small></p>
+                <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Url" class="form-control" placeholder="图书链接"/>
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa fa-check-circle"></i> 提交
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

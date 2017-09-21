@@ -33,9 +33,11 @@ namespace BookStore.Migrations
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("PushEmail");
+                    b.Property<string>("PushEmail")
+                        .HasMaxLength(500);
 
-                    b.Property<string>("PushFromPlatform");
+                    b.Property<string>("PushFromPlatform")
+                        .HasMaxLength(500);
 
                     b.Property<int>("PushStatus");
 
@@ -64,6 +66,9 @@ namespace BookStore.Migrations
                     b.Property<long>("MaxId");
 
                     b.HasKey("Name");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("app_keys");
                 });
@@ -112,6 +117,14 @@ namespace BookStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Author");
+
+                    b.HasIndex("Isbn");
+
+                    b.HasIndex("Publisher");
+
+                    b.HasIndex("Title");
+
                     b.ToTable("books");
                 });
 
@@ -138,7 +151,7 @@ namespace BookStore.Migrations
                     b.Property<long>("Filesize");
 
                     b.Property<string>("OriginalFilename")
-                        .HasMaxLength(500);
+                        .HasMaxLength(1000);
 
                     b.Property<int>("PushCount");
 

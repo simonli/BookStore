@@ -18,7 +18,7 @@ namespace BookStore.Domain.Models
         [StringLength(500)]
         public string Filename { get; set; }
 
-        [StringLength(500)]
+        [StringLength(1000)]
         public string OriginalFilename { get; set; }
 
         public long Filesize { get; set; }

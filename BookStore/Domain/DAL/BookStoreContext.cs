@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using BookStore.Models;
 
@@ -26,12 +27,14 @@ namespace BookStore.Domain.DAL
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<User>()
-                .HasIndex(x => x.Username).IsUnique();
-
-            modelBuilder.Entity<AppKey>()
-                .HasIndex(x => x.Name).IsUnique();
+        {    
+            modelBuilder.Entity<Book>().HasIndex(x => x.Title);
+            modelBuilder.Entity<Book>().HasIndex(x => x.Author);
+            modelBuilder.Entity<Book>().HasIndex(x => x.Isbn);
+            modelBuilder.Entity<Book>().HasIndex(x => x.Publisher);
+            
+            modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
+            modelBuilder.Entity<AppKey>().HasIndex(x => x.Name).IsUnique();
             
             modelBuilder.Entity<BookTag>()
                 .HasOne(x => x.Book)

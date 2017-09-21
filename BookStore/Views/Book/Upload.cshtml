@@ -1,54 +1,90 @@
 ﻿@model UploadViewModel
 
 @{
-    ViewData["Title"] = "Upload";
+    ViewData["Title"] = "上传图书";
 }
-
-<hr />
+<div class="row" style="margin-bottom: 15px;border-bottom: 1px solid #ddd;">
+    <div class="col-md-12">
+        <span><i class="fa fa-reorder"></i> 上传方式：</span>
+        <div class="btn-group" role="group">
+            <a type="button" role="button" class="btn btn-success btn-switcher" asp-controller="Book" asp-action="Upload">&nbsp;&nbsp;简易快速上传&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn btn-default btn-switcher" asp-controller="Book" asp-action="UploadExt">&nbsp;&nbsp;定制化上传&nbsp;&nbsp;</a>
+        </div>
+    </div>
+</div>
+@*<div class="row">*@
+@*    <div class="col-md-12">*@
+@*        <div class="well-ext">*@
+@*            <h5 class="text-danger"><i class="fa fa-flash"></i> 操作步骤: </h5>*@
+@*            <ol>*@
+@*                <li>点击左侧, 选择你要上传的图书文件</li>*@
+@*                <li>稍微等待, 右侧会列出豆瓣图书列表, 选择该文件对应的图书, 并点击"确认是这本"</li>*@
+@*                <li>左侧版本简介中, 输入该图书的简单介绍, 点击提交即可</li>*@
+@*            </ol>*@
+@*        </div>*@
+@*        <div class="clearfix"></div>*@
+@*    </div>*@
+@*</div>*@
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Upload" enctype="multipart/form-data" role="form" method="post">
+        <form asp-action="Upload" enctype="multipart/form-data"  role="form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" name="DoubanId" id="DoubanId" />
+            <input type="hidden" name="DoubanId" id="DoubanId"/>
             <div class="form-group">
+                <i class="fa fa-asterisk text-danger"></i>
                 <label asp-for="BooKFile" class="control-label"></label>
-                <input asp-for="BooKFile" class="form-control" type="file" />
-                <p class="help-block">支持mobi,epub,pdf,txt. 不超过 50 MB.</p>
+                <input asp-for="BooKFile" class="form-control" type="file"/>
+                <p class="help-block"><small>支持mobi,epub,pdf,txt. 不超过 50 MB.</small></p>
                 <span asp-validation-for="BooKFile" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <i class="fa fa-asterisk text-danger"></i>
                 <label asp-for="DoubanUrl" class="control-label"></label>
                 <input asp-for="DoubanUrl" class="form-control" readonly />
+                <p class="help-block" id="douban_ok"><small>点击右侧列表确认图书,获取豆瓣链接</small></p>
                 <span asp-validation-for="DoubanUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BookEditionCommnet" class="control-label"></label>
-                <textarea asp-for="BookEditionCommnet" class="form-control"></textarea>
+                <textarea asp-for="BookEditionCommnet" class="form-control" placeholder="版本介绍"></textarea>
+                <p class="help-block"><small>如:目录完整, 排版精美绝伦...</small></p>
                 <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="提交" class="btn btn-default" />
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa fa-check-circle"></i> 提交 
+                </button>
+                
             </div>
         </form>
     </div>
-    <div class="col-md-5 col-md-offset-2">
-        <div class="well" id="id_douban">
-            <label class="control-label" for="id_q">
-                <a target="_blank" href="http://book.douban.com/">豆瓣读书:</a>
-            </label>
-            <div class="input-append">
-                <input type="text" id="id_q" name="q" placeholder="搜索豆瓣书籍" class="span4 search-query">
-                <button type="submit" id="id_btn" class="btn">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
+    <div class="col-md-7 col-md-offset-1">
+        <div class="well-ext">
+            <h5 class="text-danger"><i class="fa fa-flash"></i> 操作步骤: </h5>
+            <ol>
+                <li>点击左侧, 选择你要上传的图书文件</li>
+                <li>稍微等待, 右侧会列出豆瓣图书列表, 选择该文件对应的图书, 并点击"确认是这本"</li>
+                <li>左侧版本简介中, 输入该图书的简单介绍, 点击提交即可</li>
+            </ol>
+        </div>
+        <div class="clearfix"></div>
+        
+
+        <div id="douban">
+            <div class="input-group" style="width: 30rem;">
+                <input type="text" class="form-control" placeholder="搜索豆瓣读书" name="douban_query" id="douban_query">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" id="douban_query_submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
             </div>
         </div>
-        <ul id="id_books" class="unstyled"></ul>
+        <ul id="douban_books" class="list-unstyled"></ul>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <environment include="Development">
         <script src="~/lib/jsrender/jsrender.js"></script>
     </environment>
@@ -56,24 +92,25 @@
         <script src="~/lib/jsrender/jsrender.min.js"></script>
     </environment>
     <script type=text/javascript>
-        $("#id_btn").bind('click', function () {          
-            search_douban();
-            return false;
-        });
+        $("#douban_query_submit").bind('click',
+            function() {
+                search_douban();
+                return false;
+            });
 
         function search_douban() {
             var tmpl = $.templates("#id_book_tmpl");
-            var q = $("#id_q").val();            
+            var q = $("#douban_query").val();
             $.ajax({
                 type: "GET",
-                url:"@Url.Action("SearchDouban")",
+                url: "@Url.Action("SearchDouban")",
                 data: { 'keyword': q },
-                success: function (data) {
+                success: function(data) {
                     console.log(data);
-                    $("#id_books").empty();
-                    $("#id_books").html(tmpl.render(data));
+                    $("#douban_books").empty();
+                    $("#douban_books").html(tmpl.render(data));
                 },
-                error: function (e) {
+                error: function(e) {
                     alert(e);
                 }
             });
@@ -83,9 +120,10 @@
             var link = $('#' + id).attr('href');
             $('#DoubanUrl').val(link);
             $('#DoubanId').val(id);
+            $('#douban_ok').html("<span class='text-success'><b>已确认OK</b></span>");
         }
 
-        $('#BooKFile').change(function () {
+        $('#BooKFile').change(function() {
             var self = $(this);
             var fullPath = self.val();
             var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
@@ -96,17 +134,18 @@
             var extIndex = filename.lastIndexOf('.');
             if (extIndex > 0)
                 filename = filename.substring(0, extIndex);
-            $('#id_q').val(filename);
+            $('#douban_query').val(filename);
             $('#DoubanUrl').val('');
+            $('#douban_ok').html('');
             search_douban();
         });
 
 
     </script>
     <script id="id_book_tmpl" type="text/x-jsrender">
-        <li style="border-top:1px dashed #ddd;padding: 20px 0 10px;">
+        <li style="border-bottom:1px dashed #ddd;padding: 20px 0 10px;">
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <a href="{{:url}}" target="_blank">
                         <img src="{{:logo}}" alt="{{:title}}">
                     </a>
@@ -114,10 +153,17 @@
                 <div class="col-md-8 col-md-offset-1">
                     <h5>
                         <a id="{{:subjectId}}" href="{{:url}}" target="_blank">{{:title}}</a>
-                        <button class="btn btn-mini" onclick="copy_link('{{:subjectId}}')">
-                            <i class="icon-file"></i>复制链接
-                        </button>
                     </h5>
+                    <div style="margin:10px 0;">
+                        <button class="btn btn-sm btn-default" onclick="copy_link('{{:subjectId}}')">
+                            <i class="fa fa-check-circle-o"></i> Yes,It is.
+                        </button>
+                        {{if bookId>0 }}
+                            <a href="/book/{{:bookId}}/" role="button" class="btn btn-success btn-sm">
+                                <i class="fa fa-check-square-o"></i> 已收录
+                            </a>
+                        {{/if}}
+                    </div>
                     <div>{{:publisher}}</div>
                     <div>
                         {{if ratingScore>0 }}{{:ratingScore}}分{{/if}}

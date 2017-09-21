@@ -1,23 +1,62 @@
-﻿@model PushSettingsComponentViewModel
+﻿@using System.Linq
+@model PushSettingsComponentViewModel
+@{
+    var be = Model.BookEdition;
+    var defaultPushSetting = Model.PushSettings.FirstOrDefault(x => x.IsDefault == 1);
+    var defaultPushMail = defaultPushSetting != null ? defaultPushSetting.PushEmail : "";
+}
+
+<div class="btn-group btn-group-xs" role="group" aria-label="push">
+    <button data-pk="@(be.Id)" data-pushmail="@defaultPushMail" class="pushmail-required book-push btn btn-success">
+        <i class="fa fa-paper-plane" aria-hidden="true"></i>推送 <span class="push-num">@(be.PushCount)</span>
+    </button>
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
     
-<ul class="dropdown-menu">
-    @{
-        if (Model.PushSettings.Count > 0)
-        {
-            foreach (var ps in Model.PushSettings)
+    <ul class="dropdown-menu">
+        @{
+            if (Model.PushSettings.Count > 0)
             {
-                if (ps.IsDefault == 1)
+                foreach (var ps in Model.PushSettings)
                 {
-                    <li><a data-pk="@(Model.EditionId)" data-pushmail="@(ps.PushEmail)" class="book-push" href="#"><i class="fa fa-paper-plane"></i>推送到 @(ps.PushEmail) (默认)</a></li>
-                }
-                else
-                {
-                    <li><a data-pk="@(Model.EditionId)" data-pushmail="@(ps.PushEmail)" class="book-push" href="#"><i class="fa fa-paper-plane"></i>推送到 @(ps.PushEmail)</a></li>
+                    if (ps.IsDefault == 1)
+                    {
+                        <li>
+                            <a data-pk="@(be.Id)" data-pushmail="@(ps.PushEmail)" class="book-push" href="#"><i class="fa fa-paper-plane"></i>推送到 @(ps.PushEmail) (默认)</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a data-pk="@(be.Id)" data-pushmail="@(ps.PushEmail)" class="book-push" href="#"><i class="fa fa-paper-plane"></i>推送到 @(ps.PushEmail)</a>
+                        </li>
+                    }
                 }
             }
         }
-    }
-    <li class="divider"></li>
-    <li><a target="_blank" href="@Url.Action("ProfilePush", "Account", new {username = Model.LoginedUser.Username})"><i class="fa fa-align-left"></i>推送状态</a></li>
-    <li><a target="_blank" href="@Url.Action("SettingsPush", "Account")"><i class="fa fa-cog"></i>设置</a></li>
-</ul>
+        <li class="divider"></li>
+        <li>
+            <a target="_blank" href="@Url.Action("ProfilePush", "Account", new {username = Model.LoginedUser.Username})"><i class="fa fa-align-left"></i>推送状态</a>
+        </li>
+        <li>
+            <a target="_blank" href="@Url.Action("SettingsPush", "Account")"><i class="fa fa-cog"></i>设置</a>
+        </li>
+    </ul>
+</div>
+
+<div class="btn-group btn-group-xs" role="group" aria-label="down">
+    
+    <a title="@be.Book.Title" class="book-down btn btn-success" href="@Url.Action("EditionDownload", new {id = be.Id, filename = be.OriginalFilename, checksum = be.CheckSum})">
+        <i class="fa fa-download" aria-hidden="true"></i>下载 <span>@be.DownloadCount</span>
+    </a>
+    <button class='book-favorite btn btn-success' title='点击切换收藏状态,收藏后可到我的书单查看'>
+        <i class="fa fa-star-o"></i>收藏 <span>@be.FavoriteCount</span>
+    </button>
+
+    
+
+    
+    
+</div>

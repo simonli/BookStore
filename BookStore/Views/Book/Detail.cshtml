@@ -1,213 +1,26 @@
 ﻿@using System.Linq
+@using BookStore
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Razor.Extensions
+@using Microsoft.Extensions.Options
+@inject IOptions<AppSettings> AppSettings
 @model BookDetailViewModel
+
 @{
     ViewData["Title"] = Model.Book.Title;
+    var book = Model.Book;
 }
 
 <div class="row">
-    <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h2>
-                    <a class="link-search" target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@Model.Book.Title&tag=readfreeme-23">
-                        @Model.Book.Title
-                    </a>
-                </h2>
-                <p>
-                    <span>作者:<strong>@Model.Book.Author </strong></span>
-                    @{
-                        if (!string.IsNullOrEmpty(Model.Book.Translator))
-                        {
-                            <span>&nbsp;译者:<strong>@Model.Book.Translator </strong></span>
-                        }
-                    }
-                    @{
-                        if (!string.IsNullOrEmpty(Model.Book.Publisher))
-                        {
-                            <span>
-                                <small>&nbsp;@Model.Book.Publisher</small>
-                            </span>
-                        }
-                    }
-                </p>
-                <div>
-                    @{
-                        if (!string.IsNullOrEmpty(Model.Book.DoubanUrl))
-                        {
-                            @:豆瓣:
-                            <span class="badge badge-success">@(Model.Book.DoubanRatingScore)分</span>
-                            <span>(@(Model.Book.DoubanRatingPeople)人评价...)</span>
-                        }
-                    }
-                    <a class="z-link-search btn btn-primary btn-long pull-right" href="http://www.amazon.cn/gp/search?index=books&keywords=@Model.Book.Title&tag=readfreeme-23" title="到亚马逊购买正版">
-                        <i class="fa fa-amazon" aria-hidden="true"></i> 支持正版
-                    </a>
-                    <div class='clearfix'></div>
-                </div>
-                <ul id="book-detail-tabs" class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#book-summary" data-toggle="tab">内容简介</a>
-                    </li>
-                    <li>
-                        <a href="#book-catalog" data-toggle="tab">目录列表</a>
-                    </li>
-                    <li>
-                        <a href="#book-author-intro" data-toggle="tab">作者介绍</a>
-                    </li>
-                </ul>
-                <!-- 书籍作者简介开始 -->
-                <div id="book-detail-tabs-content" class="tab-content">
-                    <div class="tab-pane active" id="book-summary">
-                        <a target='_blank' class='pull-right z-link-search' href="http://www.amazon.cn/gp/search?index=books&keywords=解忧杂货店&tag=readfreeme-23" title="购买正版...">
-                            <img class='book-img img-rounded margin-medium' src="@Model.Book.Title"/>
-                        </a>
-                        <div>
-                            @Html.Raw(Model.Book.Introduction)
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane" id="book-catalog">
-                        <div>
-                            @Html.Raw(Model.Book.BookCatelog)
-                            <div class='clearfix'></div>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane" id="book-author-intro">
-                        <div>
-                            @Html.Raw(Model.Book.AuthorIntroduction)
-                            <div class='clearfix'></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 书籍作者简介结束 -->
-                <!-- 类似书籍开始 -->
-                @{
-                    if (Model.RelatedBooks.Count > 0)
-                    {
-                        <h5>类似书籍</h5>
-                        <ul class='unstyled inline well' id="similar-books">
-                            @foreach (var book in Model.RelatedBooks)
-                            {
-                                <li>
-                                    <a href="@Url.Action("Detail", "Book", new {id = book.Id})">
-                                        <img class='img-rounded margin-medium book-img' src="@book.Logo" title="@book.Title" alt="@book.Title"/>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    }
-                }
-                <!-- 类似书籍结束 -->
-                <!-- Tag start -->
-                @{
-                    if (Model.Book.BookTags.Count > 0)
-                    {
-                        <ul class='unstyled inline well' id="book-tags">
-                            @foreach (var bt in Model.Book.BookTags)
-                            {
-                                <li>@Html.ActionLink(bt.Tag.Name, "Tag", "Book", new {id = bt.Tag.Id}) </li>
-                            }
-                        </ul>
-                    }
-                }
-                <!-- Tag end -->
-
-                <hr>
-                <h5>
-                    <vc:user-action></vc:user-action>
-                </h5>
-                <hr>
-                <a class='btn btn-primary btn-long pull-right' href='@Url.Action("FileUpload", "Book", new {id = Model.Book.Id})'>
-                    <i class="fa fa-upload" aria-hidden="true"></i>上传新版本
+    <div class="col-md-12">
+        <div class="well" style="background-color: #ffffff;">
+            <h2>
+                <a target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@(book.Title)&tag=@(AppSettings.Value.AmazonCode)">
+                    @book.Title
                 </a>
-                <h4>@(Model.Book.BookEditions.Count)个版本: </h4>
-
-                <!-- 版本评论开始 -->
-                <ol class='unstyled'>
-                    @{
-                        foreach (var be in Model.Book.BookEditions.OrderByDescending(x => x.CreateTime))
-                        {
-                            <hr/>
-                            <li id="@(be.Id)" pk="@(be.Id)" ext="@(Utils.GetFileExt(be.Filename))">
-
-                                <div>
-                                    <span class="badge badge" title="md5:@(be.CheckSum)"> @(Utils.FormatFileSize(be.Filesize)) </span>
-                                    <a href="@Url.Action("Edition", new {id = be.Id})">
-                                        <span class="badge badge" title="@(be.OriginalFilename)">@(be.OriginalFilename)</span>
-                                    </a>
-
-                                    <ul class="unstyled pull-right inline">
-                                        <li>
-                                            <a href="@Url.Action("Edition", "Book", new {id = be.Id})">
-                                                <small>@(be.BookEditionComments.Count)条评论</small>
-                                                <i class="icon-comment icon-white"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <small>@(be.CreateTime), 上传者: <a href="@Url.Action("ProfileEdition", "Account", new {username = be.User.Username})">@(be.User.Username)</a></small>
-                                </div>
-                                <div class="btn-toolbar">
-                                    <div class="btn-group">
-                                        <button data-pk="137661" data-pushmail="simonli_69@kindle.cn" class="pushmail-required book-push btn btn-mini btn-success">
-                                            <i class="fa fa-paper-plane" aria-hidden="true"></i>推送<span class="push-num">@(be.PushCount)</span>
-                                        </button>
-
-                                        <button class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                        </button>
-
-                                        <vc:pushmail edition-id="be.Id"></vc:pushmail>
-                                    </div>
-
-
-                                    <div class="btn-group">
-
-                                        <a title="@(be.OriginalFilename)" class="book-down btn btn-mini btn-success" href="@Url.Action("EdtionDownload", "Book", new {id = be.Id, filename = be.OriginalFilename})">
-                                            <i class="fa fa-download" aria-hidden="true"></i>下载<span>@(be.DownloadCount)</span>
-                                        </a>
-                                        <button class="book-wish btn btn-sm btn-success" title="点击切换收藏状态,收藏后可到我的书单查看">
-                                            <i class="icon-star icon-white"></i>收藏<span>@(be.FavoriteCount)</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                            if (be.BookEditionComments.Count > 0)
-                            {
-                                foreach (var bec in be.BookEditionComments.OrderByDescending(x => x.CreateTime))
-                                {
-                                    <div class="row-fluid">
-                                        <a href="@Url.Action("ProfileComment","Account", new{username=bec.User.Username})">
-                                            <img class='pull-left img-circle avatar-small' src="~/static/avatars/@bec.User.Avatar"/>@(bec.User.Username)
-                                        </a>:
-                                        <small class="muted">
-                                            <a href="/edition/137661/#84008">"@(bec.Comment)"</a>
-                                        </small>
-                                    </div>
-                                }
-                            }
-
-                            <form class="form-inline talk-inline" action="/edition/137661/?next=/book/25862578/#137661" method="post">
-                                <input type='hidden' name='csrfmiddlewaretoken' value='N1y2A3xvPBr3F3A9KV3P9CkKFCdMA2RbwQOXe8Col1qGXADvFAUOkQMaytYURKUx' />
-                                <input class="talk-short" type="text" name="text" pattern=".{1,80}" maxlength="80"
-                                       placeholder="发表评论，勾选[举报]将通知管理员">
-                                <label for="id_is_report">
-                                    举报<input id="id_is_report" type="checkbox" name="is_report">
-                                </label>
-                                <button class="btn" type="submit" title="发表评论">
-                                    <i class="icon-comment"></i>
-                                </button>
-                            </form>
-                        }
-                    }
-                </ol>
-                <!-- 版本评论结束 -->
-
-
-            </div>
+            </h2>
         </div>
     </div>
+
 </div>
+

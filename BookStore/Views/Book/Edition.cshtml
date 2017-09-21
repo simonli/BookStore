@@ -1,0 +1,56 @@
+﻿@using System.Linq
+@model BookEditionViewModel
+@{
+    ViewData["Title"] = Model.BookEdition.OriginalFilename;
+    var be = Model.BookEdition;
+}
+<style type="text/css">.avatar-medium { }</style>
+<div class="row">
+    <div class="col-md-9">
+        <h3>
+            <a href="@Url.Action("Detail", "Book", new {id = be.Book.Id})">@be.Book.Title</a>
+        </h3>
+        <div class="well" style="background-color: #ffffff;">
+            <div>
+                <span class="badge" title="md5:@(be.CheckSum)">@Utils.FormatFileSize(be.Filesize)</span>
+                <a href="@Url.Action("Edition", new {id = be.Id})" class="badge" title="@be.OriginalFilename"> @be.OriginalFilename</a>
+                <span class="pull-right">
+                    <a href="@Url.Action("Edition", new {id = be.Id})">
+                        <i class="fa fa-comments-o"></i> @(be.BookEditionComments.Count)条评论
+                    </a>
+                </span>
+            </div>
+            <div>
+                <small>@Utils.FormatDateTime(be.CreateTime) 上传者：<a href="@Url.Action("ProfileEdition","Account",new{username=be.User.Username})">@be.User.Username</a></small>
+            </div>
+            <div class="btn-toolbar" role="toolbar" style="margin-top:10px; margin-bottom: 10px;">
+                <vc:pushmail book-edition="@be"></vc:pushmail>
+            </div>
+        </div>
+        <!-- comments start -->
+        <div id="comments">
+            <h3>@(be.BookEditionComments.Count)条评论</h3>
+            <ul>
+            @{
+                var becList = be.BookEditionComments.OrderBy(x => x.CreateTime);
+                int seq = 1;
+                foreach (var bec in becList)
+                {
+                    <li id="@bec.Id" title="@(seq)楼" >
+                        <span class="pull-left">
+                            <a class="pull-left" href="@Url.Action("ProfileComment","Account",new{username=bec.User.Username})">
+                                <img class="avatar" src="~/static/avatars/@(bec.User.Avatar)" alt="@(bec.User.Username)"/>
+                            </a>
+                        </span>
+                        
+                    </li>
+                    seq++;
+                }
+            }
+            </ul>
+        </div>
+        <!-- comments end -->
+
+        <!-- Flaged -->
+    </div>
+</div>

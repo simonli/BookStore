@@ -3,47 +3,42 @@
 
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <a href="@Url.Action("SettingsAvatar", "Account")" title="@Model.User.Username">
-            <img class="pull-left img-circle avatar-large" src="~/static/avatars/@Model.User.Avatar"  alt="@Model.User.Username"/>
+            <img class="pull-left img-circle avatar-medium" src="~/static/avatars/@Model.User.Avatar"  title="点击设定头像" alt="@Model.User.Username"/>
         </a>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
         <h3>@Model.User.Username</h3>
         <p class="text-muted">账号类型: @Utils.GetEnumDescription(Model.User.UserType)</p>
         <p class="text-muted">加入时间: @Model.User.CreateTime.ToString("yyyy-MM-dd")</p>
         @{
             if (Model.IsLogined)
             {
-                <a class="btn btn-info btn-sm" href="@Url.Action("SettingsAvatar", "Account")"><i class="fa fa-sliders" aria-hidden="true"></i>设置</a>
+                <a class="btn btn-info" href="@Url.Action("SettingsAvatar", "Account")"><i class="fa fa-sliders" aria-hidden="true"></i>设置</a>
             }
         }
     </div>
+    <div class="col-md-7">
+        <div style="margin-top: 40px;" class="pull-right">
+            <p><i class="fa fa-trophy"></i>  剩余积分：@Model.User.PointCount</p>
+            <p><i class="fa fa-download"></i> 今日下载：@Model.TodayDownloadCount</p>
+            <p><i class="fa fa-paper-plane"></i> 今日推送：@Model.TodayPushCount</p>
+        </div>
+    </div>
 </div>
-<hr/>
-<p>用户名：@Model.User.Username, 剩余积分：@Model.User.PointCount, 今日下载：@Model.TodayDownloadCount, 今日推送：@Model.TodayPushCount</p>
-<div class="row" style="margin-bottom: 15px;">
-    <div class="col-md-12">
-        <ul class="nav nav-pills">
-            <li class="@Html.ActivePage("ProfileEdition", "Account")">
-                <a href="@Url.Action("ProfileEdition", "Account")">上传 </a>
-            </li>
-            <li class="@Html.ActivePage("ProfilePush", "Account")">
-                <a href="@Url.Action("ProfilePush", "Account")">推送 </a>
-            </li>
-            <li class="@Html.ActivePage("ProfileDownload", "Account")">
-                <a href="@Url.Action("ProfileDownload", "Account")">下载</a>
-            </li>
-            <li class="@Html.ActivePage("ProfileComment", "Account")">
-                <a href="@Url.Action("ProfileComment", "Account")">评论</a>
-            </li>
-            <li class="@Html.ActivePage("ProfileFavorite", "Account")">
-                <a href="@Url.Action("ProfileFavorite", "Account")">收藏</a>
-            </li>
-            <li class="@Html.ActivePage("ProfileCheckin", "Account")">
-                <a href="@Url.Action("ProfileCheckin", "Account")">签到</a>
-            </li>
 
-        </ul>
+<div class="row" style="margin-bottom: 10px; margin-top: 25px;">
+    <div class="col-md-12">
+        <div class="btn-group" role="group">
+            <a type="button" role="button" class="btn @Html.ActivePage("ProfileEdition", "Account") btn-switcher-profile" asp-controller="Account" asp-action="ProfileEdition">&nbsp;&nbsp;上传&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn @Html.ActivePage("ProfilePush", "Account") btn-switcher-profile" asp-controller="Account" asp-action="ProfilePush">&nbsp;&nbsp;推送&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn @Html.ActivePage("ProfileDownload", "Account") btn-switcher-profile" asp-controller="Account" asp-action="ProfileDownload">&nbsp;&nbsp;下载&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn @Html.ActivePage("ProfileComment", "Account") btn-switcher-profile" asp-controller="Account" asp-action="ProfileComment">&nbsp;&nbsp;评论&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn @Html.ActivePage("ProfileFavorite", "Account") btn-switcher-profile" asp-controller="Account" asp-action="ProfileFavorite">&nbsp;&nbsp;收藏&nbsp;&nbsp;</a>
+            <a type="button" role="button" class="btn @Html.ActivePage("ProfileCheckin","Account") btn-switcher-profile" asp-controller="Account" asp-action="ProfileCheckin">&nbsp;&nbsp;签到&nbsp;&nbsp;</a>
+
+        </div>
+        
     </div>
 </div>

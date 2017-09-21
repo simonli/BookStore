@@ -19,7 +19,7 @@ namespace BookStore.ViewComponents
             _context = context;
         }
 
-        public async Task<ViewViewComponentResult> InvokeAsync(long editionId)
+        public async Task<ViewViewComponentResult> InvokeAsync(BookEdition bookEdition)
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
@@ -30,7 +30,7 @@ namespace BookStore.ViewComponents
                 var vm = new PushSettingsComponentViewModel
                 {
                     PushSettings = pushSettings,
-                    EditionId = editionId,
+                    BookEdition = bookEdition,
                     LoginedUser = loginUser
                 };
 
