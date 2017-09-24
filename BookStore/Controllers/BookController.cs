@@ -31,15 +31,6 @@ namespace BookStore.Controllers
             _env = env;
         }
 
-        // GET: Book
-        [Route("[controller]/index")]
-        [Route("[controller]")]
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Books.ToListAsync());
-        }
-
-
         [Route("[controller]/upload")]
         public IActionResult Upload()
         {
