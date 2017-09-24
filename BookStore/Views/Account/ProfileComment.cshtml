@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <table class='table table-bordered'>
+        <table class="table table-bordered">
             <tr>
                 <th>书籍</th>
                 <th>时间</th>
@@ -20,12 +20,15 @@
                 {
                     <tr class="success">
                         <td>
-                            
-                            <a href="@Url.Action("Detail","Book",new{id=log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                            <a asp-controller="Book" asp-action="Detail" asp-route-id="@log.BookEdition.Book.Id">
+                                @log.BookEdition.OriginalFilename
+                            </a>
                         </td>
                         <td>@Utils.FormatDateTime(log.CreateTime)</td>
                         <td>
-                            <a href="@Url.Action("Edition","Book",new{id=log.BookEdition.Id})#@log.Id">@log.Comment</a>
+                            <a asp-controller="Book" asp-action="Edition" asp-route-id="@log.BookEdition.Id" asp-fragment="@log.Id">
+                                @log.Comment
+                            </a>
                         </td>
                     </tr>
                 }

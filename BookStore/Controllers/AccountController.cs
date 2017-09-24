@@ -31,7 +31,7 @@ namespace BookStore.Controllers
             _appSettings = appSettings.Value;
             _env = env;
         }
-        
+
         [Route("[controller]/profile/{username}/edition")]
         public IActionResult ProfileEdition(string username)
         {
@@ -43,7 +43,7 @@ namespace BookStore.Controllers
                     User = user,
                     ActionLogList = _context.BookEditions
                         .Where(u => u.User == user).OrderByDescending(t => t.CreateTime)
-                        .Include(be=>be.Book)
+                        .Include(be => be.Book)
                         .ToList()
                 };
                 return View(vm);
@@ -63,7 +63,7 @@ namespace BookStore.Controllers
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Push)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
-                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .Include(x => x.BookEdition).Include(x => x.BookEdition.Book)
                         .ToList()
                 };
                 return View(vm);
@@ -83,7 +83,7 @@ namespace BookStore.Controllers
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Download)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
-                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .Include(x => x.BookEdition).Include(x => x.BookEdition.Book)
                         .ToList()
                 };
                 return View(vm);
@@ -103,7 +103,7 @@ namespace BookStore.Controllers
                     User = user,
                     ActionLogList = _context.ActionLogs.Where(x => x.Taxonomy == TaxonomyEnum.Favorite)
                         .Where(x => x.User == user).OrderByDescending(x => x.CreateTime)
-                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .Include(x => x.BookEdition).Include(x => x.BookEdition.Book)
                         .ToList()
                 };
                 return View(vm);
@@ -122,7 +122,7 @@ namespace BookStore.Controllers
                 {
                     ActionLogList = _context.BookEditionComments.Where(x => x.User == user)
                         .OrderByDescending(x => x.CreateTime)
-                        .Include(x=>x.BookEdition).Include(x=>x.BookEdition.Book)
+                        .Include(x => x.BookEdition).Include(x => x.BookEdition.Book)
                         .ToList(),
                     User = user
                 };
@@ -151,7 +151,7 @@ namespace BookStore.Controllers
             TempData.Flash("danger", $"用户<span class='text-danger'><b> {username} </b></span>不存在！");
             return NotFound();
         }
-        
+
         [Route("[controller]/settings/username")]
         public async Task<IActionResult> SettingsUsername()
         {
@@ -224,36 +224,26 @@ namespace BookStore.Controllers
         [Route("[controller]/settings/push/delete")]
         public JsonResult SettingsPushDelete(long id)
         {
-            if (id > 0)
-            {
-                var pushSetting = _context.PushSettings.FirstOrDefault(x => x.Id == id);
-                if (pushSetting != null)
-                {
-                    _context.PushSettings.Remove(pushSetting);
-                    _context.SaveChanges();
-                    return Json(true);
-                }
-            }
-            return Json(false);
+            if (id <= 0) return Json(false);
+            var pushSetting = _context.PushSettings.FirstOrDefault(x => x.Id == id);
+            if (pushSetting == null) return Json(false);
+            _context.PushSettings.Remove(pushSetting);
+            _context.SaveChanges();
+            return Json(true);
         }
 
         [Route("[controller]/settings/push/default")]
         public JsonResult SettingsPushDefault(long id)
         {
-            if (id > 0)
-            {
-                var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-                var pushSettings = _context.PushSettings.Where(x => x.User == loginUser).ToList(); //当前用户的所有设置
-                var pushSettingDefault = _context.PushSettings.FirstOrDefault(x => x.Id == id);
-                if (pushSettingDefault != null)
-                {
-                    pushSettings.ForEach(ps => { ps.IsDefault = 0; });
-                    pushSettingDefault.IsDefault = 1;
-                    _context.SaveChanges();
-                    return Json(true);
-                }
-            }
-            return Json(false);
+            if (id <= 0) return Json(false);
+            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            var pushSettings = _context.PushSettings.Where(x => x.User == loginUser).ToList(); //当前用户的所有设置
+            var pushSettingDefault = _context.PushSettings.FirstOrDefault(x => x.Id == id);
+            if (pushSettingDefault == null) return Json(false);
+            pushSettings.ForEach(ps => { ps.IsDefault = 0; });
+            pushSettingDefault.IsDefault = 1;
+            _context.SaveChanges();
+            return Json(true);
         }
 
         [Route("[Controller]/settings/avatar")]
@@ -349,6 +339,7 @@ namespace BookStore.Controllers
             vm.User = loginUser;
             return View(vm);
         }
+
         [Route("[controller]/settings/pro")]
         public IActionResult SettingsPro()
         {
@@ -401,33 +392,33 @@ namespace BookStore.Controllers
         public async Task<IActionResult> Login([Bind("Username,Password,VerifyCode")] LoginViewModel vm,
             string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (!ModelState.IsValid) return View(vm);
-            var user = _context.Users.FirstOrDefault(m =>
-                string.Equals(m.Username, vm.Username, StringComparison.CurrentCultureIgnoreCase));
-            if (user.Password == Utils.GeneratePassword(vm.Password))
+            if (ModelState.IsValid)
             {
-                var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
-                identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(identity));
-                HttpContext.Session.Remove("verify_code"); //清除验证码session
-                user.LoginCount += 1;
-                user.LoginTime = DateTime.Now;
-                user.LoginIp = HttpContext.GetUserIp();
-                await _context.SaveChangesAsync();
-                TempData.Flash("success", string.Format("登录成功，欢迎你{0}", user.Username));
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                var user = _context.Users.FirstOrDefault(m =>
+                    string.Equals(m.Username, vm.Username, StringComparison.CurrentCultureIgnoreCase));
+                if (user.Password == Utils.GeneratePassword(vm.Password))
                 {
-                    return Redirect(returnUrl);
-                }
-                else
-                {
+                    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+                    identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
+                    identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(identity));
+                    HttpContext.Session.Remove("verify_code"); //清除验证码session
+                    HttpContext.Session.SetObjectAsJson("login_user",user);
+                    user.LoginCount += 1;
+                    user.LoginTime = DateTime.Now;
+                    user.LoginIp = HttpContext.GetUserIp();
+                    await _context.SaveChangesAsync();
+                    TempData.Flash("success", string.Format("登录成功，欢迎你{0}", user.Username));
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
+                ModelState.AddModelError("Password", "密码不正确.");
             }
-            ModelState.AddModelError("Password", "密码不正确.");
+            ViewData["ReturnUrl"] = returnUrl;
             return View(vm);
         }
 
@@ -436,7 +427,7 @@ namespace BookStore.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             TempData.Flash("success", "成功登出系统");
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [AllowAnonymous]
@@ -515,7 +506,5 @@ namespace BookStore.Controllers
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             return Json(Utils.GeneratePassword(password) == loginUser.Password);
         }
-
-       
     }
 }

@@ -12,50 +12,43 @@
         </div>
     </div>
 </div>
-@*<div class="row">*@
-@*    <div class="col-md-12">*@
-@*        <div class="well-ext">*@
-@*            <h5 class="text-danger"><i class="fa fa-flash"></i> 操作步骤: </h5>*@
-@*            <ol>*@
-@*                <li>点击左侧, 选择你要上传的图书文件</li>*@
-@*                <li>稍微等待, 右侧会列出豆瓣图书列表, 选择该文件对应的图书, 并点击"确认是这本"</li>*@
-@*                <li>左侧版本简介中, 输入该图书的简单介绍, 点击提交即可</li>*@
-@*            </ol>*@
-@*        </div>*@
-@*        <div class="clearfix"></div>*@
-@*    </div>*@
-@*</div>*@
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Upload" enctype="multipart/form-data"  role="form" method="post">
+        <form asp-action="Upload" enctype="multipart/form-data" role="form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="DoubanId" id="DoubanId"/>
             <div class="form-group">
                 <i class="fa fa-asterisk text-danger"></i>
                 <label asp-for="BooKFile" class="control-label"></label>
-                <input asp-for="BooKFile" class="form-control" type="file"/>
-                <p class="help-block"><small>支持mobi,epub,pdf,txt. 不超过 50 MB.</small></p>
+                <input asp-for="BooKFile" autofocus="true" class="form-control" type="file"/>
+                <p class="help-block">
+                    <small>支持mobi,epub,pdf,txt. 不超过 50 MB.</small>
+                </p>
                 <span asp-validation-for="BooKFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <i class="fa fa-asterisk text-danger"></i>
                 <label asp-for="DoubanUrl" class="control-label"></label>
-                <input asp-for="DoubanUrl" class="form-control" readonly />
-                <p class="help-block" id="douban_ok"><small>点击右侧列表确认图书,获取豆瓣链接</small></p>
+                <input asp-for="DoubanUrl" class="form-control"  readonly/>
+                <p class="help-block" id="douban_ok">
+                    <small>点击右侧列表确认图书,获取豆瓣链接</small>
+                </p>
                 <span asp-validation-for="DoubanUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BookEditionCommnet" class="control-label"></label>
-                <textarea asp-for="BookEditionCommnet" class="form-control"></textarea>
-                <p class="help-block"><small>如:目录完整, 排版精美绝伦...</small>
+                <textarea asp-for="BookEditionCommnet"  class="form-control"></textarea>
+                <p class="help-block">
+                    <small>如:目录完整, 排版精美绝伦...</small>
                 </p>
                 <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit">
-                    <i class="fa fa-check-circle"></i> 提交 
+                    <i class="fa fa-check-circle"></i> 提交
                 </button>
-                
+
             </div>
         </form>
     </div>
@@ -69,7 +62,7 @@
             </ol>
         </div>
         <div class="clearfix"></div>
-        
+
 
         <div id="douban">
             <div class="input-group" style="width: 30rem;">
@@ -90,9 +83,9 @@
     <environment include="Development">
         <script src="~/lib/jsrender/jsrender.js"></script>
         <script>
-            
+
             $("#douban_query_submit").bind('click',
-                function () {
+                function() {
                     search_douban();
                     return false;
                 });
@@ -104,12 +97,12 @@
                     type: "GET",
                     url: "@Url.Action("SearchDouban")",
                     data: { 'keyword': q },
-                    success: function (data) {
+                    success: function(data) {
                         console.log(data);
                         $("#douban_books").empty();
                         $("#douban_books").html(tmpl.render(data));
                     },
-                    error: function (e) {
+                    error: function(e) {
                         alert(e);
                     }
                 });
@@ -122,7 +115,7 @@
                 $('#douban_ok').html("<span class='text-success'><b>已确认OK</b></span>");
             }
 
-            $('#BooKFile').change(function () {
+            $('#BooKFile').change(function() {
                 var self = $(this);
                 var fullPath = self.val();
                 var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));

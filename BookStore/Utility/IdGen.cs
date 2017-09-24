@@ -4,6 +4,7 @@ using System.Linq;
 using BookStore.Domain.DAL;
 using BookStore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace BookStore.Utility
 {

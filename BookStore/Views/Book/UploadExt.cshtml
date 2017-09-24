@@ -21,7 +21,7 @@
             <div class="form-group">
                 <i class="fa fa-asterisk text-danger"></i>
                 <label asp-for="BooKFile" class="control-label"></label>
-                <input asp-for="BooKFile" class="form-control" type="file"/>
+                <input asp-for="BooKFile"  autofocus="true" class="form-control" type="file"/>
                 <p class="help-block"><small>支持mobi,epub,pdf,txt. 不超过 50 MB.</small></p>
                 <span asp-validation-for="BooKFile" class="text-danger"></span>
             </div>

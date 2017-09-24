@@ -13,14 +13,18 @@ namespace BookStore.Domain.Models
         public long Id { get; set; }
 
         public DateTime CreateTime { get; set; }
-        
+
         public string UserAgent { get; set; }
+
         [StringLength(500)]
         public string PushEmail { get; set; }
+
         public PushStatusEnum PushStatus { get; set; }
         public int PushUseTime { get; set; }
+
         [StringLength(500)]
         public string PushFromPlatform { get; set; }
+
         public int CheckinPoint { get; set; } //checkIn本次得分
         public int CheckinTotalPoint { get; set; } //CheckIn累积得分
         public virtual BookEdition BookEdition { get; set; }
@@ -31,7 +35,7 @@ namespace BookStore.Domain.Models
     public enum PushStatusEnum
     {
         [Description("推送成功")] Success = 100,
-        [Description("投递失败")] Fail = 200,
+        [Description("投递失败")] Fail = 200
     }
 
     public enum TaxonomyEnum
@@ -40,6 +44,6 @@ namespace BookStore.Domain.Models
         [Description("上传")] Upload = 200,
         [Description("下载")] Download = 300,
         [Description("收藏")] Favorite = 400,
-        [Description("签到")] Checkin = 900,
+        [Description("签到")] Checkin = 900
     }
 }

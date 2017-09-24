@@ -1,0 +1,69 @@
+﻿@using BookStore
+@using Microsoft.Extensions.Options
+@model BookStore.Domain.Models.User
+@inject IOptions<AppSettings> AppSettings
+
+<ul class="nav navbar-nav navbar-right">
+    @{
+
+        if (!User.Identity.IsAuthenticated)
+        {
+            <li>
+                <a asp-controller="Account" asp-action="Login">
+                    <i class="fa fa-sign-in"></i> 登录
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Account" asp-action="Register">
+                    <i class="fa fa-user-plus"></i> 注册
+                </a>
+            </li>
+        }
+        else
+        {
+            var username = User.Identity.Name;
+            var loginUser = Model;
+
+
+            <li>
+                <a asp-controller="Book" asp-action="Upload">
+                    <i class="fa fa-cloud-upload"></i> 上传
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Account" asp-action="SettingsPro">
+                    <i class="fa fa-rocket"></i> 升级
+                </a>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img src="@await Component.InvokeAsync("AvatarUrl", loginUser)" class="img-circle avatar-small"/>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a asp-controller="Account" asp-action="ProfilePush" asp-route-username="@username">
+                            <i class="fa fa-user-circle-o "></i> 个人中心
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Account" asp-action="SettingsUsername">
+                            <i class="fa fa-cogs"></i> 设置
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-question-circle-o"></i> 常见问题
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a asp-controller="Account" asp-action="Logout">
+                            <i class="fa fa-sign-out"></i> 登出
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        }
+    }
+</ul>

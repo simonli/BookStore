@@ -45,11 +45,11 @@ namespace BookStore.Utility
 
         public static string ActivePage(this IHtmlHelper helper, string action, string controller)
         {
-            string classValue = "btn-default";
+            var classValue = "btn-default";
             if (helper.ViewContext.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
             {
-                string currentController = controllerActionDescriptor.ControllerName;
-                string currentAction = controllerActionDescriptor.ActionName;
+                var currentController = controllerActionDescriptor.ControllerName;
+                var currentAction = controllerActionDescriptor.ActionName;
 
                 if (currentController == controller && currentAction == action)
                 {

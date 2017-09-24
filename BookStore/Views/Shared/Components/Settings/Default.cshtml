@@ -1,10 +1,13 @@
 ﻿@model SettingsComponentViewModel
 
-<div class="pull-right">
-    <a asp-controller="Account" asp-action="ProfilePush" asp-route-username="@Model.User.Username">
-        <span class="text-muted"><i class="fa fa-reply-all"></i> 返回个人中心</span>
-    </a>
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <a asp-controller="Account" asp-action="ProfilePush" asp-route-username="@Model.User.Username">
+            <span class="text-muted"><i class="fa fa-reply-all"></i> 返回个人中心</span>
+        </a>
+    </div>
 </div>
+
 <div class="row" style="margin-bottom: 10px; border-bottom: 1px solid #ddd;">
     <div class="col-md-12">
         <div class="btn-group" role="group">
@@ -18,29 +21,3 @@
         </div>
     </div>
 </div>
-
-@**@
-@*<div class="row" style="margin-bottom: 15px;">*@
-@*    <div class="col-md-12">*@
-@*        <ul class="nav nav-tabs">*@
-@*            <li class="@Html.ActivePage("SettingsUsername", "Account")">*@
-@*                <a href="@Url.Action("SettingsUsername", "Account")">修改用户名</a>*@
-@*            </li>*@
-@*            <li class="@Html.ActivePage("ChangeEmail", "Account")">*@
-@*                <a href="@Url.Action("ChangeEmail", "Account")">修改登录邮箱</a>*@
-@*            </li>*@
-@*            <li class="@Html.ActivePage("ChangePassword", "Account")">*@
-@*                <a href="@Url.Action("ChangePassword", "Account")">修改密码</a>*@
-@*            </li>*@
-@*            <li class="@Html.ActivePage("SettingsAvatar", "Account")">*@
-@*                <a href="@Url.Action("SettingsAvatar", "Account")">头像设置</a>*@
-@*            </li>*@
-@*            <li class="@Html.ActivePage("SettingsPush", "Account")">*@
-@*                @Html.ActionLink("推送设置", "SettingsPush", "Account")*@
-@*            </li>*@
-@*            <li class="@Html.ActivePage("SettingsPro","Account")">*@
-@*                @Html.ActionLink("升级到Pro","SettingsPro","Account")*@
-@*            </li>*@
-@*        </ul>*@
-@*    </div>*@
-@*</div>*@

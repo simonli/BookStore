@@ -25,7 +25,9 @@
                     var _class = log.PushStatus == PushStatusEnum.Success ? "success" : "warning";
                     <tr class="@_class">
                         <td>
-                            <a href="@Url.Action("Detail", "Book", new {id = log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                            <a asp-controller="Book" asp-action="Detail" asp-route-id="@log.BookEdition.Book.Id">
+                                @log.BookEdition.OriginalFilename
+                            </a>
                         </td>
                         <td class="text-right">@Utils.FormatFileSize(log.BookEdition.Filesize)</td>
                         <td>@log.PushFromPlatform</td>

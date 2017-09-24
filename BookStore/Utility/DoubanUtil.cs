@@ -134,11 +134,13 @@ namespace BookStore.Utility
 
             #region Tags
             var tagNodeList = rootNode.SelectNodes("//a[contains(@class,'tag')]");
-            List<string> tagList = new List<string>();
-            foreach(var tagNode in tagNodeList)
-            {
-                tagList.Add(GetHtmlNodeText(tagNode));
-            }
+            var tagList = tagNodeList.Select(GetHtmlNodeText).ToList();
+
+//            List<string> tagList = new List<string>();
+//            foreach(var tagNode in tagNodeList)
+//            {
+//                tagList.Add(GetHtmlNodeText(tagNode));
+//            }
             #endregion
 
 

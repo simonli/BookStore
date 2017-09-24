@@ -87,7 +87,7 @@ namespace BookStore.Controllers
                     if (bookEdition != null)
                     {
                         ModelState.AddModelError("BookFile",
-                            $"书籍已经存在,图书地址:{Url.Action("Edition", "Book", new {id = bookEdition.Id})}");
+                            $"书籍已经存在,图书地址:<a href='{Url.Action("Edition", "Book", new {id = bookEdition.Id})}'>图书已经存在</a>");
                         return View(vm);
                     }
                     //将内存流写入文件

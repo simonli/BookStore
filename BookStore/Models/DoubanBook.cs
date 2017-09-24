@@ -20,7 +20,7 @@ namespace BookStore.Models
         public string BookCatelog { get; set; }
         public float RatingScore { get; set; }
         public int RatingPeople { get; set; }
-        public long BookId { get; set; }
+        public long BookId { get; set; } //是否已经收录, 收录了则为当前系统的图书ID
 
         public List<string> TagList { get; set; }
     }

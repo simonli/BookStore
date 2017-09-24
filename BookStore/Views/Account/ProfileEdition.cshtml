@@ -20,7 +20,9 @@
                 {
                     <tr class="info">
                         <td>
-                            <a href="@Url.Action("Detail", "Book", new {id = @log.Book.Id})"> @log.OriginalFilename</a>
+                            <a asp-controller="Book" asp-action="Detail" asp-route-id="@log.Book.Id">
+                                @log.OriginalFilename
+                            </a>
                         </td>
                         <td>@Utils.FormatDateTime(log.CreateTime)</td>
                         <td>@log.DownloadCount.ToString()</td>

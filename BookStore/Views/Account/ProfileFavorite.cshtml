@@ -19,7 +19,9 @@
                 {
                     <tr class="info">
                         <td>
-                            <a href="@Url.Action("Detail", "Book", new {id = log.BookEdition.Book.Id})">@log.BookEdition.OriginalFilename</a>
+                            <a asp-controller="Book" asp-action="Detail" asp-route-id="@log.BookEdition.Book.Id">
+                                @log.BookEdition.OriginalFilename
+                            </a>
                         </td>
                         <td>@Utils.FormatDateTime(log.CreateTime)</td>
                     </tr>

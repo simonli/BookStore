@@ -12,7 +12,7 @@ namespace BookStore.Utility
     {
         private int FileSize { get; set; }
 
-        public FileSizeAttribute(int fileSize= 5 * 1024 * 1024)
+        public FileSizeAttribute(int fileSize= 2 * 1024 * 1024)
         {
             FileSize = fileSize;
         }

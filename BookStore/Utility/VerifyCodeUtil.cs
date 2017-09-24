@@ -12,18 +12,18 @@ namespace BookStore.Utility
     {
         private static string GetRandomNum(int codeLength)
         {
-            string vchar = "1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,U,V,W,X,Y,Z";
-            string[] vcharArray = vchar.Split(new[] { ',' });//拆分成数组
-            string code = "";
-            int temp = -1;//记录上次随机数值，尽量避避免生产几个一样的随机数
-            Random rand = new Random();
-            for (int i = 1; i < codeLength + 1; i++)
+            const string vchar = "1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,S,T,U,V,W,X,Y,Z";
+            var vcharArray = vchar.Split(new[] { ',' });//拆分成数组
+            var code = "";
+            var temp = -1;//记录上次随机数值，尽量避避免生产几个一样的随机数
+            var rand = new Random();
+            for (var i = 1; i < codeLength + 1; i++)
             {
                 if (temp != -1)
                 {
                     rand = new Random(i * temp * unchecked((int)DateTime.Now.Ticks));
                 }
-                int t = rand.Next(vcharArray.Length);
+                var t = rand.Next(vcharArray.Length);
                 if (temp != -1 && temp == t)
                 {
                     return GetRandomNum(codeLength);
@@ -46,20 +46,20 @@ namespace BookStore.Utility
             var image = new Bitmap((int)code.Length * 18, 32);
             var g = Graphics.FromImage(image);
             g.Clear(Color.White);//背景设为白色
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
-                int x = random.Next(image.Width);
-                int y = random.Next(image.Height);
+                var x = random.Next(image.Width);
+                var y = random.Next(image.Height);
                 g.DrawRectangle(new Pen(Color.LightGray, 0), x, y, 1, 1);
             }
             //验证码绘制在g中  
-            for (int i = 0; i < code.Length; i++)
+            for (var i = 0; i < code.Length; i++)
             {
-                int cindex = random.Next(c.Length);//随机颜色索引值 
-                int findex = random.Next(fonts.Length);//随机字体索引值 
-                Font f = new Font(fonts[findex], 15, FontStyle.Bold);//字体 
+                var cindex = random.Next(c.Length);//随机颜色索引值 
+                var findex = random.Next(fonts.Length);//随机字体索引值 
+                var f = new Font(fonts[findex], 15, FontStyle.Bold);//字体 
                 Brush b = new SolidBrush(c[cindex]);//颜色  
-                int ii = 4;
+                var ii = 4;
                 if ((i + 1) % 2 == 0)
                 {
                     ii = 2;
