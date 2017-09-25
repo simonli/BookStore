@@ -14,11 +14,15 @@ namespace BookStore.ViewComponents
             _appSettings = appSettings.Value;
         }
 
-        public async Task<string> InvokeAsync(User user)
+        public string Invoke(User user)
         {
-            var avatar = user.Avatar != null
-                ? "/" + _appSettings.UploadAvatarDir + "/" + user.Avatar
-                : "/images/default_avatar.png";
+            var avatar = "/images/default_avatar.png";
+            if (user != null)
+            {
+                avatar = user.Avatar != null
+                    ? "/" + _appSettings.UploadAvatarDir + "/" + user.Avatar
+                    : avatar;
+            }
             return avatar;
         }
     }

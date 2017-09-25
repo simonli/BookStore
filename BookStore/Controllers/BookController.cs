@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Domain.DAL;
 using BookStore.Domain.Models;
@@ -11,7 +10,6 @@ using BookStore.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using BookStore.Utility;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -325,7 +323,8 @@ namespace BookStore.Controllers
                 var dbDoubanIdList = dbDoubanBookList.Select(o => o.DoubanId).ToList();
                 if (dbDoubanIdList.Contains(x.SubjectId))
                 {
-                    x.BookId = dbDoubanBookList.FirstOrDefault(q => q.DoubanId == x.SubjectId).Id;
+                    var dbBook = dbDoubanBookList.FirstOrDefault(q => q.DoubanId == x.SubjectId);
+                    x.BookId = dbBook?.Id ?? 0;
                 }
                 else
                 {
@@ -383,7 +382,7 @@ namespace BookStore.Controllers
         [Route("[controller]/edition/d/{id}/{checksum}/{filename}")]
         public IActionResult EditionDownload(long id, string checksum, string filename)
         {
-            var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+            //var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             var be = _context.BookEditions.FirstOrDefault(b => b.Id == id);
             var bookFileDir = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
             var filePath = Path.Combine(bookFileDir, be.Filename);

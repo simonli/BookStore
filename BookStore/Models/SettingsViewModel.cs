@@ -27,7 +27,7 @@ namespace BookStore.Models
         public string PushmainDomain { get; set; }
     }
 
-    public class ChangeEmailViewModel : SettingsViewModel
+    public class SettingsEmailViewModel : SettingsViewModel
     {
         public string CurrentEmail { get; set; }
 
@@ -40,7 +40,7 @@ namespace BookStore.Models
         public string Email { get; set; }
     }
 
-    public class ChangePasswordViewModel : SettingsViewModel
+    public class SettingsPasswordViewModel : SettingsViewModel
     {
         [Remote("CheckPassword", "Account", HttpMethod = "Post", ErrorMessage = "{0}不正确")]
         [Required(ErrorMessage = "{0}不能为空")]

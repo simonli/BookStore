@@ -286,17 +286,17 @@ namespace BookStore.Controllers
         }
 
 
-        [Route("[controller]/change_password")]
-        public IActionResult ChangePassword()
+        [Route("[controller]/settings/password")]
+        public IActionResult SettingsPassword()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("[controller]/change_password")]
-        public async Task<IActionResult> ChangePassword(
-            [Bind("Password", "NewPassword", "ConfirmNewPassword")] ChangePasswordViewModel vm)
+        [Route("[controller]/settings/password")]
+        public async Task<IActionResult> SettingsPassword(
+            [Bind("Password", "NewPassword", "ConfirmNewPassword")] SettingsPasswordViewModel vm)
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             if (ModelState.IsValid)
@@ -305,17 +305,17 @@ namespace BookStore.Controllers
                 await _context.SaveChangesAsync();
                 TempData.Flash("success", "密码修改成功, 下次请使用新密码登陆");
 
-                return RedirectToAction(nameof(ChangePassword));
+                return RedirectToAction(nameof(SettingsPassword));
             }
             vm.User = loginUser;
             return View(vm);
         }
 
-        [Route("[controller]/change_email")]
-        public IActionResult ChangeEmail()
+        [Route("[controller]/settings/email")]
+        public IActionResult SettingsEmail()
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
-            var vm = new ChangeEmailViewModel
+            var vm = new SettingsEmailViewModel
             {
                 User = loginUser,
                 CurrentEmail = loginUser != null ? loginUser.Email : ""
@@ -325,8 +325,8 @@ namespace BookStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("[controller]/change_email")]
-        public async Task<IActionResult> ChangeEmail([Bind("Email")] ChangeEmailViewModel vm)
+        [Route("[controller]/settings/email")]
+        public async Task<IActionResult> SettingsEmail([Bind("Email")] SettingsEmailViewModel vm)
         {
             var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
             if (ModelState.IsValid)
@@ -334,7 +334,7 @@ namespace BookStore.Controllers
                 loginUser.Email = vm.Email;
                 await _context.SaveChangesAsync();
                 TempData.Flash("success", $"邮箱修改成功, 新邮箱为: {vm.Email}");
-                return RedirectToAction(nameof(ChangeEmail));
+                return RedirectToAction(nameof(SettingsEmail));
             }
             vm.User = loginUser;
             return View(vm);
