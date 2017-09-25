@@ -311,13 +311,13 @@ namespace BookStore.Controllers
         {
             if (string.IsNullOrEmpty(keyword)) return Json(new List<DoubanBook>());
             var bookList = DoubanUtil.GetDoubanBookList(keyword);
-            
+
             var subjectIdList = new List<int>();
             bookList.ForEach(x => { subjectIdList.Add(x.SubjectId); });
 
 
             var dbDoubanBookList = _context.Books.Where(x => subjectIdList.Contains(x.DoubanId)).ToList();
-            
+
             bookList.ForEach(x =>
             {
                 var dbDoubanIdList = dbDoubanBookList.Select(o => o.DoubanId).ToList();

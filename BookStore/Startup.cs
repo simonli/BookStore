@@ -39,8 +39,8 @@ namespace BookStore
 
             //数据库配置
             services.AddDbContext<BookStoreContext>(options =>
-//                options.UseMySql(Configuration.GetConnectionString("DefaultConnection2"))
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseMySql(Configuration.GetConnectionString("MysqlConnection"))
+//                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection"))
             );
 
             //字符编码
@@ -59,7 +59,7 @@ namespace BookStore
             //限制表单上传文件大小最大为60MB.
             services.Configure<FormOptions>(options => { options.MultipartBodyLengthLimit = 60 * 1024 * 1024; });
 
-            //URL小写
+            //URL小写及结尾加slash
             services.AddRouting(options =>
             {
                 options.LowercaseUrls = true;

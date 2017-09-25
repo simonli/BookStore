@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
@@ -12,8 +13,8 @@ namespace BookStore.Migrations
                 name: "app_keys",
                 columns: table => new
                 {
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    MaxId = table.Column<long>(type: "INTEGER", nullable: false)
+                    Name = table.Column<string>(type: "varchar(127)", nullable: false),
+                    MaxId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -24,22 +25,23 @@ namespace BookStore.Migrations
                 name: "books",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    Author = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    AuthorIntroduction = table.Column<string>(type: "TEXT", nullable: true),
-                    BookCatelog = table.Column<string>(type: "TEXT", nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DoubanId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DoubanRatingPeople = table.Column<int>(type: "INTEGER", nullable: false),
-                    DoubanRatingScore = table.Column<float>(type: "REAL", nullable: false),
-                    DoubanUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Introduction = table.Column<string>(type: "TEXT", nullable: true),
-                    IsDelete = table.Column<int>(type: "INTEGER", nullable: false),
-                    Isbn = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    Logo = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    Publisher = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    Translator = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Author = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    AuthorIntroduction = table.Column<string>(type: "longtext", nullable: true),
+                    BookCatelog = table.Column<string>(type: "longtext", nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DoubanId = table.Column<int>(type: "int", nullable: false),
+                    DoubanRatingPeople = table.Column<int>(type: "int", nullable: false),
+                    DoubanRatingScore = table.Column<float>(type: "float", nullable: false),
+                    DoubanUrl = table.Column<string>(type: "longtext", nullable: true),
+                    Introduction = table.Column<string>(type: "longtext", nullable: true),
+                    IsDelete = table.Column<int>(type: "int", nullable: false),
+                    Isbn = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    Logo = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    Publisher = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    Title = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    Translator = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -50,8 +52,8 @@ namespace BookStore.Migrations
                 name: "tags",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,18 +64,19 @@ namespace BookStore.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    Avatar = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    IsDelete = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoginCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    LoginIp = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    LoginTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
-                    PointCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserType = table.Column<int>(type: "INTEGER", nullable: false),
-                    Username = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Avatar = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Email = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    IsDelete = table.Column<int>(type: "int", nullable: false),
+                    LoginCount = table.Column<int>(type: "int", nullable: false),
+                    LoginIp = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
+                    LoginTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Password = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: true),
+                    PointCount = table.Column<int>(type: "int", nullable: false),
+                    UserType = table.Column<int>(type: "int", nullable: false),
+                    Username = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,9 +87,9 @@ namespace BookStore.Migrations
                 name: "book_tag",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    BookId = table.Column<long>(type: "INTEGER", nullable: false),
-                    TagId = table.Column<long>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    BookId = table.Column<long>(type: "bigint", nullable: false),
+                    TagId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,17 +112,18 @@ namespace BookStore.Migrations
                 name: "book_editions",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    BookId = table.Column<long>(type: "INTEGER", nullable: true),
-                    CheckSum = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DownloadCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    FavoriteCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Filename = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    Filesize = table.Column<long>(type: "INTEGER", nullable: false),
-                    OriginalFilename = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
-                    PushCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    BookId = table.Column<long>(type: "bigint", nullable: true),
+                    CheckSum = table.Column<string>(type: "varchar(2000)", maxLength: 2000, nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DownloadCount = table.Column<int>(type: "int", nullable: false),
+                    FavoriteCount = table.Column<int>(type: "int", nullable: false),
+                    Filename = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    Filesize = table.Column<long>(type: "bigint", nullable: false),
+                    OriginalFilename = table.Column<string>(type: "varchar(1000)", maxLength: 1000, nullable: true),
+                    PushCount = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,11 +146,11 @@ namespace BookStore.Migrations
                 name: "push_settings",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsDefault = table.Column<int>(type: "INTEGER", nullable: false),
-                    PushEmail = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    IsDefault = table.Column<int>(type: "int", nullable: false),
+                    PushEmail = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -163,18 +167,19 @@ namespace BookStore.Migrations
                 name: "action_logs",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    BookEditionId = table.Column<long>(type: "INTEGER", nullable: true),
-                    CheckinPoint = table.Column<int>(type: "INTEGER", nullable: false),
-                    CheckinTotalPoint = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PushEmail = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    PushFromPlatform = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    PushStatus = table.Column<int>(type: "INTEGER", nullable: false),
-                    PushUseTime = table.Column<int>(type: "INTEGER", nullable: false),
-                    Taxonomy = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserAgent = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    BookEditionId = table.Column<long>(type: "bigint", nullable: true),
+                    CheckinPoint = table.Column<int>(type: "int", nullable: false),
+                    CheckinTotalPoint = table.Column<int>(type: "int", nullable: false),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PushEmail = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    PushFromPlatform = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    PushStatus = table.Column<int>(type: "int", nullable: false),
+                    PushUseTime = table.Column<int>(type: "int", nullable: false),
+                    Taxonomy = table.Column<int>(type: "int", nullable: false),
+                    UserAgent = table.Column<string>(type: "longtext", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -197,12 +202,13 @@ namespace BookStore.Migrations
                 name: "book_edition_comments",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    AtUserId = table.Column<long>(type: "INTEGER", nullable: true),
-                    BookEditionId = table.Column<long>(type: "INTEGER", nullable: true),
-                    Comment = table.Column<string>(type: "TEXT", nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    AtUserId = table.Column<long>(type: "bigint", nullable: true),
+                    BookEditionId = table.Column<long>(type: "bigint", nullable: true),
+                    Comment = table.Column<string>(type: "longtext", nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -231,11 +237,12 @@ namespace BookStore.Migrations
                 name: "user_point_logs",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false),
-                    ActionLogId = table.Column<long>(type: "INTEGER", nullable: true),
-                    CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Point = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<long>(type: "INTEGER", nullable: true)
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    ActionLogId = table.Column<long>(type: "bigint", nullable: true),
+                    CreateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Point = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {

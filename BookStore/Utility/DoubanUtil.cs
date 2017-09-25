@@ -3,9 +3,12 @@ using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using OpenQA.Selenium;
+using OpenQA.Selenium.PhantomJS;
 
 namespace BookStore.Utility
 {
@@ -13,14 +16,27 @@ namespace BookStore.Utility
     {
         public static List<DoubanBook> GetDoubanBookList(string keyword)
         {
+            keyword = WebUtility.UrlEncode(keyword);
             List<DoubanBook> bookList = new List<DoubanBook>();
             var doubanUrl = $"https://book.douban.com/subject_search?search_text={keyword}";
-            var web = new HtmlWeb
-            {
-                OverrideEncoding = Encoding.Default
-            };
-            var htmlDoc = web.Load(doubanUrl);
-            var itemList = htmlDoc.DocumentNode.SelectNodes("//li[@class='subject-item']");
+
+            PhantomJSDriverService pds = PhantomJSDriverService.CreateDefaultService();
+            pds.OutputEncoding = "utf-8";
+            IWebDriver driver = new PhantomJSDriver(pds);
+            driver.Navigate().GoToUrl(doubanUrl);
+
+            var doubanHtml = driver.PageSource;
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(doubanHtml);
+
+
+//            var web = new HtmlWeb
+//            {
+//                OverrideEncoding = Encoding.Default
+//            };
+//            var htmlDoc = web.Load(doubanUrl);
+            var itemList = doc.DocumentNode.SelectNodes("//div[contains(@class,'sc-bZQynM')]");
 
             foreach (var item in itemList)
             {
