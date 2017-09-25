@@ -39,8 +39,8 @@ namespace BookStore
 
             //数据库配置
             services.AddDbContext<BookStoreContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("MysqlConnection"))
-//                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection"))
+//                options.UseMySql(Configuration.GetConnectionString("MysqlConnection"))
+                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection"))
             );
 
             //字符编码

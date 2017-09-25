@@ -13,8 +13,8 @@ namespace BookStore.Utility
         public static long NewId(string name)
         {
             var options = new DbContextOptionsBuilder<BookStoreContext>()
-                .UseMySql("Server=localhost;User Id=root;Password=cncode;Database=bookstore")
-//                .UseSqlite("Data Source=bookstore.db")
+//                .UseMySql("Server=localhost;User Id=root;Password=cncode;Database=bookstore")
+                .UseSqlite("Data Source=bookstore.db")
                 .Options;
             using (var context = new BookStoreContext(options))
             {

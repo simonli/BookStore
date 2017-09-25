@@ -31,38 +31,36 @@ namespace BookStore.Utility
             doc.LoadHtml(doubanHtml);
 
 
-//            var web = new HtmlWeb
-//            {
-//                OverrideEncoding = Encoding.Default
-//            };
-//            var htmlDoc = web.Load(doubanUrl);
             var itemList = doc.DocumentNode.SelectNodes("//div[contains(@class,'sc-bZQynM')]");
 
             foreach (var item in itemList)
             {
                 DoubanBook book = new DoubanBook
                 {
-                    Url = item.SelectSingleNode(".//a[@class='nbg']").Attributes["href"].Value
+                    Url = item.SelectSingleNode(".//a").Attributes["href"].Value
                 };
                 if (book.Url.IndexOf("book.douban.com/subject/", StringComparison.Ordinal) > 0)
                 {
                     //书名
-                    book.Title = GetHtmlNodeText(item.SelectSingleNode(".//div[@class='info']/h2/a"));
+                    book.Title = GetHtmlNodeText(item.SelectSingleNode(".//div[@class='title']/a"));
                     //封面图片
-                    book.Logo = item.SelectSingleNode(".//img").Attributes["src"].Value;
+                    var logoStr = item.SelectSingleNode(".//div[contains(@class,'cover')]").Attributes["style"].Value;
+                    book.Logo = logoStr.Substring(logoStr.IndexOf("(") + 1,
+                        logoStr.LastIndexOf(")") - logoStr.IndexOf("(")-1);
                     //图书Id
                     if (int.TryParse(Regex.Replace(book.Url, @"[^\d]*", ""), out int subjectId))
                     {
                         book.SubjectId = subjectId;
                     }
                     //出版社
-                    var publisherNode = item.SelectSingleNode(".//div[@class='info']/div[@class='pub']");
+                    var publisherNode = item.SelectSingleNode(".//div[contains(@class,'abstract')]");
                     if (publisherNode != null)
                     {
                         book.Publisher = GetHtmlNodeText(publisherNode);
                     }
                     //评分
-                    var ratingScoreNode = item.SelectSingleNode(".//div[@class='info']/div[@class='star clearfix']/span[@class='rating_nums']");
+                    var ratingScoreNode =
+                        item.SelectSingleNode(".//span[@class='rating_nums']");
                     if (ratingScoreNode != null)
                     {
                         if (float.TryParse(GetHtmlNodeText(ratingScoreNode), out float ratingScore))
@@ -71,7 +69,8 @@ namespace BookStore.Utility
                         }
                     }
                     //评价人数
-                    var ratingPeopleNode = item.SelectSingleNode(".//div[@class='info']/div[@class='star clearfix']/span[@class='pl']");
+                    var ratingPeopleNode =
+                        item.SelectSingleNode(".//span[@class='pl']");
                     if (ratingPeopleNode != null)
                     {
                         var ratingPeopleStr = Regex.Replace(GetHtmlNodeText(ratingPeopleNode), @"[^\d]*", "");
