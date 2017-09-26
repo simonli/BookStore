@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -73,6 +74,44 @@ namespace BookStore.Utility
                 }
             }
             return isActive;
+        }
+
+        public static string NoHtml(this string htmlstring)
+        {
+            string result;
+            if (string.IsNullOrEmpty(htmlstring))
+            {
+                result = string.Empty;
+            }
+            else
+            {
+                htmlstring = Regex.Replace(htmlstring, "<script[^>]*?>.*?</script>", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "<iframe[\\s]*[^>]*?>.*?</iframe[\\s]*>", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "<frameset[\\s]*[^>]*?>.*?</frameset[\\s]*>", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "<(.[^>]*)>", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "-->", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "<!--.*", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(quot|#34);", "\"", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(amp|#38);", "&", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(lt|#60);", "<", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(gt|#62);", ">", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(nbsp|#160);", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(iexcl|#161);", "¡", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(cent|#162);", "¢", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(pound|#163);", "£", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&(copy|#169);", "©", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "&#(\\d+);", " ", RegexOptions.IgnoreCase);
+                htmlstring = Regex.Replace(htmlstring, "(\\s+)", " ", RegexOptions.IgnoreCase);
+                htmlstring = htmlstring.Replace("<", " ");
+                htmlstring = htmlstring.Replace(">", " ");
+                htmlstring = htmlstring.Replace("(", "");
+                htmlstring = htmlstring.Replace(")", "");
+                htmlstring = htmlstring.Replace("）", "");
+                htmlstring = htmlstring.Replace("（", "");
+                htmlstring = htmlstring.Replace(" ", "");
+                result = htmlstring;
+            }
+            return result;
         }
     }
 }

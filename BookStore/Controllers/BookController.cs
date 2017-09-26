@@ -310,7 +310,7 @@ namespace BookStore.Controllers
         public JsonResult SearchDouban(string keyword)
         {
             if (string.IsNullOrEmpty(keyword)) return Json(new List<DoubanBook>());
-            var bookList = DoubanUtil.GetDoubanBookList(keyword);
+            var bookList = DoubanUtil.GetDoubanBookList(_appSettings.PhantomJsExePath, keyword);
 
             var subjectIdList = new List<int>();
             bookList.ForEach(x => { subjectIdList.Add(x.SubjectId); });

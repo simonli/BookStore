@@ -13,5 +13,6 @@ namespace BookStore
         public string UploadAvatarDir { get; set; }
         public string PushmailDomain { get; set; }
         public string AmazonCode { get; set; }
+        public string PhantomJsExePath { get; set; }
     }
 }

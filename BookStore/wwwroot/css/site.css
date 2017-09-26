@@ -138,3 +138,7 @@ body {
 .bs-callout-warning {
     border-left-color: #aa6708;
 }
+
+.book-medium {
+    width:8rem;
+}

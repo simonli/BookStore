@@ -2,37 +2,62 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using OpenQA.Selenium;
-using OpenQA.Selenium.PhantomJS;
+using BookStore.Utility;
 
 namespace BookStore.Utility
 {
     public static class DoubanUtil
     {
-        public static List<DoubanBook> GetDoubanBookList(string keyword)
+        public static List<DoubanBook> GetDoubanBookList(string phantomJsPath, string keyword)
         {
-            keyword = WebUtility.UrlEncode(keyword);
+
+            keyword = WebUtility.UrlEncode(keyword.NoHtml());
             List<DoubanBook> bookList = new List<DoubanBook>();
             var doubanUrl = $"https://book.douban.com/subject_search?search_text={keyword}";
 
-            PhantomJSDriverService pds = PhantomJSDriverService.CreateDefaultService();
-            pds.OutputEncoding = "utf-8";
-            IWebDriver driver = new PhantomJSDriver(pds);
-            driver.Navigate().GoToUrl(doubanUrl);
+            #region 通过PhantomJS获取douban动态列表内容
 
-            var doubanHtml = driver.PageSource;
+            var phantomJs = new PhantomJS
+            {
+                PhantomJsExePath = phantomJsPath
+            };
+            string doubanHtml;
+            using (var outFs = new MemoryStream())
+            {
+                try
+                {
+                    phantomJs.RunScript(@"
+						var system = require('system');
+						var page = require('webpage').create();
+						page.open('" + doubanUrl + @"', function() {
+							system.stdout.writeLine(page.content);
+							phantom.exit();
+						});
+					", null, null, outFs);
+                }
+                finally
+                {
+                    phantomJs.Abort(); // ensure that phantomjs.exe is stopped
+                }
+                outFs.Position = 0;
+                var reader = new StreamReader(outFs);
+                doubanHtml = reader.ReadToEnd();
+            }
+
+            #endregion
 
             var doc = new HtmlDocument();
             doc.LoadHtml(doubanHtml);
 
 
             var itemList = doc.DocumentNode.SelectNodes("//div[contains(@class,'sc-bZQynM')]");
-
+            if (itemList == null) return bookList;
             foreach (var item in itemList)
             {
                 DoubanBook book = new DoubanBook
@@ -45,8 +70,9 @@ namespace BookStore.Utility
                     book.Title = GetHtmlNodeText(item.SelectSingleNode(".//div[@class='title']/a"));
                     //封面图片
                     var logoStr = item.SelectSingleNode(".//div[contains(@class,'cover')]").Attributes["style"].Value;
-                    book.Logo = logoStr.Substring(logoStr.IndexOf("(") + 1,
-                        logoStr.LastIndexOf(")") - logoStr.IndexOf("(")-1);
+                    book.Logo = logoStr.Substring(logoStr.IndexOf("(", StringComparison.Ordinal) + 1,
+                        logoStr.LastIndexOf(")", StringComparison.Ordinal) -
+                        logoStr.IndexOf("(", StringComparison.Ordinal) - 1);
                     //图书Id
                     if (int.TryParse(Regex.Replace(book.Url, @"[^\d]*", ""), out int subjectId))
                     {
@@ -106,7 +132,10 @@ namespace BookStore.Utility
             foreach (var spanNode in infoSpanNodeList)
             {
                 var spanNodeText = GetHtmlNodeText(spanNode);
-                if (spanNodeText.IndexOf(":", StringComparison.Ordinal) > 0) { spanNodeText = spanNodeText.Split(':')[0]; }
+                if (spanNodeText.IndexOf(":", StringComparison.Ordinal) > 0)
+                {
+                    spanNodeText = spanNodeText.Split(':')[0];
+                }
                 switch (spanNodeText)
                 {
                     case "作者":
@@ -125,14 +154,17 @@ namespace BookStore.Utility
             }
 
             #region 图书简介
+
             var bookIntroNode1 = rootNode.SelectSingleNode("//*[@id='link-report']/span[2]/div/div");
             var bookIntroNode2 = rootNode.SelectSingleNode("//*[@id='link-report']/span[1]/div");
             var bookIntroNode3 = rootNode.SelectSingleNode("//*[@id='link-report']/div[1]/div");
             var bookIntroNode = bookIntroNode1 ?? bookIntroNode2 ?? bookIntroNode3;
             var bookIntro = GetHtmlNodeHtml(bookIntroNode);
+
             #endregion
 
             #region 作者简介
+
             var authorIntroNode1 = rootNode.SelectSingleNode("//*[@id='content']/div/div[1]/div[3]/div[2]/span[2]/div");
             var authorIntroNode2 = rootNode.SelectSingleNode("//*[@id='content']/div/div[1]/div[3]/div[2]/span[1]/div");
             var authorIntroNode3 = rootNode.SelectSingleNode("//*[@id='content']/div/div[1]/div[3]/div[2]/div/div");
@@ -142,12 +174,14 @@ namespace BookStore.Utility
             #endregion
 
             var bookCatelog = GetHtmlNodeHtml(rootNode.SelectSingleNode($"//*[@id='dir_{doubanId}_full']"));
-            var ratingScoreStr = GetHtmlNodeText(rootNode.SelectSingleNode("//strong[contains(@class,'ll rating_num')]"));
+            var ratingScoreStr =
+                GetHtmlNodeText(rootNode.SelectSingleNode("//strong[contains(@class,'ll rating_num')]"));
             float.TryParse(ratingScoreStr, out float ratingScore);
             var ratingPeopleStr = GetHtmlNodeText(rootNode.SelectSingleNode("//span[contains(@property,'v:votes')]"));
             int.TryParse(ratingPeopleStr, out int ratingPeople);
 
             #region Tags
+
             var tagNodeList = rootNode.SelectNodes("//a[contains(@class,'tag')]");
             var tagList = tagNodeList.Select(GetHtmlNodeText).ToList();
 
@@ -156,6 +190,7 @@ namespace BookStore.Utility
 //            {
 //                tagList.Add(GetHtmlNodeText(tagNode));
 //            }
+
             #endregion
 
 
@@ -182,7 +217,6 @@ namespace BookStore.Utility
 
         public static int GetDoubanId(string doubanUrl)
         {
-
             return (int.TryParse(Regex.Replace(doubanUrl, @"[^\d]*", ""), out int doubanId)) ? doubanId : 0;
         }
 
@@ -217,5 +251,30 @@ namespace BookStore.Utility
             return html;
         }
 
+        private static string GetHtmlContent(PhantomJS phantomJs, string url)
+        {
+            using (var outFs = new MemoryStream())
+            {
+                try
+                {
+                    phantomJs.RunScript(@"
+						var system = require('system');
+						var page = require('webpage').create();
+						page.open(url, function() {
+							system.stdout.writeLine(page.content);
+							phantom.exit();
+						});
+					", null, null, outFs);
+                }
+                finally
+                {
+                    phantomJs.Abort(); // ensure that phantomjs.exe is stopped
+                }
+                outFs.Position = 0;
+                var reader = new StreamReader(outFs);
+                var content = reader.ReadToEnd();
+                return content;
+            }
+        }
     }
 }
