@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 using System.IO;
 using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
 
 namespace BookStore.Utility
 {
@@ -24,33 +19,11 @@ namespace BookStore.Utility
         }
 
 
-        public static string GetDigitalRandomNum(int NumCount)
-        {
-            string allChar = "0,1,2,3,4,5,6,7,8,9";
-            string[] allCharArray = allChar.Split(','); //拆分成数组
-            string randomNum = "";
-            int temp = -1; //记录上次随机数的数值，尽量避免产生几个相同的随机数
-            var rand = new Random();
-            for (int i = 0; i < NumCount; i++)
-            {
-                if (temp != -1)
-                {
-                    rand = new Random(i * temp * ((int) DateTime.Now.Ticks));
-                }
-                int t = rand.Next(9);
-                if (temp == t)
-                {
-                    return GetDigitalRandomNum(NumCount);
-                }
-                temp = t;
-                randomNum += allCharArray[t];
-            }
-            return "";
-        }
+        
 
         public static string GetCheckSum(string filepath)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             using (var md5 = MD5.Create())
             {
                 using (var stream = File.OpenRead(filepath))
@@ -67,7 +40,7 @@ namespace BookStore.Utility
 
         public static string GetCheckSum(Stream stream)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             using (var md5 = MD5.Create())
             {
                 byte[] hashBytes = md5.ComputeHash(stream);
@@ -80,11 +53,7 @@ namespace BookStore.Utility
         }
 
 
-        public static string GetRandomFileName()
-        {
-            //20位数字文件名
-            return DateTime.Now.ToString("yyMMddHHmmss") + GetDigitalRandomNum(8);
-        }
+      
 
         public static string GetGuid()
         {
@@ -136,7 +105,33 @@ namespace BookStore.Utility
             byte[] buffer = Guid.NewGuid().ToByteArray();
             return BitConverter.ToInt64(buffer, 0);
         }
-        
-        
+
+        /// <summary>
+        /// 根据文件名（不带扩展名）从Path环境变量中获取文件路径
+        /// </summary>
+        /// <param name="filenameWithoutExt"></param>
+        /// <returns></returns>
+        public static string GetFilePathFromPathEnvironmentVariable(string filenameWithoutExt)
+        {
+            var pathEnvs = Environment.GetEnvironmentVariable("path");
+            var os = Environment.GetEnvironmentVariable("os");
+            var filename = os.IndexOf("windows", StringComparison.OrdinalIgnoreCase) < 0
+                ? filenameWithoutExt
+                : $"{filenameWithoutExt}.exe";
+            if (!string.IsNullOrEmpty(pathEnvs))
+            {
+                foreach (var pathEnv in pathEnvs.Split(Path.PathSeparator))
+                {
+                    string filepath = Path.Combine(pathEnv, filename);
+                    if (File.Exists(filepath))
+                    {
+                        return filepath;
+                    }
+                }
+            }
+            return "";
+        }
+
+
     }
 }

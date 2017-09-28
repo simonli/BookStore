@@ -33,11 +33,7 @@ namespace BookStore.Utility
         /// By default this property initialized with assembly location (app bin folder). 
         /// This is exact place where phantomjs.exe is copied by PhantomJS nuget package.
         /// </remarks>
-        public string ToolPath
-        {
-            get;
-            set;
-        }
+        public string ToolPath { get; set; }
 
         /// <summary>
         /// Get or set location for temp files (default location: <see cref="M:System.IO.Path.GetTempPath" />)
@@ -45,47 +41,27 @@ namespace BookStore.Utility
         /// <remarks>
         /// Temp file is created in <see cref="M:NReco.PhantomJS.PhantomJS.RunScript(System.String,System.String[])" /> and <see cref="M:NReco.PhantomJS.PhantomJS.RunScriptAsync(System.String,System.String[])" /> methods
         /// (PhantomJS can read javascript code only from file).</remarks>
-        public string TempFilesPath
-        {
-            get;
-            set;
-        }
+        public string TempFilesPath { get; set; }
 
         /// <summary>
         /// Get or set PhantomJS tool executive file name ('phantomjs.exe' by default)
         /// </summary>
-        public string PhantomJsExeName
-        {
-            get;
-            set;
-        }
+        public string PhantomJsExeName { get; set; }
 
         /// <summary>
         /// Get or set extra PhantomJS switches/options
         /// </summary>
-        public string CustomArgs
-        {
-            get;
-            set;
-        }
+        public string CustomArgs { get; set; }
 
         /// <summary>
         /// Get or set PhantomJS process priority (Normal by default)
         /// </summary>
-        public ProcessPriorityClass ProcessPriority
-        {
-            get;
-            set;
-        }
+        public ProcessPriorityClass ProcessPriority { get; set; }
 
         /// <summary>
         /// Get or set maximum execution time for running PhantomJS process (null is by default = no timeout)
         /// </summary>
-        public TimeSpan? ExecutionTimeout
-        {
-            get;
-            set;
-        }
+        public TimeSpan? ExecutionTimeout { get; set; }
 
         public string PhantomJsExePath { get; set; }
 
@@ -94,41 +70,11 @@ namespace BookStore.Utility
         /// </summary>
         public PhantomJS()
         {
-            this.ToolPath = this.ResolveAppBinPath();
-            this.PhantomJsExeName = "phantomjs.exe";
+            this.PhantomJsExeName = "Phantomjs";
             this.ProcessPriority = ProcessPriorityClass.Normal;
-            this.PhantomJsExePath = Path.Combine(this.ToolPath, this.PhantomJsExeName);
-        }
 
-        private string ResolveAppBinPath()
-        {
-            string result = AppDomain.CurrentDomain.BaseDirectory;
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            for (int i = 0; i < assemblies.Length; i++)
-            {
-                Assembly assembly = assemblies[i];
-                Type type = assembly.GetType("System.Web.HttpRuntime", false);
-                if (type != null)
-                {
-                    PropertyInfo property = type.GetProperty("AppDomainId", BindingFlags.Static | BindingFlags.Public);
-                    if (!(property == null) && property.GetValue(null, null) != null)
-                    {
-                        PropertyInfo property2 = type.GetProperty("BinDirectory", BindingFlags.Static | BindingFlags.Public);
-                        if (!(property2 != null))
-                        {
-                            break;
-                        }
-                        object value = property2.GetValue(null, null);
-                        if (value is string)
-                        {
-                            result = (string)value;
-                            break;
-                        }
-                        break;
-                    }
-                }
-            }
-            return result;
+            string envPhantomJsExePath = Utils.GetFilePathFromPathEnvironmentVariable(this.PhantomJsExeName);
+            this.PhantomJsExePath = !string.IsNullOrEmpty(envPhantomJsExePath) ? envPhantomJsExePath : Path.Combine(this.ToolPath, this.PhantomJsExeName);
         }
 
         /// <summary>
@@ -198,10 +144,7 @@ namespace BookStore.Utility
                 }
             };
             this.RunInternal(jsFile, jsArgs, null, null);
-            this.PhantomJsProcess.Exited += delegate (object sender, EventArgs args)
-            {
-                handleExit();
-            };
+            this.PhantomJsProcess.Exited += delegate(object sender, EventArgs args) { handleExit(); };
             if (this.PhantomJsProcess.HasExited)
             {
                 handleExit();
@@ -254,7 +197,7 @@ namespace BookStore.Utility
             Task result;
             try
             {
-                result = this.RunAsync(tmpJsFilePath, jsArgs).ContinueWith(delegate (Task t)
+                result = this.RunAsync(tmpJsFilePath, jsArgs).ContinueWith(delegate(Task t)
                 {
                     this.DeleteFileIfExists(tmpJsFilePath);
                 });
@@ -339,7 +282,7 @@ namespace BookStore.Utility
                 {
                     this.PhantomJsProcess.PriorityClass = this.ProcessPriority;
                 }
-                this.PhantomJsProcess.ErrorDataReceived += delegate (object o, DataReceivedEventArgs args)
+                this.PhantomJsProcess.ErrorDataReceived += delegate(object o, DataReceivedEventArgs args)
                 {
                     if (args.Data == null)
                     {
@@ -354,7 +297,7 @@ namespace BookStore.Utility
                 this.PhantomJsProcess.BeginErrorReadLine();
                 if (outputStream == null)
                 {
-                    this.PhantomJsProcess.OutputDataReceived += delegate (object o, DataReceivedEventArgs args)
+                    this.PhantomJsProcess.OutputDataReceived += delegate(object o, DataReceivedEventArgs args)
                     {
                         if (this.OutputReceived != null)
                         {
@@ -433,7 +376,7 @@ namespace BookStore.Utility
             bool hasValue = this.ExecutionTimeout.HasValue;
             if (hasValue)
             {
-                this.PhantomJsProcess.WaitForExit((int)this.ExecutionTimeout.Value.TotalMilliseconds);
+                this.PhantomJsProcess.WaitForExit((int) this.ExecutionTimeout.Value.TotalMilliseconds);
             }
             else
             {
@@ -446,7 +389,8 @@ namespace BookStore.Utility
             if (hasValue && !this.PhantomJsProcess.HasExited)
             {
                 this.EnsureProcessStopped();
-                throw new Exception(string.Format("FFMpeg process exceeded execution timeout ({0}) and was aborted", this.ExecutionTimeout));
+                throw new Exception(string.Format("FFMpeg process exceeded execution timeout ({0}) and was aborted",
+                    this.ExecutionTimeout));
             }
         }
 
@@ -483,6 +427,5 @@ namespace BookStore.Utility
                 throw new Exception(string.Join("\n", errLines.ToArray()));
             }
         }
-
     }
 }

@@ -5,18 +5,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using BookStore.Utility;
 
 namespace BookStore.Utility
 {
     public static class DoubanUtil
     {
-        public static List<DoubanBook> GetDoubanBookList(string phantomJsPath, string keyword)
+        public static List<DoubanBook> GetDoubanBookList(string keyword)
         {
-
             keyword = WebUtility.UrlEncode(keyword.NoHtml());
             List<DoubanBook> bookList = new List<DoubanBook>();
             var doubanUrl = $"https://book.douban.com/subject_search?search_text={keyword}";
@@ -25,7 +21,7 @@ namespace BookStore.Utility
 
             var phantomJs = new PhantomJS
             {
-                PhantomJsExePath = phantomJsPath
+                CustomArgs = " --disk-cache=true --ignore-ssl-errors=true --load-images=false "
             };
             string doubanHtml;
             using (var outFs = new MemoryStream())
@@ -234,6 +230,7 @@ namespace BookStore.Utility
             }
             catch
             {
+                // ignored
             }
             return text;
         }
@@ -247,34 +244,9 @@ namespace BookStore.Utility
             }
             catch
             {
+                // ignored
             }
             return html;
-        }
-
-        private static string GetHtmlContent(PhantomJS phantomJs, string url)
-        {
-            using (var outFs = new MemoryStream())
-            {
-                try
-                {
-                    phantomJs.RunScript(@"
-						var system = require('system');
-						var page = require('webpage').create();
-						page.open(url, function() {
-							system.stdout.writeLine(page.content);
-							phantom.exit();
-						});
-					", null, null, outFs);
-                }
-                finally
-                {
-                    phantomJs.Abort(); // ensure that phantomjs.exe is stopped
-                }
-                outFs.Position = 0;
-                var reader = new StreamReader(outFs);
-                var content = reader.ReadToEnd();
-                return content;
-            }
         }
     }
 }

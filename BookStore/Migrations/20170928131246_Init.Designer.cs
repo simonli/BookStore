@@ -12,7 +12,7 @@ using System;
 namespace BookStore.Migrations
 {
     [DbContext(typeof(BookStoreContext))]
-    [Migration("20170926024113_Init")]
+    [Migration("20170928131246_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -312,7 +312,7 @@ namespace BookStore.Controllers
             if (string.IsNullOrEmpty(keyword)) return Json(new List<DoubanBook>());
             Console.WriteLine("****************************************************************");
             Console.WriteLine(DateTime.Now);
-            var bookList = DoubanUtil.GetDoubanBookList(_appSettings.PhantomJsExePath, keyword);
+            var bookList = DoubanUtil.GetDoubanBookList(keyword);
             Console.WriteLine(DateTime.Now);
             Console.WriteLine("###############################################################*");
             

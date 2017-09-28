@@ -74,6 +74,7 @@
                 </span>
             </div>
         </div>
+        <i id="icon"></i>
         <ul id="douban_books" class="list-unstyled"></ul>
     </div>
 </div>
@@ -97,7 +98,11 @@
                     type: "GET",
                     url: "@Url.Action("SearchDouban")",
                     data: { 'keyword': q },
-                    success: function(data) {
+                    beforeSend: function(){
+                        $("#icon").addClass("fa fa-spinner fa-pulse fa-5x text-success");
+                    },
+                    success: function (data) {
+                        $("#icon").removeClass("fa fa-spinner fa-pulse fa-5x text-success");
                         console.log(data);
                         $("#douban_books").empty();
                         $("#douban_books").html(tmpl.render(data));
