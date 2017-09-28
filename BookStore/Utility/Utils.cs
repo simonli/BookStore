@@ -115,7 +115,7 @@ namespace BookStore.Utility
         {
             var pathEnvs = Environment.GetEnvironmentVariable("PATH");
             var os = Environment.OSVersion.Platform.ToString();
-            var filename = os.IndexOf("windows", StringComparison.OrdinalIgnoreCase) < 0
+            var filename = os.IndexOf("win32", StringComparison.OrdinalIgnoreCase) < 0
                 ? filenameWithoutExt
                 : $"{filenameWithoutExt}.exe";
             if (!string.IsNullOrEmpty(pathEnvs))
