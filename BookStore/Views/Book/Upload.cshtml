@@ -98,11 +98,11 @@
                     type: "GET",
                     url: "@Url.Action("SearchDouban")",
                     data: { 'keyword': q },
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $("#icon").addClass("fa fa-spinner fa-pulse fa-5x text-success");
                     },
                     success: function (data) {
-                        $("#icon").removeClass("fa fa-spinner fa-pulse fa-5x text-success");
+                        $("#icon").removeClass();
                         console.log(data);
                         $("#douban_books").empty();
                         $("#douban_books").html(tmpl.render(data));

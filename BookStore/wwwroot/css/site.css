@@ -5,10 +5,11 @@
 body {
     padding-top: 80px;
     padding-bottom: 20px;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "PingFang SC", "Hiragino Sans GB","Microsoft YaHei", "WenQuanYi Micro Hei", Verdana, Aril, sans-serif;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Verdana, Aril, sans-serif;
     -webkit-font-smoothing: antialiased;
     background: #fcfcfc;
 }
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -80,12 +81,14 @@ body {
     border-bottom: 0;
     border-bottom-left-radius: 0.5px;
 }
+
 .btn-switcher-profile {
     border-bottom-right-radius: 0.5px;
     border-bottom: 1px solid #e3e3e3;
     border-bottom-left-radius: 0.5px;
 }
-.hr-profile{
+
+.hr-profile {
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -117,7 +120,7 @@ body {
 .well-ext-profile {
     min-height: 2rem;
     padding: 0.5rem 1.5rem;
-    margin: 1.5rem 0 1.5rem 0 ;
+    margin: 1.5rem 0 1.5rem 0;
     /*background-color: #f5f5f5;*/
     /*font-size: 1.6rem;*/
     /*border: 1px solid #e3e3e3;*/
@@ -140,5 +143,5 @@ body {
 }
 
 .book-medium {
-    width:8rem;
+    width: 8rem;
 }
