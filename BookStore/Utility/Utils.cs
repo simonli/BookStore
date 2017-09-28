@@ -113,8 +113,8 @@ namespace BookStore.Utility
         /// <returns></returns>
         public static string GetFilePathFromPathEnvironmentVariable(string filenameWithoutExt)
         {
-            var pathEnvs = Environment.GetEnvironmentVariable("path");
-            var os = Environment.GetEnvironmentVariable("os");
+            var pathEnvs = Environment.GetEnvironmentVariable("PATH");
+            var os = Environment.OSVersion.Platform.ToString();
             var filename = os.IndexOf("windows", StringComparison.OrdinalIgnoreCase) < 0
                 ? filenameWithoutExt
                 : $"{filenameWithoutExt}.exe";
@@ -122,7 +122,7 @@ namespace BookStore.Utility
             {
                 foreach (var pathEnv in pathEnvs.Split(Path.PathSeparator))
                 {
-                    string filepath = Path.Combine(pathEnv, filename);
+                    var filepath = Path.Combine(pathEnv, filename);
                     if (File.Exists(filepath))
                     {
                         return filepath;
