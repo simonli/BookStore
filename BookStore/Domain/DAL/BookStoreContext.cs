@@ -11,7 +11,7 @@ namespace BookStore.Domain.DAL
 {
     public class BookStoreContext : DbContext
     {
-        public BookStoreContext(DbContextOptions options): base(options)
+        public BookStoreContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -27,15 +27,15 @@ namespace BookStore.Domain.DAL
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {    
+        {
             modelBuilder.Entity<Book>().HasIndex(x => x.Title);
             modelBuilder.Entity<Book>().HasIndex(x => x.Author);
             modelBuilder.Entity<Book>().HasIndex(x => x.Isbn);
             modelBuilder.Entity<Book>().HasIndex(x => x.Publisher);
-            
+
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             modelBuilder.Entity<AppKey>().HasIndex(x => x.Name).IsUnique();
-            
+
             modelBuilder.Entity<BookTag>()
                 .HasOne(x => x.Book)
                 .WithMany(x => x.BookTags)
@@ -49,10 +49,13 @@ namespace BookStore.Domain.DAL
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<User>().Property(x => x.IsDelete).HasDefaultValue(0);
             modelBuilder.Entity<Book>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Book>().Property(x => x.IsDelete).HasDefaultValue(0);
             modelBuilder.Entity<BookEdition>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
             modelBuilder.Entity<BookEditionComment>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
             modelBuilder.Entity<PushSetting>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
+            modelBuilder.Entity<PushSetting>().Property(x => x.IsDefault).HasDefaultValue(0);
             modelBuilder.Entity<ActionLog>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
             modelBuilder.Entity<UserPointLog>().Property(x => x.CreateTime).ValueGeneratedOnAdd();
         }

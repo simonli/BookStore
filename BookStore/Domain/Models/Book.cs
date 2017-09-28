@@ -39,6 +39,7 @@ namespace BookStore.Domain.Models
         public string BookCatelog { get; set; }
         public string Introduction { get; set; }
         public int DoubanId { get; set; }
+        [StringLength(500)]
         public string DoubanUrl { get; set; }
         public float DoubanRatingScore { get; set; }
         public int DoubanRatingPeople { get; set; }
