@@ -1,5 +1,4 @@
-﻿@using System
-@using BookStore
+﻿@using BookStore
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.Extensions.Options
 @inject IOptions<AppSettings> AppSettings
@@ -9,6 +8,7 @@
 @{
     ViewData["Title"] = Model.Book.Title;
     var book = Model.Book;
+    var relatedBooks = Model.RelatedBooks;
     var amazonCode = AppSettings.Value.AmazonCode;
     var logoUrl = book.Logo;
     if (logoUrl.IndexOf("http", StringComparison.Ordinal) < 0 || logoUrl.IndexOf("https", StringComparison.Ordinal) < 0)
@@ -17,25 +17,98 @@
     }
 }
 
+
 <div class="row">
     <div class="col-md-10">
         <div class="well">
             <h1>
-                <a target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@(book.Title)&tag=@amazonCode">
+                <a>
                     @book.Title
                 </a>
             </h1>
-            <div class="row">
-                <div class="col-md-8">
-
-                </div>
-                <div class="col-md-4">
-                    <a target="_blank" href="http://www.amazon.cn/gp/search?index=books&keywords=@(book.Title)&tag=@amazonCode">
-                        <img src="@logoUrl" class="book-img pull-right" alt="@book.Title"/>
-                    </a>
-                </div>
+            <p>
+                <span>作者：<a><strong>@book.Author</strong></a></span>
+                @{
+                    if (!string.IsNullOrEmpty(book.Translator))
+                    {
+                        <span>译者：<a><strong>@book.Translator</strong></a></span>
+                    }
+                    if (!string.IsNullOrEmpty(book.Publisher))
+                    {
+                        <span><a><small>@book.Publisher</small></a></span>
+                    }
+                }
+            </p>
+            <div>
+                @{
+                    if (book.DoubanRatingScore > 0 || book.DoubanRatingPeople > 0)
+                    {
+                        @:豆瓣：
+                        if (book.DoubanRatingScore > 0)
+                        {
+                            <span class="badge text-success">@(book.DoubanRatingScore)分</span>
+                        }
+                        if (book.DoubanRatingPeople > 0)
+                        {
+                            <a href="@book.DoubanUrl" target="_blank">(@(book.DoubanRatingPeople)人评价...)</a>
+                        }
+                    }
+                }
+                <a class="btn btn-primary pull-right" title="到亚马逊购买正版">
+                    <i class="fa fa-amazon" aria-hidden="true"></i> 购买正版
+                </a>
+                <div class="clearfix"></div>
             </div>
-        </div>
-    </div>
+            
+            <div class="row">
+                <ul id="book-detail-tabs" class="nav nav-tabs">
+                    <li class="active"><a href="#book-summary" data-toggle="tab">内容简介</a></li>
+                    <li><a href="#book-catalog" data-toggle="tab">目录列表</a></li>
+                    <li><a href="#book-author-intro" data-toggle="tab">作者介绍</a></li>
+                </ul>
+                <div id="book-detail-tabscontent" class="tab-content">
+                    <div class="tab-pane active" id="book-summary">
+                        <a href="#" target="_blank" class="pull-right" title="购买正版...">
+                            <img src="@logoUrl" alt="@(book.Title)" class="book-img" />
+                        </a>
+                        <div>
+                            @Html.Raw(book.BookSummary)
+                            <div class="clearfix"></div>
+                        </div>
+                    </div><!-- book-summary end -->
+                    <div class="tab-pane fade" id="book-catalog">
+                        @Html.Raw(book.BookCatalog)
+                        <div class="clearfix"></div>
+                    </div> <!-- book-catalog end -->
+                    <div class="tab-pane fade" id="book-author-intro">
+                        <div>
+                            @Html.Raw(book.AuthorSummary)
+                            <div class="clearfix"></div>
+                        </div>
+                    </div><!-- author-summary end -->
+                </div>
+            </div><!-- book detail end -->
+            <div class="row">
+                @{
+                    if (relatedBooks.Count > 0)
+                    {
+                        <h5>类似书籍</h5>
+                        <ul class="list-unstyled well" id="ralted-books">
+                            @foreach (var rb in relatedBooks)
+                            {
+                                <li>
+                                    <a asp-action="Detail" asp-route-id="@rb.Id">
+                                        <img class='book-img' src="@rb.Logo" title="@rb.Title" alt="@rb.Title" />
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+                
+            </div><!-- related books end -->
+            
 
+        </div><!-- well end -->
+    </div>
 </div>

@@ -22,7 +22,7 @@ namespace BookStore.Domain.Models
         [StringLength(500)]
         public string Author { get; set; }
 
-        public string AuthorIntroduction { get; set; }
+        public string AuthorSummary { get; set; }
 
         [StringLength(500)]
         public string Logo { get; set; }
@@ -36,8 +36,8 @@ namespace BookStore.Domain.Models
         [StringLength(100)]
         public string Isbn { get; set; }
 
-        public string BookCatelog { get; set; }
-        public string Introduction { get; set; }
+        public string BookCatalog { get; set; }
+        public string BookSummary { get; set; }
         public int DoubanId { get; set; }
         [StringLength(500)]
         public string DoubanUrl { get; set; }

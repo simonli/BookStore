@@ -13,6 +13,7 @@ using System.Text.Unicode;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using BookStore.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -34,13 +35,12 @@ namespace BookStore
             //AppSetings Section注入
             var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
-
             services.AddSession();
 
             //数据库配置
             services.AddDbContext<BookStoreContext>(options =>
 //                options.UseMySql(Configuration.GetConnectionString("MysqlConnection"))
-                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection"))
+                    options.UseSqlite(Configuration.GetConnectionString("SqliteConnection"))
             );
 
             //字符编码
@@ -66,6 +66,8 @@ namespace BookStore
                 options.AppendTrailingSlash = true;
             });
             services.AddMvc();
+
+            services.AddSingleton<AppSettingsUtil>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,7 +103,6 @@ namespace BookStore
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
         }
     }
 }

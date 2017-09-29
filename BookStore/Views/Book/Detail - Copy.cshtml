@@ -62,21 +62,21 @@
                             <img class='book-img img-rounded margin-medium' src="@Model.Book.Logo"/>
                         </a>
                         <div>
-                            @Html.Raw(Model.Book.Introduction)
+                            @Html.Raw(Model.Book.BookSummary)
                             <div class="clearfix"></div>
                         </div>
                     </div>
 
                     <div class="tab-pane" id="book-catalog">
                         <div>
-                            @Html.Raw(Model.Book.BookCatelog)
+                            @Html.Raw(Model.Book.BookCatalog)
                             <div class='clearfix'></div>
                         </div>
                     </div>
 
                     <div class="tab-pane" id="book-author-intro">
                         <div>
-                            @Html.Raw(Model.Book.AuthorIntroduction)
+                            @Html.Raw(Model.Book.AuthorSummary)
                             <div class='clearfix'></div>
                         </div>
                     </div>

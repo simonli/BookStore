@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BookStore.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,15 +26,16 @@ namespace BookStore.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false),
                     Author = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    AuthorIntroduction = table.Column<string>(type: "TEXT", nullable: true),
-                    BookCatelog = table.Column<string>(type: "TEXT", nullable: true),
+                    AuthorSummary = table.Column<string>(type: "TEXT", nullable: true),
+                    BookCatalog = table.Column<string>(type: "TEXT", nullable: true),
+                    BookSummary = table.Column<string>(type: "TEXT", nullable: true),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DoubanId = table.Column<int>(type: "INTEGER", nullable: false),
                     DoubanRatingPeople = table.Column<int>(type: "INTEGER", nullable: false),
                     DoubanRatingScore = table.Column<float>(type: "REAL", nullable: false),
-                    DoubanUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Introduction = table.Column<string>(type: "TEXT", nullable: true),
-                    IsDelete = table.Column<int>(type: "INTEGER", nullable: false),
+                    DoubanUrl = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
+                    IsDelete = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
+                        .Annotation("Sqlite:Autoincrement", true),
                     Isbn = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     Logo = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     Publisher = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
@@ -66,7 +67,8 @@ namespace BookStore.Migrations
                     Avatar = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    IsDelete = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsDelete = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
+                        .Annotation("Sqlite:Autoincrement", true),
                     LoginCount = table.Column<int>(type: "INTEGER", nullable: false),
                     LoginIp = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     LoginTime = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -144,7 +146,8 @@ namespace BookStore.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false),
                     CreateTime = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsDefault = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsDefault = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
+                        .Annotation("Sqlite:Autoincrement", true),
                     PushEmail = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     UserId = table.Column<long>(type: "INTEGER", nullable: true)
                 },

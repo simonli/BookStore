@@ -80,9 +80,11 @@ namespace BookStore.Migrations
                     b.Property<string>("Author")
                         .HasMaxLength(500);
 
-                    b.Property<string>("AuthorIntroduction");
+                    b.Property<string>("AuthorSummary");
 
-                    b.Property<string>("BookCatelog");
+                    b.Property<string>("BookCatalog");
+
+                    b.Property<string>("BookSummary");
 
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd();
@@ -93,11 +95,12 @@ namespace BookStore.Migrations
 
                     b.Property<float>("DoubanRatingScore");
 
-                    b.Property<string>("DoubanUrl");
+                    b.Property<string>("DoubanUrl")
+                        .HasMaxLength(500);
 
-                    b.Property<string>("Introduction");
-
-                    b.Property<int>("IsDelete");
+                    b.Property<int>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Isbn")
                         .HasMaxLength(100);
@@ -216,7 +219,9 @@ namespace BookStore.Migrations
                     b.Property<DateTime?>("CreateTime")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("IsDefault");
+                    b.Property<int>("IsDefault")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
 
                     b.Property<string>("PushEmail")
                         .IsRequired()
@@ -256,7 +261,9 @@ namespace BookStore.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(500);
 
-                    b.Property<int>("IsDelete");
+                    b.Property<int>("IsDelete")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValue(0);
 
                     b.Property<int>("LoginCount");
 

@@ -10,14 +10,14 @@ namespace BookStore.Models
         public int SubjectId { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
-        public string AuthorIntroduction { get; set; }
-        public string Introduction { get; set; }
+        public string AuthorSummary { get; set; }
+        public string BookSummary { get; set; }
         public string Url { get; set; }
         public string Logo { get; set; }
         public string Publisher { get; set; }
         public string Translator { get; set; }
         public string Isbn { get; set; }
-        public string BookCatelog { get; set; }
+        public string BookCatalog { get; set; }
         public float RatingScore { get; set; }
         public int RatingPeople { get; set; }
         public long BookId { get; set; } //是否已经收录, 收录了则为当前系统的图书ID

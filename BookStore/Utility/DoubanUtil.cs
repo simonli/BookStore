@@ -21,7 +21,7 @@ namespace BookStore.Utility
 
             var phantomJs = new PhantomJS
             {
-                CustomArgs = " --disk-cache=true --ignore-ssl-errors=true --load-images=false "
+                CustomArgs = "  --ignore-ssl-errors=true --load-images=false "
             };
             string doubanHtml;
             using (var outFs = new MemoryStream())
@@ -29,13 +29,13 @@ namespace BookStore.Utility
                 try
                 {
                     phantomJs.RunScript(@"
-						var system = require('system');
-						var page = require('webpage').create();
-						page.open('" + doubanUrl + @"', function() {
-							system.stdout.writeLine(page.content);
-							phantom.exit();
-						});
-					", null, null, outFs);
+            						var system = require('system');
+            						var page = require('webpage').create();
+            						page.open('" + doubanUrl + @"', function() {
+            							system.stdout.writeLine(page.content);
+            							phantom.exit();
+            						});
+            					", null, null, outFs);
                 }
                 finally
                 {
@@ -47,6 +47,7 @@ namespace BookStore.Utility
             }
 
             #endregion
+
 
             var doc = new HtmlDocument();
             doc.LoadHtml(doubanHtml);
@@ -169,7 +170,7 @@ namespace BookStore.Utility
 
             #endregion
 
-            var bookCatelog = GetHtmlNodeHtml(rootNode.SelectSingleNode($"//*[@id='dir_{doubanId}_full']"));
+            var bookCatalog = GetHtmlNodeHtml(rootNode.SelectSingleNode($"//*[@id='dir_{doubanId}_full']"));
             var ratingScoreStr =
                 GetHtmlNodeText(rootNode.SelectSingleNode("//strong[contains(@class,'ll rating_num')]"));
             float.TryParse(ratingScoreStr, out float ratingScore);
@@ -196,13 +197,13 @@ namespace BookStore.Utility
                 Url = doubanUrl,
                 Title = title,
                 Author = author,
-                AuthorIntroduction = authorIntro,
+                AuthorSummary = authorIntro,
                 Logo = logo,
                 Translator = translator,
                 Isbn = isbn,
                 Publisher = publisher,
-                Introduction = bookIntro,
-                BookCatelog = bookCatelog,
+                BookSummary = bookIntro,
+                BookCatalog = bookCatalog,
                 RatingScore = ratingScore,
                 RatingPeople = ratingPeople,
                 TagList = tagList

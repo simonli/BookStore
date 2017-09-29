@@ -38,7 +38,7 @@ namespace BookStore.Models
 
         [Required(ErrorMessage = "{0}不能为空")]
         [Display(Name = "内容简介")]
-        public string Introduction { get; set; }
+        public string BookSummary { get; set; }
 
         [Display(Name = "链接")]
         public string Url { get; set; }
@@ -56,7 +56,7 @@ namespace BookStore.Models
         public string BookCatelog { get; set; }
 
         [Display(Name = "作者简介")]
-        public string AuthorIntroduction { get; set; }
+        public string AuthorSummary { get; set; }
 
         [Display(Name = "标签")]
         public string Tags { get; set; }
