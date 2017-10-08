@@ -1,11 +1,11 @@
 ﻿html {
-    font-size:100px;
+    font-size: 100px;
 }
 
 body {
     padding-top: 80px;
     padding-bottom: 20px;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Verdana, Aril, sans-serif;
+    /*font-family: "Lucida Grande", "Lucida Sans Unicode", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Verdana, Aril, sans-serif;*/
     -webkit-font-smoothing: antialiased;
     background: #fcfcfc;
     font-size: 0.14rem;
@@ -18,7 +18,6 @@ body {
     padding-right: 0.15rem;
 }
 
-
 .navbar-default .navbar-nav > li > a {
     /*color: #007fff;*/
 }
@@ -28,20 +27,15 @@ body {
     padding-bottom: 0.05rem;
 }
 
-.navbar-default {
-    background-color: #fff;
+/*.navbar-default {*/
+    /*background-color: #fff;*/
 
-}
+/*}*/
 
 .book-img {
     width: 1rem;
     height: auto;
 }
-
-
-
-
-
 
 .avatar-small {
     width: 0.25rem;
@@ -123,4 +117,8 @@ body {
 
 .bs-callout-warning {
     border-left-color: #aa6708;
+}
+
+.comment-short {
+    width: 2.5rem;
 }

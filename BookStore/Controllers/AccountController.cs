@@ -24,12 +24,15 @@ namespace BookStore.Controllers
         private readonly BookStoreContext _context;
         private readonly AppSettings _appSettings;
         private readonly IHostingEnvironment _env;
+        private readonly IdGenService _idGenService;
 
-        public AccountController(BookStoreContext context, IOptions<AppSettings> appSettings, IHostingEnvironment env)
+        public AccountController(BookStoreContext context, IOptions<AppSettings> appSettings,
+            IHostingEnvironment env, IdGenService idGenService)
         {
             _context = context;
             _appSettings = appSettings.Value;
             _env = env;
+            _idGenService = idGenService;
         }
 
         [Route("[controller]/profile/{username}/edition")]
@@ -205,7 +208,7 @@ namespace BookStore.Controllers
             {
                 var pushSetting = new PushSetting
                 {
-                    Id = IdGen.NewId(AppkeyEnum.PushSettings.ToString()),
+                    Id = _idGenService.NewId(AppkeyEnum.PushSettings.ToString()),
                     PushEmail = vm.PushEmail,
                     User = loginUser,
                     CreateTime = DateTime.Now
@@ -364,7 +367,7 @@ namespace BookStore.Controllers
             if (!ModelState.IsValid) return View(vm);
             var user = new User
             {
-                Id = IdGen.NewId(AppkeyEnum.Users.ToString()),
+                Id = _idGenService.NewId(AppkeyEnum.Users.ToString()),
                 Username = vm.Username,
                 Password = Utils.GeneratePassword(vm.Password),
                 Email = vm.Email,
@@ -404,7 +407,7 @@ namespace BookStore.Controllers
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(identity));
                     HttpContext.Session.Remove("verify_code"); //清除验证码session
-                    HttpContext.Session.SetObjectAsJson("login_user",user);
+                    HttpContext.Session.SetObjectAsJson("login_user", user);
                     user.LoginCount += 1;
                     user.LoginTime = DateTime.Now;
                     user.LoginIp = HttpContext.GetUserIp();

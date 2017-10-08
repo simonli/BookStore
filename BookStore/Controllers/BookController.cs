@@ -21,12 +21,16 @@ namespace BookStore.Controllers
         private readonly BookStoreContext _context;
         private readonly AppSettings _appSettings;
         private readonly IHostingEnvironment _env;
+        private readonly IdGenService _idGenService;
 
-        public BookController(BookStoreContext context, IOptions<AppSettings> appSettings, IHostingEnvironment env)
+
+        public BookController(BookStoreContext context, IOptions<AppSettings> appSettings,
+            IHostingEnvironment env, IdGenService idGenService)
         {
             _context = context;
             _appSettings = appSettings.Value;
             _env = env;
+            _idGenService = idGenService;
         }
 
         [Route("[controller]/upload")]
@@ -91,9 +95,15 @@ namespace BookStore.Controllers
 
                 var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
                 var doubanBook = DoubanUtil.GetDoubanBook(vm.DoubanUrl);
+                if (doubanBook == null)
+                {
+                    ModelState.AddModelError("BookFile",
+                        $"豆瓣不存在该图书的详细页，地址是：{vm.DoubanUrl},请使用定制化上传功能上传此图书.");
+                    return View(vm);
+                }
                 var b = new Book
                 {
-                    Id = IdGen.NewId(AppkeyEnum.Books.ToString()),
+                    Id = _idGenService.NewId(AppkeyEnum.Books.ToString()),
                     Title = doubanBook.Title ?? vm.BooKFile.FileName,
                     Author = doubanBook.Author,
                     AuthorSummary = doubanBook.AuthorSummary,
@@ -120,10 +130,10 @@ namespace BookStore.Controllers
                 {
                     var bookTag = new BookTag
                     {
-                        Id = IdGen.NewId(AppkeyEnum.BookTags.ToString()),
+                        Id = _idGenService.NewId(AppkeyEnum.BookTags.ToString()),
                         Tag = dbTagList.Any(x => x.Name == doubanTagName)
                             ? dbTagList.FirstOrDefault(x => x.Name == doubanTagName)
-                            : new Tag {Id = IdGen.NewId(AppkeyEnum.Tags.ToString()), Name = doubanTagName},
+                            : new Tag {Id = _idGenService.NewId(AppkeyEnum.Tags.ToString()), Name = doubanTagName},
                         Book = b
                     };
                     bookTagList.Add(bookTag);
@@ -135,7 +145,7 @@ namespace BookStore.Controllers
 
                 var be = new BookEdition
                 {
-                    Id = IdGen.NewId(AppkeyEnum.BookEditions.ToString()),
+                    Id = _idGenService.NewId(AppkeyEnum.BookEditions.ToString()),
                     Filename = filename,
                     OriginalFilename = vm.BooKFile.FileName,
                     Filesize = vm.BooKFile.Length,
@@ -151,7 +161,7 @@ namespace BookStore.Controllers
                 {
                     var bec = new BookEditionComment
                     {
-                        Id = IdGen.NewId(AppkeyEnum.BookEditionComments.ToString()),
+                        Id = _idGenService.NewId(AppkeyEnum.BookEditionComments.ToString()),
                         Comment = vm.BookEditionCommnet,
                         BookEdition = be,
                         User = loginUser,
@@ -233,7 +243,7 @@ namespace BookStore.Controllers
 
                 var b = new Book
                 {
-                    Id = IdGen.NewId(AppkeyEnum.Books.ToString()),
+                    Id = _idGenService.NewId(AppkeyEnum.Books.ToString()),
                     Title = vm.Title ?? vm.BooKFile.FileName,
                     Author = vm.Author,
                     Logo = logoFilename,
@@ -257,10 +267,10 @@ namespace BookStore.Controllers
                 {
                     var bookTag = new BookTag
                     {
-                        Id = IdGen.NewId(AppkeyEnum.BookTags.ToString()),
+                        Id = _idGenService.NewId(AppkeyEnum.BookTags.ToString()),
                         Tag = dbTagList.Any(x => x.Name == doubanTagName)
                             ? dbTagList.FirstOrDefault(x => x.Name == doubanTagName)
-                            : new Tag {Id = IdGen.NewId(AppkeyEnum.Tags.ToString()), Name = doubanTagName},
+                            : new Tag {Id = _idGenService.NewId(AppkeyEnum.Tags.ToString()), Name = doubanTagName},
                         Book = b
                     };
                     bookTagList.Add(bookTag);
@@ -272,7 +282,7 @@ namespace BookStore.Controllers
 
                 var be = new BookEdition
                 {
-                    Id = IdGen.NewId(AppkeyEnum.BookEditions.ToString()),
+                    Id = _idGenService.NewId(AppkeyEnum.BookEditions.ToString()),
                     Filename = filename,
                     OriginalFilename = vm.BooKFile.FileName,
                     Filesize = vm.BooKFile.Length,
@@ -288,7 +298,7 @@ namespace BookStore.Controllers
                 {
                     var bec = new BookEditionComment
                     {
-                        Id = IdGen.NewId(AppkeyEnum.BookEditionComments.ToString()),
+                        Id = _idGenService.NewId(AppkeyEnum.BookEditionComments.ToString()),
                         Comment = vm.BookEditionCommnet,
                         BookEdition = be,
                         User = loginUser,
@@ -315,7 +325,7 @@ namespace BookStore.Controllers
             var bookList = DoubanUtil.GetDoubanBookList(keyword);
             Console.WriteLine(DateTime.Now);
             Console.WriteLine("###############################################################*");
-            
+
 
             var subjectIdList = new List<int>();
             bookList.ForEach(x => { subjectIdList.Add(x.SubjectId); });
@@ -405,6 +415,7 @@ namespace BookStore.Controllers
             throw new NotImplementedException();
         }
 
+        [Route("[controller]/{id}/edition/upload")]
         public IActionResult FileUpload(long id)
         {
             throw new NotImplementedException();

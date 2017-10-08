@@ -1,7 +1,8 @@
-﻿@{
+﻿@inject BookUtil BookUtil
+@{
     ViewData["Title"] = "Home Page";
 }
 
 welcome...
 
-@AppSettingsUtil.GetAppSettings().LoginUrl
+@BookUtil.GetBookLogo("abc.jpg")

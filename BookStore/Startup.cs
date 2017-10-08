@@ -35,6 +35,11 @@ namespace BookStore
             //AppSetings Section注入
             var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
+            
+            //Custom Services 注入
+            services.AddSingleton<BookUtil>();
+            services.AddScoped<IdGenService>();
+            
             services.AddSession();
 
             //数据库配置
@@ -65,9 +70,10 @@ namespace BookStore
                 options.LowercaseUrls = true;
                 options.AppendTrailingSlash = true;
             });
+            
             services.AddMvc();
 
-            services.AddSingleton<AppSettingsUtil>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

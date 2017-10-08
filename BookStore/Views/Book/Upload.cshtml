@@ -30,7 +30,7 @@
             <div class="form-group">
                 <i class="fa fa-asterisk text-danger"></i>
                 <label asp-for="DoubanUrl" class="control-label"></label>
-                <input asp-for="DoubanUrl" class="form-control"  readonly/>
+                <input asp-for="DoubanUrl" class="form-control" readonly/>
                 <p class="help-block" id="douban_ok">
                     <small>点击右侧列表确认图书,获取豆瓣链接</small>
                 </p>
@@ -83,65 +83,66 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <environment include="Development">
         <script src="~/lib/jsrender/jsrender.js"></script>
-        <script>
-
-            $("#douban_query_submit").bind('click',
-                function() {
-                    search_douban();
-                    return false;
-                });
-
-            function search_douban() {
-                var tmpl = $.templates("#id_book_tmpl");
-                var q = $("#douban_query").val();
-                $.ajax({
-                    type: "GET",
-                    url: "@Url.Action("SearchDouban")",
-                    data: { 'keyword': q },
-                    beforeSend: function() {
-                        $("#icon").addClass("fa fa-spinner fa-pulse fa-5x text-success");
-                    },
-                    success: function (data) {
-                        $("#icon").removeClass();
-                        console.log(data);
-                        $("#douban_books").empty();
-                        $("#douban_books").html(tmpl.render(data));
-                    },
-                    error: function(e) {
-                        alert(e);
-                    }
-                });
-            }
-
-            function copy_link(id) {
-                var link = $('#' + id).attr('href');
-                $('#DoubanUrl').val(link);
-                $('#DoubanId').val(id);
-                $('#douban_ok').html("<span class='text-success'><b>已确认OK</b></span>");
-            }
-
-            $('#BooKFile').change(function() {
-                var self = $(this);
-                var fullPath = self.val();
-                var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
-                var filename = fullPath.substring(startIndex);
-                if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
-                    filename = filename.substring(1);
-                }
-                var extIndex = filename.lastIndexOf('.');
-                if (extIndex > 0)
-                    filename = filename.substring(0, extIndex);
-                $('#douban_query').val(filename);
-                $('#DoubanUrl').val('');
-                $('#douban_ok').html('');
-                search_douban();
-            });
-        </script>
     </environment>
     <environment exclude="Development">
         <script src="~/lib/jsrender/jsrender.min.js"></script>
-        <script src="~/js/site.min.js"></script>
     </environment>
+    <script>
+
+        $("#douban_query_submit").bind('click',
+            function() {
+                search_douban();
+                return false;
+            });
+
+        function search_douban() {
+            var tmpl = $.templates("#id_book_tmpl");
+            var q = $("#douban_query").val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("SearchDouban")",
+                data: { 'keyword': q },
+                beforeSend: function() {
+                    $("#icon").addClass("fa fa-spinner fa-pulse fa-5x text-success");
+                },
+                success: function(data) {
+                    $("#icon").removeClass();
+                    console.log(data);
+                    $("#douban_books").empty();
+                    $("#douban_books").html(tmpl.render(data));
+                },
+                error: function(e) {
+                    alert(e);
+                }
+            });
+        }
+
+        function copy_link(id) {
+            var link = $('#' + id).attr('href');
+            $('#DoubanUrl').val(link);
+            $('#DoubanId').val(id);
+            $('#douban_ok').html("<span class='text-success'><b>已确认OK</b></span>");
+        }
+
+        $('#BooKFile').change(function() {
+            var self = $(this);
+            var fullPath = self.val();
+            var startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+            var filename = fullPath.substring(startIndex);
+            if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                filename = filename.substring(1);
+            }
+            var extIndex = filename.lastIndexOf('.');
+            if (extIndex > 0)
+                filename = filename.substring(0, extIndex);
+            $('#douban_query').val(filename);
+            $('#DoubanUrl').val('');
+            $('#douban_ok').html('');
+            search_douban();
+        });
+    </script>
+
+   
     <script id="id_book_tmpl" type="text/x-jsrender">
         <li style="border-bottom:1px dashed #ddd;padding: 20px 0 10px;">
             <div class="row">

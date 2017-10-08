@@ -14,7 +14,7 @@ namespace BookStore.Utility
         public static List<DoubanBook> GetDoubanBookList(string keyword)
         {
             keyword = WebUtility.UrlEncode(keyword.NoHtml());
-            List<DoubanBook> bookList = new List<DoubanBook>();
+            var bookList = new List<DoubanBook>();
             var doubanUrl = $"https://book.douban.com/subject_search?search_text={keyword}";
 
             #region 通过PhantomJS获取douban动态列表内容
@@ -115,6 +115,9 @@ namespace BookStore.Utility
             var rootNode = htmlDoc.DocumentNode;
             var doubanId = GetDoubanId(doubanUrl);
 
+            var titleNode = rootNode.SelectSingleNode("//*[@id='wrapper']/h1/span");
+            if (titleNode == null) return null;
+
             var title = GetHtmlNodeText(rootNode.SelectSingleNode("//*[@id='wrapper']/h1/span"));
 
             var logoNode = rootNode.SelectSingleNode("//*[@id='mainpic']/a/img");
@@ -214,12 +217,12 @@ namespace BookStore.Utility
 
         public static int GetDoubanId(string doubanUrl)
         {
-            return (int.TryParse(Regex.Replace(doubanUrl, @"[^\d]*", ""), out int doubanId)) ? doubanId : 0;
+            return int.TryParse(Regex.Replace(doubanUrl, @"[^\d]*", ""), out int doubanId) ? doubanId : 0;
         }
 
         public static int GetDigitalInString(string digitalAndString)
         {
-            return (int.TryParse(Regex.Replace(digitalAndString, @"[^\d]*", ""), out int digital)) ? digital : 0;
+            return int.TryParse(Regex.Replace(digitalAndString, @"[^\d]*", ""), out int digital) ? digital : 0;
         }
 
         private static string GetHtmlNodeText(HtmlNode node)
