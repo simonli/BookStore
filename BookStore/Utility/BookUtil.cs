@@ -19,7 +19,7 @@ namespace BookStore.Utility
 
         public string GetBookLogo(string logo)
         {
-            var bookLogo = logo;
+            string bookLogo;
 
             if (logo.IndexOf("http", StringComparison.Ordinal) < 0 ||
                 logo.IndexOf("https", StringComparison.Ordinal) < 0)

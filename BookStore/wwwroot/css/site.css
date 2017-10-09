@@ -1,36 +1,55 @@
 ﻿html {
-    font-size: 100px;
+    font-size:100px;
+    font-family: -apple-system, PingFang SC, Hiragino Sans GB, Arial, Microsoft YaHei, Helvetica Neue, sans-serif;
+    
 }
 
 body {
     padding-top: 80px;
     padding-bottom: 20px;
-    /*font-family: "Lucida Grande", "Lucida Sans Unicode", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", Verdana, Aril, sans-serif;*/
     -webkit-font-smoothing: antialiased;
-    background: #fcfcfc;
+    background: #f8f9f9;
     font-size: 0.14rem;
 }
 
-/* Wrapping element */
-/* Set some basic padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 0.15rem;
-    padding-right: 0.15rem;
+a { cursor: pointer; }
+
+a:hover { text-decoration: none; }
+
+.body-content { padding: 0 0.15rem; }
+
+.navbar-default {
+    background-color: #FFFFFF;
+    border-color: #f0f0f0;
 }
 
-.navbar-default .navbar-nav > li > a {
-    /*color: #007fff;*/
-}
+/*.navbar-default .navbar-nav > li > a {*/
+
+/*    color: #007fff;*/
+
+/*}*/
 
 .dropdown-menu > li > a {
     padding-top: 0.05rem;
     padding-bottom: 0.05rem;
 }
 
-/*.navbar-default {*/
-    /*background-color: #fff;*/
 
-/*}*/
+.entry {
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background-color: #FFF;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;    
+}
+
+.title {
+    font-weight: 700;
+    font-size: 0.32rem;
+    padding: .032rem 0;
+    line-height: 1.3;
+}
 
 .book-img {
     width: 1rem;
@@ -115,10 +134,6 @@ body {
     border-radius: 3px;
 }
 
-.bs-callout-warning {
-    border-left-color: #aa6708;
-}
+.bs-callout-warning { border-left-color: #aa6708; }
 
-.comment-short {
-    width: 2.5rem;
-}
+.comment-short { width: 2.5rem; }

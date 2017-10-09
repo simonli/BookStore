@@ -182,11 +182,11 @@
                                     var becs = be.BookEditionComments.OrderBy(x => x.CreateTime);
                                     foreach (var bec in becs)
                                     {
-                                        <div class="row-fluid">
+                                        <div>
                                             <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">
-                                                <img class='pull-left img-circle avatar-small' src="@await Component.InvokeAsync("AvatarUrl", bec.User)"/>@bec.User.Username
+                                                <img class='pull-left img-circle avatar-small' src="@await Component.InvokeAsync("AvatarUrl", bec.User)" alt="@bec.User.Username"/>@bec.User.Username
                                             </a>:
-                                            <small class="muted">
+                                            <small class="text-muted">
                                                 <a asp-action="Edition" asp-route-id="@bec.BookEdition.Id" asp-fragment="@bec.Id">@bec.Comment</a>
                                             </small>
                                         </div>
