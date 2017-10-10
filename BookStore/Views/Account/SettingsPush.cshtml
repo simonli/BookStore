@@ -89,7 +89,7 @@
                             var pk = tr.attr('pk');
                             var url = "@Url.Action("SettingsPushDelete")";
                             var args = { id: pk };
-                            $.post(url, args, function (data) {
+                            $.get(url, args, function (data) {
                                 console.log(data)
                                 if (data==true) {
                                     tr.remove();
@@ -113,7 +113,7 @@
             var pk = $(this).parents('tr').attr('pk');
             var url = "@Url.Action("SettingsPushDefault")";
             var args = { id: pk };
-            $.post(url, args, function (data) { });
+            $.get(url, args, function (data) { });
         });
 
     </script>
