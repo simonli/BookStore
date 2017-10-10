@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Cache-Control" content="no-siteapp">
     <meta name="renderer" content="webkit">
@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css"/>
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
     </environment>
-    @RenderSection("Css", required: false)
+    @RenderSection("Css", false)
 </head>
 <body>
 <!--[if IE]>
@@ -52,12 +52,12 @@
     @{
         foreach (var key in TempData.Keys)
         {
-            <div class="alert alert-@key.ToString() alert-dismissable">
+            <div class="alert alert-@key alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert"
                         aria-hidden="true">
                     &times;
                 </button>
-                @Html.Raw(TempData[key.ToString()])
+                @Html.Raw(TempData[key])
             </div>
         }
     }
@@ -79,6 +79,6 @@
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
 
-@RenderSection("Scripts", required: false)
+@RenderSection("Scripts", false)
 </body>
 </html>
