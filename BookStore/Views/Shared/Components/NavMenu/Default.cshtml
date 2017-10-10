@@ -1,9 +1,4 @@
-﻿@using BookStore
-@using Microsoft.Extensions.Options
-@model BookStore.Domain.Models.User
-@inject IOptions<AppSettings> AppSettings
-
-<ul class="nav navbar-nav navbar-right">
+﻿<ul class="nav navbar-nav navbar-right">
     @{
 
         if (!User.Identity.IsAuthenticated)
@@ -37,7 +32,7 @@
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img src="@await Component.InvokeAsync("AvatarUrl", loginUser)" class="img-circle avatar-small"/>
+                    <img src="@await Component.InvokeAsync("AvatarUrl", loginUser)" class="nav-avatar" alt="@loginUser.Username" title="@loginUser.Username">
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
