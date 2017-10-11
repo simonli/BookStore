@@ -151,7 +151,7 @@
                      <div>
                          <a asp-action="Edition" asp-route-id="@be.Id" class="pull-right">
                              <small>@(be.BookEditionComments.Count)条评论</small>
-                             <i class="fa fa-comment"></i>
+                             <i class="fa fa-commenting-o"></i>
                          </a>
                          <span class="badge" title="md5:@be.CheckSum">@Utils.FormatFileSize(be.Filesize)</span>
                          <a asp-action="Edition" asp-route-id="@be.Id">
@@ -161,11 +161,37 @@
                      <div>
                          <small>
                              @Utils.FormatDateTime(be.CreateTime), 上传者:
-                             <a asp-controller="Account" asp-action="ProfileEdition">
+                             <a asp-controller="Account" asp-action="ProfileEdition" asp-route-username="@be.User.Username">
                                  @be.User.Username
                              </a>
                          </small>
                      </div>
+                     <div class="btn-toolbar">
+                         <vc:pushmail book-edition="@be"></vc:pushmail>
+                     </div>
+                     @{
+                         var becs = be.BookEditionComments.OrderBy(x => x.CreateTime);
+                         foreach (var bec in becs)
+                         {
+                             <div class="pub-edition-comments">
+                                 <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">
+                                     <img class='pull-left img-circle avatar-small' src="@await Component.InvokeAsync("AvatarUrl", bec.User)" alt="@bec.User.Username"/>@bec.User.Username
+                                 </a>:
+                                 <small class="text-muted">
+                                     <a asp-action="Edition" asp-route-id="@bec.BookEdition.Id" asp-fragment="@bec.Id">@bec.Comment</a>
+                                 </small>
+                             </div>
+                         }
+                     }<!-- comment end -->
+                     <form asp-action="Edition" asp-route-id="@be.Id" asp-route-next=@Url.Action("Detail", new {id = book.Id, fragment = be.Id}) class="form-inline">
+                         <input type="text" class="form-control" name="comment-short"  maxlength="80" placeholder="发表评论，勾选[举报]将通知管理员" />
+                         <label for="id_is_report">
+                             举报<input id="id_is_report" type="checkbox" name="is_report">
+                         </label>
+                         <button class="btn" type="submit" title="发表评论">
+                             <i class="fa fa-comment-o"></i>
+                         </button>
+                     </form>
                  </div>
              }
         }
