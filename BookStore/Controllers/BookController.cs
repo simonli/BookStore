@@ -354,9 +354,12 @@ namespace BookStore.Controllers
         public async Task<IActionResult> Detail(long id)
         {
             var book = await _context.Books
-                .Include(b => b.BookEditions).ThenInclude(be => be.BookEditionComments)
+                .Include(b => b.BookEditions)
+                    .ThenInclude(be => be.BookEditionComments)
+                    .ThenInclude(be=>be.User)
                 .Include(b => b.BookTags).ThenInclude(t => t.Tag)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
             if (book != null)
             {
                 var relatedBooks = await _context.Books
