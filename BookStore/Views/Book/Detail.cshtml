@@ -6,7 +6,7 @@
 @model BookDetailViewModel
 
 @{
-    ViewData["Title"] = Model.Book.Title;
+    //ViewData["Title"] = Model.Book.Title;
     var book = Model.Book;
     var relatedBooks = Model.RelatedBooks;
     var amazonCode = AppSettings.Value.AmazonCode;
@@ -14,10 +14,19 @@
 }
 
 
+
 <div class="row">
-    <div class="col-md-10 contentbox">
-        <h1>
-            <a>@book.Title</a>
-        </h1>
+    <div class="col-md-8 cbox">
+        <div class="pub-header">
+            <div class="pub-header-img">
+                <img src="@BookUtil.GetBookLogo(book.Logo)" alt="@book.Title" />
+            </div>
+            <div class="pub-header-content">
+                <h1 class="pub-header-title">@book.Title</h1>
+            </div>
+        </div>
+        <div class="pub-detail">
+            
+        </div>
     </div>
 </div>
