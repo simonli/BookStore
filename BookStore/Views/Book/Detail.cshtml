@@ -1,4 +1,4 @@
-﻿@using System.Linq
+﻿﻿@using System.Linq
 @using BookStore
 @using Microsoft.Extensions.Options
 @inject IOptions<AppSettings> AppSettings
@@ -14,19 +14,163 @@
 }
 
 
-
 <div class="row">
-    <div class="col-md-8 cbox">
-        <div class="pub-header">
+    <div class="col-md-7">
+        <div class="pub-header pub-item  card">
             <div class="pub-header-img">
-                <img src="@BookUtil.GetBookLogo(book.Logo)" alt="@book.Title" />
+                <img src="@BookUtil.GetBookLogo(book.Logo)" class="book-img" alt="@book.Title"/>
             </div>
             <div class="pub-header-content">
-                <h1 class="pub-header-title">@book.Title</h1>
+                <h1 class="pub-header-title">
+                    <a href="#" class="pub-header-link"><i class="fa fa-amazon" aria-hidden="true"></i> 购买正版</a>@book.Title
+                </h1>
+                <span class="pub-header-info">
+                    作者： <a class="pub-link">@book.Author</a>
+                    @{
+                        if (!string.IsNullOrEmpty(book.Translator))
+                        {
+                            @:译者： <a class="pub-link">@book.Translator </a>
+                        }
+                        if (!string.IsNullOrEmpty(book.Publisher))
+                        {
+                            <a class="pub-link">
+                                <small>@book.Publisher</small>
+                            </a>
+                        }
+                    }
+                </span>
+                <span class="pub-header-info">
+                    @{
+                        if (book.DoubanRatingScore > 0 || book.DoubanRatingPeople > 0)
+                        {
+                            @:豆瓣：
+                            if (book.DoubanRatingScore > 0)
+                            {
+                                <span class="badge text-success">@(book.DoubanRatingScore)分</span>
+                            }
+                            if (book.DoubanRatingPeople > 0)
+                            {
+                                <a href="@book.DoubanUrl" target="_blank">(@(book.DoubanRatingPeople)人评价...)</a>
+                            }
+                        }
+                    }
+                </span>
+
+                @{
+                    if (!string.IsNullOrEmpty(book.Isbn))
+                    {
+                        <span class="pub-header-info">ISBN：@book.Isbn</span>
+                    }
+                }
+
+
             </div>
         </div>
-        <div class="pub-detail">
-            
+        <div class="pub-item card">
+            <div>
+                <ul id="book-detail-tabs" class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#book-summary" data-toggle="tab">内容简介</a>
+                    </li>
+                    <li>
+                        <a href="#book-catalog" data-toggle="tab">目录列表</a>
+                    </li>
+                    <li>
+                        <a href="#author-intro" data-toggle="tab">作者介绍</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="book-detail-tabscontent" class="tab-content">
+                <div class="tab-pane active" id="book-summary">
+                    @Html.Raw(book.BookSummary)
+                    <div class="clearfix"></div>
+
+                </div><!-- book-summary end -->
+                <div class="tab-pane fade" id="book-catalog">
+                    @Html.Raw(book.BookCatalog)
+                    <div class="clearfix"></div>
+                </div> <!-- book-catalog end -->
+                <div class="tab-pane fade" id="author-intro">
+                    <div>
+                        @Html.Raw(book.AuthorSummary)
+                        <div class="clearfix"></div>
+                    </div>
+                </div><!-- author-summary end -->
+            </div>
         </div>
+        <div class="pub-item card">
+
+            @{
+                if (relatedBooks.Count > 0)
+                {
+                    <h5>类似书籍</h5>
+                    <ul class="list-inline" id="ralted-books">
+                        @foreach (var rb in relatedBooks)
+                        {
+                            <li>
+                                <a asp-action="Detail" asp-route-id="@rb.Id">
+                                    <img class="book-img-sm" src="@BookUtil.GetBookLogo(rb.Logo)" title="@rb.Title" alt="@rb.Title"/>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </div>
+        <div class="pub-item card">
+            @{
+                if (book.BookTags.Count > 0)
+                {
+                    <ul class="list-inline">
+                        @foreach (var bookTag in book.BookTags)
+                        {
+                            <li>
+                                <a asp-controller="Book" asp-action="Tag" asp-route-id="@bookTag.TagId">@bookTag.Tag.Name</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </div>
+
+
+    </div>
+    <div class="col-md-5">
+        <div class="pub-edition-info card">
+
+            <a asp-action="FileUpload" asp-route-id="@book.Id" class="btn btn-sm btn-default pub-edition-info-link">
+                <i class="fa fa-upload" aria-hidden="true"></i> 上传新版本
+            </a>
+            <h5>@(book.BookEditions.Count)个版本:</h5>
+        </div>
+        @{
+            var bookEdtions = book.BookEditions.OrderBy(x => x.CreateTime);
+            foreach (var be in bookEdtions)
+             {
+                 <div class="pub-item card">
+                     <div>
+                         <a asp-action="Edition" asp-route-id="@be.Id" class="pull-right">
+                             <small>@(be.BookEditionComments.Count)条评论</small>
+                             <i class="fa fa-comment"></i>
+                         </a>
+                         <span class="badge" title="md5:@be.CheckSum">@Utils.FormatFileSize(be.Filesize)</span>
+                         <a asp-action="Edition" asp-route-id="@be.Id">
+                             <span class="badge" title="@be.OriginalFilename">@be.OriginalFilename</span>
+                         </a>
+                     </div>
+                     <div>
+                         <small>
+                             @Utils.FormatDateTime(be.CreateTime), 上传者:
+                             <a asp-controller="Account" asp-action="ProfileEdition">
+                                 @be.User.Username
+                             </a>
+                         </small>
+                     </div>
+                 </div>
+             }
+        }
+
+
+
     </div>
 </div>

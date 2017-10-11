@@ -19,6 +19,18 @@ namespace BookStore.Utility
 
         public string GetBookLogo(string logo)
         {
+            var bookLogo = logo;
+
+            if (logo.IndexOf("http", StringComparison.Ordinal) < 0 ||
+                logo.IndexOf("https", StringComparison.Ordinal) < 0)
+            {
+                bookLogo = "/" + _appSettings.UploadAvatarDir + "/" + logo;
+            }
+            return bookLogo;
+        }
+
+        public string GetBookSmallLogo(string logo)
+        {
             string bookLogo;
 
             if (logo.IndexOf("http", StringComparison.Ordinal) < 0 ||
@@ -28,8 +40,7 @@ namespace BookStore.Utility
             }
             else
             {
-
-                bookLogo = logo.Replace("/lpic/", "/mpic/");
+                bookLogo = logo.Replace("/lpic/", "/lpic/");
             }
             return bookLogo;
         }

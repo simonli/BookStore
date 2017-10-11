@@ -24,7 +24,7 @@
                 <i class="fa fa-check-circle-o fa-fw"></i>
                 <label asp-for="VerifyCode" class="control-label"></label>
                 <input asp-for="VerifyCode" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" class="form-control" />
-                <img id="ImageVerifyCode" src="@Url.Action("VerifyCode")" title="看不清? 点击更换"  style="vertical-align:middle;" />
+                <img id="ImageVerifyCode" src="@Url.Action("VerifyCode")" title="看不清? 点击更换" style="vertical-align:middle;" alt="验证码" >
                 <span asp-validation-for="VerifyCode" class="text-danger"></span>
             </div>
             
