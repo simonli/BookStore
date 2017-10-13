@@ -126,11 +126,12 @@ body {
     position: relative;
     padding: 5px 20px;
 }
-.pub-edition-info-link{
+
+.pub-edition-info-link {
     float: right;
 }
 
-.pub-edition li{
+.pub-edition li {
     background-color: #FFF;
     position: relative;
     border-bottom: #eae9e9 1px solid;
@@ -138,13 +139,123 @@ body {
 }
 
 .pub-editions {
-    margin:0;
+    margin: 0;
     display: flex;
     padding-bottom: 16px;
 }
 
-.pub-edition-comments{
-    margin:8px 0;
+/*Comments style*/
+.pub-comments {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.pub-comments-count {
+    border-bottom: 1px solid #eee;
+    line-height: 36px;
+    text-indent: 1em;
+    font-size: 14px;
+}
+
+.pub-comments-list {
+    padding: 0 10px;
+}
+
+.pub-comment-item {
+    position: relative;
+    list-style: none;
+    outline: none;
+    padding: 3px 0;
+    border-top: 1px solid #eee;
+}
+
+.pub-comment-item-first {
+    position: relative;
+    list-style: none;
+    outline: none;
+    padding: 3px 0;
+}
+
+.pub-comment-item-avatar {
+    float: left;
+    margin: 4px 4px 0 0;
+}
+
+.pub-comment-item-body {
+
+}
+
+.pub-comment-item-body-header {
+    color: #999;
+}
+
+.pub-comment-item-body-content {
+    min-height: 22px;
+    word-wrap: break-word;
+    color: #222;
+}
+
+.pub-comment-item-body-footer {
+
+}
+
+.pub-comments-form {
+    margin: 0;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 4px 4px;
+    background: #fbfbfb;
+}
+
+.pub-comments-form-inputbox {
+    width: 100%;
+    padding: 10px 10px;
+    line-height: 0.3;
+    color: #222;
+    cursor: text;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .1);
+    box-sizing: border-box;
+    background: #fff;
+}
+
+/*为空时显示 element attribute content*/
+.pub-comments-form-inputbox::before {
+    content: attr(placeholder);
+    color: #999;
+}
+
+/*焦点时内容为空*/
+.pub-comments-form-inputbox:focus:before {
+    content: none;
+}
+
+.pub-comments-form-action {
+    margin-top: 1em;
+    padding-bottom: 0;
+    text-align: right;
+    line-height: 33px;
+    display: none;
+}
+
+.pub-comments-form-button-submit {
+    float: right;
+}
+
+.pub-comments-form-button-cancel {
+    margin-right: 10px;
+}
+
+.text-button {
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    cursor: pointer;
+    color: #999;
 }
 
 .book-img {

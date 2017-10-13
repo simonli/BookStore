@@ -15,188 +15,221 @@
 
 
 <div class="row">
-    <div class="col-md-7">
-        <div class="pub-header pub-item  card">
-            <div class="pub-header-img">
-                <img src="@BookUtil.GetBookLogo(book.Logo)" class="book-img" alt="@book.Title"/>
-            </div>
-            <div class="pub-header-content">
-                <h1 class="pub-header-title">
-                    <a href="#" class="pub-header-link"><i class="fa fa-amazon" aria-hidden="true"></i> 购买正版</a>@book.Title
-                </h1>
-                <span class="pub-header-info">
-                    作者： <a class="pub-link">@book.Author</a>
-                    @{
-                        if (!string.IsNullOrEmpty(book.Translator))
-                        {
-                            @:译者： <a class="pub-link">@book.Translator </a>
-                        }
-                        if (!string.IsNullOrEmpty(book.Publisher))
-                        {
-                            <a class="pub-link">
-                                <small>@book.Publisher</small>
-                            </a>
-                        }
-                    }
-                </span>
-                <span class="pub-header-info">
-                    @{
-                        if (book.DoubanRatingScore > 0 || book.DoubanRatingPeople > 0)
-                        {
-                            @:豆瓣：
-                            if (book.DoubanRatingScore > 0)
-                            {
-                                <span class="badge text-success">@(book.DoubanRatingScore)分</span>
-                            }
-                            if (book.DoubanRatingPeople > 0)
-                            {
-                                <a href="@book.DoubanUrl" target="_blank">(@(book.DoubanRatingPeople)人评价...)</a>
-                            }
-                        }
-                    }
-                </span>
-
+<div class="col-md-8">
+    <div class="pub-header pub-item  card">
+        <div class="pub-header-img">
+            <img src="@BookUtil.GetBookLogo(book.Logo)" class="book-img" alt="@book.Title"/>
+        </div>
+        <div class="pub-header-content">
+            <h1 class="pub-header-title">
+                <a href="#" class="pub-header-link"><i class="fa fa-amazon" aria-hidden="true"></i> 购买正版</a>@book.Title
+            </h1>
+            <span class="pub-header-info">
+                作者： <a class="pub-link">@book.Author</a>
                 @{
-                    if (!string.IsNullOrEmpty(book.Isbn))
+                    if (!string.IsNullOrEmpty(book.Translator))
                     {
-                        <span class="pub-header-info">ISBN：@book.Isbn</span>
+                        @:译者： <a class="pub-link">@book.Translator </a>
+                    }
+                    if (!string.IsNullOrEmpty(book.Publisher))
+                    {
+                        <a class="pub-link">
+                            <small>@book.Publisher</small>
+                        </a>
                     }
                 }
-
-
-            </div>
-        </div>
-        <div class="pub-item card">
-            <div>
-                <ul id="book-detail-tabs" class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#book-summary" data-toggle="tab">内容简介</a>
-                    </li>
-                    <li>
-                        <a href="#book-catalog" data-toggle="tab">目录列表</a>
-                    </li>
-                    <li>
-                        <a href="#author-intro" data-toggle="tab">作者介绍</a>
-                    </li>
-                </ul>
-            </div>
-            <div id="book-detail-tabscontent" class="tab-content">
-                <div class="tab-pane active" id="book-summary">
-                    @Html.Raw(book.BookSummary)
-                    <div class="clearfix"></div>
-
-                </div><!-- book-summary end -->
-                <div class="tab-pane fade" id="book-catalog">
-                    @Html.Raw(book.BookCatalog)
-                    <div class="clearfix"></div>
-                </div> <!-- book-catalog end -->
-                <div class="tab-pane fade" id="author-intro">
-                    <div>
-                        @Html.Raw(book.AuthorSummary)
-                        <div class="clearfix"></div>
-                    </div>
-                </div><!-- author-summary end -->
-            </div>
-        </div>
-        <div class="pub-item card">
+            </span>
+            <span class="pub-header-info">
+                @{
+                    if (book.DoubanRatingScore > 0 || book.DoubanRatingPeople > 0)
+                    {
+                        @:豆瓣：
+                        if (book.DoubanRatingScore > 0)
+                        {
+                            <span class="badge text-success">@(book.DoubanRatingScore)分</span>
+                        }
+                        if (book.DoubanRatingPeople > 0)
+                        {
+                            <a href="@book.DoubanUrl" target="_blank">(@(book.DoubanRatingPeople)人评价...)</a>
+                        }
+                    }
+                }
+            </span>
 
             @{
-                if (relatedBooks.Count > 0)
+                if (!string.IsNullOrEmpty(book.Isbn))
                 {
-                    <h5>类似书籍</h5>
-                    <ul class="list-inline" id="ralted-books">
-                        @foreach (var rb in relatedBooks)
-                        {
-                            <li>
-                                <a asp-action="Detail" asp-route-id="@rb.Id">
-                                    <img class="book-img-sm" src="@BookUtil.GetBookLogo(rb.Logo)" title="@rb.Title" alt="@rb.Title"/>
-                                </a>
-                            </li>
-                        }
-                    </ul>
+                    <span class="pub-header-info">ISBN：@book.Isbn</span>
                 }
             }
-        </div>
-        <div class="pub-item card">
-            @{
-                if (book.BookTags.Count > 0)
-                {
-                    <ul class="list-inline">
-                        @foreach (var bookTag in book.BookTags)
-                        {
-                            <li>
-                                <a asp-controller="Book" asp-action="Tag" asp-route-id="@bookTag.TagId">@bookTag.Tag.Name</a>
-                            </li>
-                        }
-                    </ul>
-                }
-            }
-        </div>
 
 
+        </div>
     </div>
-    <div class="col-md-5">
-        <div class="pub-edition-info card">
-
-            <a asp-action="FileUpload" asp-route-id="@book.Id" class="btn btn-sm btn-default pub-edition-info-link">
-                <i class="fa fa-upload" aria-hidden="true"></i> 上传新版本
-            </a>
-            <h5>@(book.BookEditions.Count)个版本:</h5>
+    <div class="pub-item card">
+        <div>
+            <ul id="book-detail-tabs" class="nav nav-tabs">
+                <li class="active">
+                    <a href="#book-summary" data-toggle="tab">内容简介</a>
+                </li>
+                <li>
+                    <a href="#book-catalog" data-toggle="tab">目录列表</a>
+                </li>
+                <li>
+                    <a href="#author-intro" data-toggle="tab">作者介绍</a>
+                </li>
+            </ul>
         </div>
+        <div id="book-detail-tabscontent" class="tab-content">
+            <div class="tab-pane active" id="book-summary">
+                @Html.Raw(book.BookSummary)
+                <div class="clearfix"></div>
+
+            </div><!-- book-summary end -->
+            <div class="tab-pane fade" id="book-catalog">
+                @Html.Raw(book.BookCatalog)
+                <div class="clearfix"></div>
+            </div> <!-- book-catalog end -->
+            <div class="tab-pane fade" id="author-intro">
+                <div>
+                    @Html.Raw(book.AuthorSummary)
+                    <div class="clearfix"></div>
+                </div>
+            </div><!-- author-summary end -->
+        </div>
+    </div>
+    <div class="pub-item card">
+
         @{
-            var bookEdtions = book.BookEditions.OrderBy(x => x.CreateTime);
-            foreach (var be in bookEdtions)
-             {
-                 <div class="pub-item card">
-                     <div>
-                         <a asp-action="Edition" asp-route-id="@be.Id" class="pull-right">
-                             <small>@(be.BookEditionComments.Count)条评论</small>
-                             <i class="fa fa-commenting-o"></i>
-                         </a>
-                         <span class="badge" title="md5:@be.CheckSum">@Utils.FormatFileSize(be.Filesize)</span>
-                         <a asp-action="Edition" asp-route-id="@be.Id">
-                             <span class="badge" title="@be.OriginalFilename">@be.OriginalFilename</span>
-                         </a>
-                     </div>
-                     <div>
-                         <small>
-                             @Utils.FormatDateTime(be.CreateTime), 上传者:
-                             <a asp-controller="Account" asp-action="ProfileEdition" asp-route-username="@be.User.Username">
-                                 @be.User.Username
-                             </a>
-                         </small>
-                     </div>
-                     <div class="btn-toolbar">
-                         <vc:pushmail book-edition="@be"></vc:pushmail>
-                     </div>
-                     @{
-                         var becs = be.BookEditionComments.OrderBy(x => x.CreateTime);
-                         foreach (var bec in becs)
-                         {
-                             <div class="pub-edition-comments">
-                                 <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">
-                                     <img class='pull-left img-circle avatar-small' src="@await Component.InvokeAsync("AvatarUrl", bec.User)" alt="@bec.User.Username"/>@bec.User.Username
-                                 </a>:
-                                 <small class="text-muted">
-                                     <a asp-action="Edition" asp-route-id="@bec.BookEdition.Id" asp-fragment="@bec.Id">@bec.Comment</a>
-                                 </small>
-                             </div>
-                         }
-                     }<!-- comment end -->
-                     <form asp-action="Edition" asp-route-id="@be.Id" asp-route-next=@Url.Action("Detail", new {id = book.Id, fragment = be.Id}) class="form-inline">
-                         <input type="text" class="form-control" name="comment-short"  maxlength="80" placeholder="发表评论，勾选[举报]将通知管理员" />
-                         <label for="id_is_report">
-                             举报<input id="id_is_report" type="checkbox" name="is_report">
-                         </label>
-                         <button class="btn" type="submit" title="发表评论">
-                             <i class="fa fa-comment-o"></i>
-                         </button>
-                     </form>
-                 </div>
-             }
+            if (relatedBooks.Count > 0)
+            {
+                <h5>类似书籍</h5>
+                <ul class="list-inline" id="ralted-books">
+                    @foreach (var rb in relatedBooks)
+                    {
+                        <li>
+                            <a asp-action="Detail" asp-route-id="@rb.Id">
+                                <img class="book-img-sm" src="@BookUtil.GetBookLogo(rb.Logo)" title="@rb.Title" alt="@rb.Title"/>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
         }
-
-
-
     </div>
+    <div class="pub-item card">
+        @{
+            if (book.BookTags.Count > 0)
+            {
+                <ul class="list-inline">
+                    @foreach (var bookTag in book.BookTags)
+                    {
+                        <li>
+                            <a asp-controller="Book" asp-action="Tag" asp-route-id="@bookTag.TagId">@bookTag.Tag.Name</a>
+                        </li>
+                    }
+                </ul>
+            }
+        }
+    </div>
+
+
 </div>
+<div class="col-md-4">
+    <div class="pub-edition-info card">
+
+        <a asp-action="FileUpload" asp-route-id="@book.Id" class="btn btn-sm btn-default pub-edition-info-link">
+            <i class="fa fa-upload" aria-hidden="true"></i> 上传新版本
+        </a>
+        <h5>@(book.BookEditions.Count)个版本:</h5>
+    </div>
+    @{
+        var bookEdtions = book.BookEditions.OrderBy(x => x.CreateTime);
+        foreach (var be in bookEdtions)
+        {
+            <div class="pub-item card">
+                <div>
+                    <a asp-action="Edition" asp-route-id="@be.Id" class="pull-right">
+                        <small>@(be.BookEditionComments.Count)条评论</small>
+                        <i class="fa fa-commenting-o"></i>
+                    </a>
+                    <span class="badge" title="md5:@be.CheckSum">@Utils.FormatFileSize(be.Filesize)</span>
+                    <a asp-action="Edition" asp-route-id="@be.Id">
+                        <span class="badge" title="@be.OriginalFilename">@be.OriginalFilename</span>
+                    </a>
+                </div>
+                <div>
+                    <small>
+                        @Utils.FormatDateTime(be.CreateTime), 上传者:
+                        <a asp-controller="Account" asp-action="ProfileEdition" asp-route-username="@be.User.Username">
+                            @be.User.Username
+                        </a>
+                    </small>
+                </div>
+                <div class="btn-toolbar">
+                    <vc:pushmail book-edition="@be"></vc:pushmail>
+                </div>
+                @{
+                    <div class="pub-comments">
+                        <div class="pub-comments-list">
+                            @{
+                                var becs = be.BookEditionComments.OrderBy(x => x.CreateTime);
+                                var seq = 1;
+                                var cssClass = "pub-comment-item-first";
+
+                                foreach (var bec in becs)
+                                {
+                                    if (seq > 1)
+                                    {
+                                        cssClass = "pub-comment-item";
+                                    }
+                                    <div class="@cssClass">
+                                        <div class="pub-comment-item-avatar">
+                                            <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">
+                                                <img class='avatar-small img-rounded' src="@await Component.InvokeAsync("AvatarUrl", bec.User)" alt="@bec.User.Username"/>
+                                            </a>
+                                        </div>
+                                        <div class="pub-comment-item-body">
+                                            <div class="pub-comment-item-body-header">
+                                                <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">@bec.User.Username</a>
+                                            </div>
+                                            <div class="pub-comment-item-body-content">
+                                                @bec.Comment
+                                            </div>
+                                        </div>
+                                    </div>
+                                    seq++;
+                                }
+                            }
+
+                        </div>
+                        <div class="pub-comments-form">
+                            <div required placeholder="写下你的评论…" onkeydown="display_action(this)" class="pub-comments-form-inputbox" id="edition-@be.Id"
+                                 data-input-box="true" aria-label="写下你的评论…" contenteditable="true">
+                            </div>
+                            <div class="pub-comments-form-action clearfix">
+                                <button class="pub-comments-form-button-submit btn btn-primary">评论</button>
+                                <button class="pub-comments-form-button-cancel" data-key="cancel">取消</button>
+                            </div>
+                        </div><!-- comments form end -->
+                    </div>
+                } <!-- comments end -->
+
+            </div>
+        }
+    }
+
+
+
+</div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        function display_action(obj) {
+            obj.parentNode(".pub-comments-form-action").display = block;
+        }
+    </script>
+}
