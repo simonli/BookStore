@@ -1,15 +1,13 @@
 ﻿﻿@using System.Linq
-@using BookStore
-@using Microsoft.Extensions.Options
-@inject IOptions<AppSettings> AppSettings
 @inject BookUtil BookUtil
+@inject UserUtil UserUtil
 @model BookDetailViewModel
 
 @{
     //ViewData["Title"] = Model.Book.Title;
     var book = Model.Book;
     var relatedBooks = Model.RelatedBooks;
-    var amazonCode = AppSettings.Value.AmazonCode;
+    var amazonCode = BookUtil.GetAmazonCode();
     var logoUrl = BookUtil.GetBookLogo(book.Logo);
 }
 
@@ -186,7 +184,7 @@
                                     <div class="@cssClass">
                                         <div class="pub-comment-item-avatar">
                                             <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">
-                                                <img class='avatar-small img-rounded' src="@await Component.InvokeAsync("AvatarUrl", bec.User)" alt="@bec.User.Username"/>
+                                                <img class='avatar-small img-rounded' src="@UserUtil.GetAvatar(bec.User.Avatar)" alt="@bec.User.Username"/>
                                             </a>
                                         </div>
                                         <div class="pub-comment-item-body">

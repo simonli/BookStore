@@ -38,6 +38,7 @@ namespace BookStore
             
             //Custom Services 注入
             services.AddSingleton<BookUtil>();
+            services.AddSingleton<UserUtil>();
             services.AddScoped<IdGenService>();
             
             services.AddSession();

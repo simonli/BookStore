@@ -1,7 +1,5 @@
-﻿@using BookStore
-@using Microsoft.Extensions.Options
-@model ProfileComponentViewModel
-@inject IOptions<AppSettings> AppSettings
+﻿@model ProfileComponentViewModel
+@inject UserUtil UserUtil
 @{
     var user = Model.User;
 }
@@ -9,7 +7,7 @@
 <div class="row">
     <div class="col-md-2">
         <a href="@Url.Action("SettingsAvatar", "Account")" title="@user.Username">
-            <img class="pull-left img-circle avatar-medium" src="@await Component.InvokeAsync("AvatarUrl",@user)" title="点击设定头像" alt="@Model.User.Username"/>
+            <img class="pull-left img-circle avatar-medium" src="@UserUtil.GetAvatar(user.Avatar)" title="点击设定头像" alt="@Model.User.Username"/>
         </a>
     </div>
     <div class="col-md-3">

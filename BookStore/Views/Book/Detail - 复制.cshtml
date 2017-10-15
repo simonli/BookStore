@@ -3,6 +3,7 @@
 @using Microsoft.Extensions.Options
 @inject IOptions<AppSettings> AppSettings
 @inject BookUtil BookUtil
+@inject UserUtil UserUtil
 @model BookDetailViewModel
 
 @{
@@ -184,7 +185,7 @@
                                     {
                                         <div>
                                             <a asp-controller="Account" asp-action="ProfileComment" asp-route-username="@bec.User.Username">
-                                                <img class='pull-left img-circle avatar-small' src="@await Component.InvokeAsync("AvatarUrl", bec.User)" alt="@bec.User.Username"/>@bec.User.Username
+                                                <img class='pull-left img-circle avatar-small' src="@UserUtil.GetAvatar(bec.User.Avatar)" alt="@bec.User.Username"/>@bec.User.Username
                                             </a>:
                                             <small class="text-muted">
                                                 <a asp-action="Edition" asp-route-id="@bec.BookEdition.Id" asp-fragment="@bec.Id">@bec.Comment</a>

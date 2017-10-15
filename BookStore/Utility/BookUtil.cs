@@ -17,6 +17,11 @@ namespace BookStore.Utility
             _appSettings = appSettings.Value;
         }
 
+        public string GetAmazonCode()
+        {
+            return _appSettings.AmazonCode;
+        }
+
         public string GetBookLogo(string logo)
         {
             var bookLogo = logo;
