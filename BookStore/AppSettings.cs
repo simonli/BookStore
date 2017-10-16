@@ -9,5 +9,6 @@
         public string PushmailDomain { get; set; }
         public string AmazonCode { get; set; }
         public string PhantomJsExePath { get; set; }
+        public int PageSize { get; set; }
     }
 }

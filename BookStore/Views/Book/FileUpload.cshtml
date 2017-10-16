@@ -1,0 +1,50 @@
+﻿@model FileUploadViewModel
+
+@{
+    ViewData["Title"] = "";
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="pub-edition-upload  card">
+            <div class="pub-edition-upload-header">
+                <a asp-action="Detail" asp-route-id="@Model.BookId">
+                    <h1 class="pub-edition-upload-title">@Model.BookTitle</h1>
+                </a>
+            </div>
+            <form asp-action="FileUpload" enctype="multipart/form-data" role="form" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="BookId" id="BookId" value="@Model.BookId"/>
+                <input type="hidden" name="BookTitle" id="BookTitle" value="@Model.BookTitle"/>
+                <div class="form-group">
+                    <i class="fa fa-asterisk text-danger"></i>
+                    <label asp-for="BooKFile" class="control-label"></label>
+                    <input asp-for="BooKFile" autofocus class="form-control" type="file"/>
+                    <p class="help-block">
+                        <small>支持mobi,epub,pdf,txt. 不超过 50 MB.</small>
+                    </p>
+                    <span asp-validation-for="BooKFile" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="BookEditionCommnet" class="control-label"></label>
+                    <textarea asp-for="BookEditionCommnet"  class="form-control"></textarea>
+                    <p class="help-block">
+                        <small>如:目录完整, 排版精美绝伦...</small>
+                    </p>
+                    <span asp-validation-for="BookEditionCommnet" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-check-circle"></i> 提交
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

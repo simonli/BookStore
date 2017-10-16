@@ -12,6 +12,7 @@ using System.IO;
 using BookStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Remotion.Linq.Clauses.ResultOperators;
 
 namespace BookStore.Controllers
 {
@@ -31,6 +32,21 @@ namespace BookStore.Controllers
             _appSettings = appSettings.Value;
             _env = env;
             _idGenService = idGenService;
+        }
+
+
+        [Route("[Controller]/")]
+        [Route("[Controller]/index/")]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var pageSize = _appSettings.PageSize;
+            var books = await _context.Books.OrderByDescending(x => x.CreateTime).Skip((page - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
+            var vm = new BookListViewModel
+            {
+                Books = books
+            };
+            return View();
         }
 
         [Route("[controller]/upload")]
@@ -355,8 +371,8 @@ namespace BookStore.Controllers
         {
             var book = await _context.Books
                 .Include(b => b.BookEditions)
-                    .ThenInclude(be => be.BookEditionComments)
-                    .ThenInclude(be=>be.User)
+                .ThenInclude(be => be.BookEditionComments)
+                .ThenInclude(be => be.User)
                 .Include(b => b.BookTags).ThenInclude(t => t.Tag)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -421,7 +437,90 @@ namespace BookStore.Controllers
         [Route("[controller]/{id}/edition/upload")]
         public IActionResult FileUpload(long id)
         {
-            throw new NotImplementedException();
+            var book = _context.Books.FirstOrDefault(x => x.Id == id);
+            var vm = new FileUploadViewModel
+            {
+                BookId = book.Id,
+                BookTitle = book.Title
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Route("[controller]/{id}/edition/upload")]
+        public async Task<IActionResult> FileUpload(FileUploadViewModel vm)
+        {
+            if (ModelState.IsValid)
+            {
+                #region 定义图书目录,文件名,文件路径
+
+                var bookFileFolder = Path.Combine(_env.ContentRootPath, _appSettings.UploadBookDir);
+                if (!Directory.Exists(bookFileFolder)) Directory.CreateDirectory(bookFileFolder);
+                var filename = Utils.GetId() + Path.GetExtension(vm.BooKFile.FileName);
+                var filepath = Path.Combine(bookFileFolder, filename);
+
+                #endregion
+
+                #region 获得并判断checkSum,上传文件
+
+                string checkSum;
+                using (var ms = new MemoryStream())
+                {
+                    vm.BooKFile.CopyTo(ms);
+                    ms.Position = 0;
+                    checkSum = Utils.GetCheckSum(ms);
+                    var bookEdition = _context.BookEditions.FirstOrDefault(m => m.CheckSum == checkSum);
+                    if (bookEdition != null)
+                    {
+                        ModelState.AddModelError("BookFile",
+                            $"书籍已经存在,图书地址:<a href='{Url.Action("Edition", "Book", new {id = bookEdition.Id})}'>图书已经存在</a>");
+                        return View(vm);
+                    }
+                    //将内存流写入文件
+                    using (var stream = new FileStream(filepath, FileMode.Create))
+                    {
+                        ms.Position = 0;
+                        ms.CopyTo(stream);
+                    }
+                }
+
+                #endregion
+
+                var book = _context.Books.FirstOrDefault(x => x.Id == vm.BookId);
+                var loginUser = _context.Users.FirstOrDefault(m => m.Username == HttpContext.User.Identity.Name);
+                var be = new BookEdition
+                {
+                    Id = _idGenService.NewId(AppkeyEnum.BookEditions.ToString()),
+                    Filename = filename,
+                    OriginalFilename = vm.BooKFile.FileName,
+                    Filesize = vm.BooKFile.Length,
+                    CheckSum = checkSum,
+                    CreateTime = DateTime.Now,
+                    Book = book,
+                    User = loginUser
+                };
+                _context.Add(be);
+                if (!string.IsNullOrEmpty(vm.BookEditionCommnet))
+                {
+                    var bec = new BookEditionComment
+                    {
+                        Id = _idGenService.NewId(AppkeyEnum.BookEditionComments.ToString()),
+                        Comment = vm.BookEditionCommnet,
+                        BookEdition = be,
+                        User = loginUser,
+                        CreateTime = DateTime.Now
+                    };
+                    _context.Add(bec);
+                }
+
+                await _context.SaveChangesAsync();
+
+                var editionUrl = Url.Action("edition", "book", new {id = be.Id});
+                TempData.Flash("success",
+                    $"图书上传成功,书名：<a href='{editionUrl}'><span class='text-danger'><b>{vm.BooKFile.FileName}</b></span></a>");
+                return RedirectToAction(nameof(FileUpload));
+            }
+            return View(vm);
         }
     }
 }

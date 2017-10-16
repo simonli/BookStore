@@ -4,7 +4,7 @@
     <UserSecretsId>ea205243-6d3d-414a-8764-cee63e876bf8</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.5.5" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
