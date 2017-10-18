@@ -46,7 +46,7 @@ namespace BookStore.Controllers
             {
                 Books = books
             };
-            return View();
+            return View(vm);
         }
 
         [Route("[controller]/upload")]

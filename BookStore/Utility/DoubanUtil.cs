@@ -66,10 +66,8 @@ namespace BookStore.Utility
                     //书名
                     book.Title = GetHtmlNodeText(item.SelectSingleNode(".//div[@class='title']/a"));
                     //封面图片
-                    var logoStr = item.SelectSingleNode(".//div[contains(@class,'cover')]").Attributes["style"].Value;
-                    book.Logo = logoStr.Substring(logoStr.IndexOf("(", StringComparison.Ordinal) + 1,
-                        logoStr.LastIndexOf(")", StringComparison.Ordinal) -
-                        logoStr.IndexOf("(", StringComparison.Ordinal) - 1);
+                    book.Logo  = item.SelectSingleNode("//div/a/img").Attributes["src"].Value;
+                  
                     //图书Id
                     if (int.TryParse(Regex.Replace(book.Url, @"[^\d]*", ""), out int subjectId))
                     {

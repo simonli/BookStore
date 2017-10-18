@@ -1,19 +1,20 @@
-﻿@model IList<BookListViewModel>
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-        <form class="form-inline" id="form">
-            <input type="text" class="form-control" id="keyword" placeholder="书名/作者/出版社/ISBN">
-            <button class="btn" type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </button>
-        </form>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-
-        <div class="book-list card">
-            fadfadsfadsf
+﻿@model BookListViewModel
+@{
+    var books = Model.Books;
+}
+<form id="main-search-form" asp-controller="Book" asp-action="Search">
+    <input name="q" value="" placeholder="书名/作者/出版社/ISBN" type="text">
+    <button class="btn" type="submit">
+        <i class="fa fa-search" aria-hidden="true"></i>
+    </button>
+</form>
+@{
+    foreach (var book in books)
+    {
+        <div class="col-md-2">
+            <div class="book-item card">
+                fdasfdasfdas
+            </div>
         </div>
-    </div>
-</div>
+    }
+}
