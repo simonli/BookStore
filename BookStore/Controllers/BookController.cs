@@ -522,5 +522,10 @@ namespace BookStore.Controllers
             }
             return View(vm);
         }
+
+        public IActionResult Search()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
