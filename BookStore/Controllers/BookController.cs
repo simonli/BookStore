@@ -12,7 +12,6 @@ using System.IO;
 using BookStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using Remotion.Linq.Clauses.ResultOperators;
 
 namespace BookStore.Controllers
 {

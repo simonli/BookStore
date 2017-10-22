@@ -1,5 +1,6 @@
 ﻿@model BookListViewModel
 @using BookStore.Domain.Models
+@inject BookUtil BookUtil
 @{
     IList<Book> books = Model.Books;
 }
@@ -15,7 +16,7 @@
         {
             <li class="book-item">
                 <div class="book-card">
-                    @book.Title
+                    <img class="book-img" src="@BookUtil.GetBookLogo(book.Logo)" alt="@book.Title"/>
                 </div>
             </li>
         }
