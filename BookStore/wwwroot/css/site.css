@@ -391,8 +391,106 @@ body {
     border-radius: 0 3px 3px 0;
 }
 
-.book-item{
-    padding: 20px;
+
+.book-index {
+    box-sizing: border-box
 }
 
+.book-index * {
+    box-sizing: border-box
+}
 
+.book-item {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    padding: 6px;
+}
+
+@media all and (min-width: 360px) {
+    .book-item {
+        width: 50%
+    }
+}
+
+@media all and (min-width: 768px) {
+    .book-item {
+        width: 25%
+    }
+}
+
+@media all and (min-width: 1200px) {
+    .book-item {
+        width: 20%
+    }
+}
+
+.book-card {
+    height: 190px;
+    margin-bottom: 0;
+    position: relative;
+    padding: 0;
+    background-color: #fff;
+    
+}
+
+.book-cover {
+    display: inline-block;
+    width: 50%;
+    height: 165px;
+    overflow-y: hidden;
+    padding: 4px;
+    position: absolute;
+    left: 0;
+    top: 0
+}
+
+.book-img {
+    width: 100px;
+    height: auto
+}
+
+.book-info {
+    display: inline-block;
+    overflow-wrap: break-word;
+    width: 50%;
+    height: 100%;
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    top: 0
+}
+
+.book-author {
+    margin-top: 10px;
+    font-size: 90%
+}
+
+.book-author a {
+    color: inherit
+}
+
+.book-meta {
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 100%;
+    height: 20px;
+    padding: 0 4px
+}
+
+.book-meta * {
+    box-sizing: content-box
+}
+
+.book-meta .douban {
+    position: absolute;
+    right: 6px
+}
+
+.book-similar li {
+    width: 100px;
+    height: 150px;
+    padding: 5px 5px 0px 0px;
+    margin: 0px 20px 10px 0px
+}

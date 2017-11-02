@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace BookStore.Domain.Models

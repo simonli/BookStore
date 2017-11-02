@@ -12,7 +12,6 @@ using System.IO;
 using BookStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using Remotion.Linq.Clauses.ResultOperators;
 
 namespace BookStore.Controllers
 {
@@ -521,6 +520,11 @@ namespace BookStore.Controllers
                 return RedirectToAction(nameof(FileUpload));
             }
             return View(vm);
+        }
+
+        public IActionResult Search()
+        {
+            throw new NotImplementedException();
         }
     }
 }
